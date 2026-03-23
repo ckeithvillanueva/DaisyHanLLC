@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daisy Han Consulting LLC — Strategic Consulting for Meaningful Change</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    /* ── Design Tokens ─────────────────────────────────── */
+    :root {
+      --color-sun-gold:    #F2C02E;
+      --color-sun-amber:   #F07A28;
+      --color-sun-coral:   #E84E28;
+      --color-sun-crimson: #E02458;
+      --color-sun-teal:    #28A880;
+      --color-sun-blue:    #2870BC;
+      --color-sun-navy:    #1C3870;
+
+      --color-taupe:   #AEA290;
+      --color-linen:   #DDD5C4;
+      --color-cream:   #F5F0E8;
+      --color-white:   #FFFFFF;
+      --color-ink:     #1A1714;
+      --color-slate:   #4A4540;
+      --color-mist:    #7A746E;
+
+      --color-primary:        #28A880;
+      --color-primary-dark:   #1C7A60;
+      --color-accent:         #F2C02E;
+      --color-accent-warm:    #F07A28;
+      --color-surface:        #F5F0E8;
+      --color-surface-raised: #DDD5C4;
+      --color-error:          #E02458;
+      --color-success:        #28A880;
+      --color-text:           #1A1714;
+      --color-text-secondary: #4A4540;
+      --color-text-muted:     #7A746E;
+      --color-border:         #DDD5C4;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-5:  24px;
+      --space-6:  32px;
+      --space-7:  48px;
+      --space-8:  64px;
+      --space-9:  96px;
+      --space-10: 128px;
+
+      --section-padding-y: clamp(64px, 8vw, 120px);
+      --section-padding-x: clamp(16px, 5vw, 80px);
+
+      --radius-sm:   4px;
+      --radius-md:   8px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --radius-full: 9999px;
+
+      --shadow-subtle:  0 1px 3px rgba(26,23,20,.06), 0 1px 2px rgba(26,23,20,.04);
+      --shadow-card:    0 2px 8px rgba(26,23,20,.06), 0 8px 24px rgba(26,23,20,.08);
+      --shadow-raised:  0 4px 16px rgba(26,23,20,.08), 0 16px 40px rgba(26,23,20,.10);
+      --shadow-floating:0 8px 32px rgba(26,23,20,.12), 0 24px 64px rgba(26,23,20,.12);
+      --shadow-teal:    0 6px 20px rgba(40,168,128,.20);
+      --shadow-gold:    0 6px 20px rgba(242,192,46,.25);
+
+      --transition-fast:     150ms cubic-bezier(0.4,0,0.2,1);
+      --transition-standard: 300ms cubic-bezier(0.4,0,0.2,1);
+      --transition-spring:   300ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    /* ── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--color-text);
+      background: var(--color-cream);
+      -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Utilities ──────────────────────────────────────── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--section-padding-x);
+    }
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: var(--space-4);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Navbar ─────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      transition: background var(--transition-standard), box-shadow var(--transition-standard);
+    }
+    .nav.scrolled {
+      background: var(--color-cream);
+      box-shadow: var(--shadow-subtle);
+    }
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .nav__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .nav__logo-mark {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .nav__logo-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-ink);
+      line-height: 1.2;
+    }
+    .nav__logo-text span {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .05em;
+      color: var(--color-mist);
+    }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-7);
+      list-style: none;
+    }
+    .nav__links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-slate);
+      transition: color var(--transition-fast);
+    }
+    .nav__links a:hover { color: var(--color-primary); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--transition-spring), box-shadow var(--transition-standard), background-color var(--transition-fast);
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-teal);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-primary);
+      border: 1.5px solid var(--color-primary);
+    }
+    .btn-secondary:hover { background: rgba(40,168,128,.06); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-primary);
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .btn-ghost:hover { opacity: .75; }
+    .btn-accent {
+      background: var(--color-accent);
+      color: var(--color-ink);
+    }
+    .btn-accent:hover {
+      background: var(--color-sun-amber);
+      box-shadow: var(--shadow-gold);
+    }
+    .btn-lg { padding: 16px 36px; font-size: 16px; }
+
+    /* hamburger */
+    .nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: var(--space-2);
+    }
+    .nav__hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--color-ink);
+      border-radius: 2px;
+      transition: transform var(--transition-standard), opacity var(--transition-standard);
+    }
+
+    /* mobile drawer */
+    .nav__drawer {
+      position: fixed;
+      inset: 0;
+      background: var(--color-cream);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-standard);
+    }
+    .nav__drawer.open { opacity: 1; pointer-events: auto; }
+    .nav__drawer a {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 500;
+      color: var(--color-ink);
+      transition: color var(--transition-fast);
+    }
+    .nav__drawer a:hover { color: var(--color-primary); }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding-top: 72px;
+      position: relative;
+      overflow: hidden;
+      background: var(--color-cream);
+    }
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hero__arc {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: clamp(360px, 45vw, 680px);
+      opacity: .12;
+    }
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-10);
+      align-items: center;
+      padding: var(--section-padding-y) var(--section-padding-x);
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero__content { position: relative; z-index: 1; }
+    .hero__location {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-mist);
+      margin-bottom: var(--space-5);
+    }
+    .hero__location::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+    .hero__heading {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      color: var(--color-ink);
+      margin-bottom: var(--space-6);
+    }
+    .hero__heading em {
+      font-style: italic;
+      color: var(--color-primary);
+    }
+    .hero__subhead {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--color-slate);
+      max-width: 520px;
+      margin-bottom: var(--space-7);
+    }
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+    }
+    .hero__visual {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+    .hero__card {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-card);
+    }
+    .hero__card--accent {
+      background: var(--color-sun-navy);
+      color: var(--color-white);
+    }
+    .hero__stat-num {
+      font-family: var(--font-mono);
+      font-size: clamp(40px, 5vw, 56px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -.03em;
+      color: var(--color-primary);
+    }
+    .hero__card--accent .hero__stat-num { color: var(--color-accent); }
+    .hero__stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-mist);
+      margin-top: var(--space-2);
+    }
+    .hero__card--accent .hero__stat-label { color: rgba(255,255,255,.6); }
+    .hero__card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+
+    /* ── About ──────────────────────────────────────────── */
+    .about {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-white);
+    }
+    .about__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+      align-items: center;
+    }
+    .about__visual {
+      position: relative;
+    }
+    .about__img-block {
+      background: var(--color-sun-navy);
+      border-radius: var(--radius-lg);
+      aspect-ratio: 4/5;
+      display: flex;
+      align-items: flex-end;
+      padding: var(--space-7);
+      overflow: hidden;
+      position: relative;
+    }
+    .about__img-stripes {
+      position: absolute;
+      inset: 0;
+      opacity: .15;
+    }
+    .about__img-quote {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-style: italic;
+      font-weight: 500;
+      color: var(--color-white);
+      line-height: 1.3;
+    }
+    .about__img-quote::before {
+      content: '\201C';
+      display: block;
+      font-size: 80px;
+      line-height: .8;
+      color: var(--color-accent);
+      opacity: .6;
+      margin-bottom: var(--space-3);
+    }
+    .about__badge {
+      position: absolute;
+      top: var(--space-6);
+      right: calc(-1 * var(--space-6));
+      background: var(--color-accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      text-align: center;
+      box-shadow: var(--shadow-gold);
+    }
+    .about__badge-num {
+      font-family: var(--font-mono);
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--color-ink);
+      line-height: 1;
+    }
+    .about__badge-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-slate);
+      margin-top: 4px;
+    }
+    .about__content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+      margin-bottom: var(--space-6);
+    }
+    .about__content h2 em { font-style: italic; color: var(--color-primary); }
+    .about__body {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--color-slate);
+      margin-bottom: var(--space-5);
+    }
+    .about__pull {
+      border-left: 3px solid var(--color-primary);
+      padding-left: var(--space-5);
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2vw, 24px);
+      font-style: italic;
+      color: var(--color-primary);
+      line-height: 1.5;
+      margin: var(--space-7) 0;
+    }
+    .about__awards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+    .tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--color-linen);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-slate);
+    }
+
+    /* ── Services ───────────────────────────────────────── */
+    .services {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-linen);
+    }
+    .services__inner { max-width: 1280px; margin: 0 auto; }
+    .services__header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      align-items: end;
+      margin-bottom: var(--space-9);
+    }
+    .services__header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+    }
+    .services__header h2 em { font-style: italic; color: var(--color-primary); }
+    .services__intro {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--color-slate);
+    }
+    .services__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+    }
+    .service-card {
+      background: var(--color-cream);
+      border-radius: var(--radius-lg);
+      padding: var(--space-7);
+      border: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-spring), box-shadow var(--transition-standard);
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--color-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-standard);
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-raised);
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(40,168,128,.1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-5);
+    }
+    .service-icon svg { width: 24px; height: 24px; color: var(--color-primary); }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-ink);
+      margin-bottom: var(--space-4);
+    }
+    .service-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-slate);
+    }
+    .service-card ul {
+      list-style: none;
+      margin-top: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .service-card ul li {
+      font-size: 13px;
+      color: var(--color-mist);
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .service-card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+    }
+
+    /* ── Stats ──────────────────────────────────────────── */
+    .stats {
+      background: var(--color-sun-navy);
+      padding: var(--section-padding-y) var(--section-padding-x);
+    }
+    .stats__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .stats__eyebrow { color: var(--color-accent); }
+    .stats__heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      color: var(--color-white);
+      margin-bottom: var(--space-9);
+      line-height: 1.2;
+    }
+    .stats__heading em { font-style: italic; color: var(--color-accent); }
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+    .stat-card {
+      padding: var(--space-7) var(--space-5);
+      background: rgba(255,255,255,.05);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -.03em;
+      color: var(--color-accent);
+      display: block;
+    }
+    .stat-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,.55);
+      margin-top: var(--space-3);
+      letter-spacing: .02em;
+    }
+
+    /* ── Philosophy ──────────────────────────────────────── */
+    .philosophy {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-cream);
+    }
+    .philosophy__inner { max-width: 1280px; margin: 0 auto; }
+    .philosophy__header { margin-bottom: var(--space-9); }
+    .philosophy__heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+      max-width: 640px;
+    }
+    .philosophy__heading em { font-style: italic; color: var(--color-primary); }
+    .philosophy__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8);
+    }
+    .philosophy__item {}
+    .philosophy__num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--color-taupe);
+      margin-bottom: var(--space-4);
+      letter-spacing: .08em;
+    }
+    .philosophy__item h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--color-ink);
+      margin-bottom: var(--space-4);
+    }
+    .philosophy__item p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--color-slate);
+    }
+    .philosophy__divider {
+      width: 40px;
+      height: 2px;
+      background: var(--color-primary);
+      margin: var(--space-4) 0 var(--space-5);
+    }
+
+    /* ── Who We Serve ────────────────────────────────────── */
+    .serve {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-white);
+    }
+    .serve__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    .serve__content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+      margin-bottom: var(--space-6);
+    }
+    .serve__content h2 em { font-style: italic; color: var(--color-primary); }
+    .serve__body {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--color-slate);
+      margin-bottom: var(--space-7);
+    }
+    .serve__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    .serve__list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      font-size: 15px;
+      color: var(--color-slate);
+    }
+    .serve__check {
+      width: 24px;
+      height: 24px;
+      background: rgba(40,168,128,.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .serve__check svg { width: 12px; height: 12px; color: var(--color-primary); }
+    .serve__visual {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+    .serve__exp-card {
+      background: var(--color-cream);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+    }
+    .serve__exp-card h4 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-ink);
+      margin-bottom: var(--space-2);
+    }
+    .serve__exp-card .role {
+      font-size: 13px;
+      color: var(--color-primary);
+      font-weight: 500;
+      margin-bottom: var(--space-3);
+    }
+    .serve__exp-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-mist);
+    }
+
+    /* ── Background / Experience ─────────────────────────── */
+    .background {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-linen);
+    }
+    .background__inner { max-width: 1280px; margin: 0 auto; }
+    .background__header { margin-bottom: var(--space-9); }
+    .background__heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+    }
+    .background__heading em { font-style: italic; color: var(--color-primary); }
+    .background__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+    .background__col h3 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .edu-item {
+      padding: var(--space-5) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-item h4 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-ink);
+    }
+    .edu-item .degree {
+      font-size: 14px;
+      color: var(--color-slate);
+      margin-top: 4px;
+    }
+    .edu-item .year {
+      font-size: 12px;
+      color: var(--color-mist);
+      margin-top: 4px;
+    }
+    .cert-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .cert-list li {
+      font-size: 14px;
+      color: var(--color-slate);
+      padding-left: var(--space-5);
+      position: relative;
+    }
+    .cert-list li::before {
+      content: '●';
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+      font-size: 8px;
+      top: 6px;
+    }
+
+    /* ── Schedule ────────────────────────────────────────── */
+    .schedule {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-cream);
+    }
+    .schedule__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .schedule__header {
+      text-align: center;
+      margin-bottom: var(--space-9);
+    }
+    .schedule__heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+    }
+    .schedule__heading em { font-style: italic; color: var(--color-primary); }
+    .schedule__subhead {
+      font-size: 16px;
+      color: var(--color-slate);
+      max-width: 480px;
+      margin: var(--space-5) auto 0;
+      line-height: 1.75;
+    }
+    .schedule__embed {
+      background: var(--color-white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--color-border);
+      min-height: 700px;
+      position: relative;
+    }
+    .schedule__embed iframe {
+      width: 100%;
+      height: 800px;
+      border: none;
+      display: block;
+    }
+
+    /* ── Contact ─────────────────────────────────────────── */
+    .contact {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-white);
+    }
+    .contact__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+    .contact__content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      color: var(--color-ink);
+      margin-bottom: var(--space-5);
+    }
+    .contact__content h2 em { font-style: italic; color: var(--color-primary); }
+    .contact__body {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--color-slate);
+      margin-bottom: var(--space-7);
+    }
+    .contact__details {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    .contact__detail {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 15px;
+      color: var(--color-slate);
+    }
+    .contact__detail svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+    .contact__detail a {
+      color: var(--color-primary);
+      transition: opacity var(--transition-fast);
+    }
+    .contact__detail a:hover { opacity: .7; }
+    .contact__form {
+      background: var(--color-cream);
+      border-radius: var(--radius-xl);
+      padding: var(--space-7);
+      box-shadow: var(--shadow-card);
+    }
+    .form-group { margin-bottom: var(--space-5); }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-mist);
+      margin-bottom: var(--space-2);
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--color-white);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--color-ink);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .form-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(40,168,128,.15);
+    }
+    .form-input::placeholder { color: var(--color-mist); }
+    textarea.form-input {
+      min-height: 140px;
+      resize: vertical;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    .form-submit {
+      margin-top: var(--space-3);
+    }
+    .form-success {
+      display: none;
+      background: rgba(40,168,128,.1);
+      border: 1px solid rgba(40,168,128,.3);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      font-size: 14px;
+      color: var(--color-primary);
+      margin-top: var(--space-4);
+    }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      background: var(--color-sun-navy);
+      padding: var(--space-9) var(--section-padding-x) var(--space-7);
+    }
+    .footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .footer__top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-8);
+      padding-bottom: var(--space-8);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .footer__brand {}
+    .footer__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+    .footer__logo-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+    .footer__tagline {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.5);
+      max-width: 280px;
+    }
+    .footer__col h4 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: var(--space-5);
+    }
+    .footer__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .footer__links a {
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      transition: color var(--transition-fast);
+    }
+    .footer__links a:hover { color: var(--color-white); }
+    .footer__bottom {
+      padding-top: var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer__copy {
+      font-size: 13px;
+      color: rgba(255,255,255,.35);
+    }
+    .footer__legal {
+      display: flex;
+      gap: var(--space-5);
+    }
+    .footer__legal a {
+      font-size: 13px;
+      color: rgba(255,255,255,.35);
+      transition: color var(--transition-fast);
+    }
+    .footer__legal a:hover { color: rgba(255,255,255,.65); }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .stats__grid { grid-template-columns: repeat(2, 1fr); }
+      .background__grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav__links, .nav__cta { display: none; }
+      .nav__hamburger { display: flex; }
+      .hero__inner { grid-template-columns: 1fr; gap: var(--space-8); }
+      .hero__visual { display: none; }
+      .about__inner { grid-template-columns: 1fr; }
+      .about__badge { display: none; }
+      .services__header { grid-template-columns: 1fr; gap: var(--space-5); }
+      .services__grid { grid-template-columns: 1fr; }
+      .philosophy__grid { grid-template-columns: 1fr; gap: var(--space-6); }
+      .serve__inner { grid-template-columns: 1fr; }
+      .contact__inner { grid-template-columns: 1fr; }
+      .footer__top { grid-template-columns: 1fr 1fr; }
+      .footer__bottom { flex-direction: column; gap: var(--space-4); text-align: center; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero__card-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats__grid { grid-template-columns: 1fr 1fr; }
+      .footer__top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════════════ -->
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="#" class="nav__logo" aria-label="Daisy Han Consulting Home">
+          <!-- Sunrise Logo -->
+          <svg class="nav__logo-mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <clipPath id="logo-clip"><circle cx="50" cy="50" r="50"/></clipPath>
+            <g clip-path="url(#logo-clip)">
+              <rect x="0" y="0"    width="100" height="14.3" fill="#F2C02E"/>
+              <rect x="0" y="14.3" width="100" height="14.3" fill="#F07A28"/>
+              <rect x="0" y="28.6" width="100" height="14.3" fill="#E84E28"/>
+              <rect x="0" y="42.9" width="100" height="14.3" fill="#E02458"/>
+              <rect x="0" y="57.1" width="100" height="14.3" fill="#28A880"/>
+              <rect x="0" y="71.4" width="100" height="14.3" fill="#2870BC"/>
+              <rect x="0" y="85.7" width="100" height="14.3" fill="#1C3870"/>
+            </g>
+          </svg>
+          <div class="nav__logo-text">
+            Daisy Han
+            <span>Consulting LLC</span>
+          </div>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#impact">Impact</a></li>
+          <li><a href="#schedule">Schedule</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <a href="#schedule" class="btn btn-primary nav__cta">Schedule a Call</a>
+
+        <button class="nav__hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav__drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <a href="#about"     onclick="closeDrawer()">About</a>
+    <a href="#services"  onclick="closeDrawer()">Services</a>
+    <a href="#impact"    onclick="closeDrawer()">Impact</a>
+    <a href="#schedule"  onclick="closeDrawer()">Schedule</a>
+    <a href="#contact"   onclick="closeDrawer()">Contact</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero__bg">
+      <!-- Decorative sunrise arc -->
+      <svg class="hero__arc" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="300" cy="300" r="280" stroke="#F2C02E" stroke-width="2"/>
+        <circle cx="300" cy="300" r="230" stroke="#F07A28" stroke-width="2"/>
+        <circle cx="300" cy="300" r="180" stroke="#E84E28" stroke-width="2"/>
+        <circle cx="300" cy="300" r="130" stroke="#28A880" stroke-width="2"/>
+        <circle cx="300" cy="300" r="80"  stroke="#2870BC" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <div class="hero__inner">
+      <div class="hero__content">
+        <p class="hero__location">Makawao, Hawaii · Serving Clients Nationwide</p>
+        <h1 class="hero__heading fade-up">
+          Partnering for<br><em>meaningful</em> change.
+        </h1>
+        <p class="hero__subhead fade-up" style="transition-delay:100ms">
+          Two decades of translating ambitious visions into measurable social impact — for school systems, philanthropies, and mission-driven organizations advancing equity.
+        </p>
+        <div class="hero__ctas fade-up" style="transition-delay:200ms">
+          <a href="#schedule" class="btn btn-primary btn-lg">Work With Me</a>
+          <a href="#about" class="btn btn-ghost btn-lg">Learn more →</a>
+        </div>
+      </div>
+
+      <div class="hero__visual fade-up" style="transition-delay:300ms">
+        <div class="hero__card hero__card--accent">
+          <span class="hero__stat-num" data-count="18">0</span><span class="hero__stat-num">+</span>
+          <p class="hero__stat-label">Years Leading Equity-Centered Change</p>
+        </div>
+        <div class="hero__card-grid">
+          <div class="hero__card">
+            <span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)" data-count="660">0</span><span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)">K+</span>
+            <p class="hero__stat-label">Students Reached</p>
+          </div>
+          <div class="hero__card">
+            <span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)" data-count="10">0</span><span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)">K+</span>
+            <p class="hero__stat-label">Educators Trained</p>
+          </div>
+        </div>
+        <div class="hero__card" style="background:var(--color-linen)">
+          <p style="font-family:var(--font-display);font-size:15px;font-style:italic;color:var(--color-slate);line-height:1.6">
+            "40 Under 40 Powerlist, Leaders of Color Magazine"
+          </p>
+          <p style="font-size:12px;color:var(--color-mist);margin-top:8px;font-weight:500">Leaders of Color Magazine, 2024</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       ABOUT
+  ═══════════════════════════════════════════════════ -->
+  <section class="about" id="about" aria-label="About Daisy Han">
+    <div class="about__inner">
+      <div class="about__visual fade-up">
+        <div class="about__img-block">
+          <!-- Sunrise stripes decoration -->
+          <svg class="about__img-stripes" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect x="0" y="0"   width="400" height="71.4" fill="#F2C02E"/>
+            <rect x="0" y="71.4" width="400" height="71.4" fill="#F07A28"/>
+            <rect x="0" y="142.8" width="400" height="71.4" fill="#E84E28"/>
+            <rect x="0" y="214.2" width="400" height="71.4" fill="#E02458"/>
+            <rect x="0" y="285.6" width="400" height="71.4" fill="#28A880"/>
+            <rect x="0" y="357.0" width="400" height="71.4" fill="#2870BC"/>
+            <rect x="0" y="428.4" width="400" height="71.6" fill="#1C3870"/>
+          </svg>
+          <p class="about__img-quote">
+            Bridging vision with day-to-day execution — on schedule, on budget, on purpose.
+          </p>
+        </div>
+        <div class="about__badge">
+          <div class="about__badge-num">96%</div>
+          <div class="about__badge-label">Impact Metrics</div>
+        </div>
+      </div>
+
+      <div class="about__content fade-up" style="transition-delay:100ms">
+        <span class="eyebrow">About Daisy</span>
+        <h2>Two decades of leading with <em>purpose</em>.</h2>
+        <p class="about__body">
+          Daisy Han is a seasoned education and social innovation strategist with over 18 years of experience leading equity-centered transformation across K–12 systems, charter and Montessori ecosystems, higher education, and career-connected learning.
+        </p>
+        <blockquote class="about__pull">
+          A trusted partner to districts, charter networks, foundations, and community organizations advancing racial equity and systems-level change.
+        </blockquote>
+        <p class="about__body">
+          Based in Makawao, Hawaii, Daisy brings a rare combination of on-the-ground classroom experience, nonprofit leadership, and philanthropic strategy. She founded and scaled Embracing Equity into a national organization serving 660,000+ students across 48 states — then brought those learnings back to the consulting world.
+        </p>
+        <div class="about__awards">
+          <span class="tag">40 Under 40, Leaders of Color (2024)</span>
+          <span class="tag">Harvard M.Ed., Educational Equity</span>
+          <span class="tag">Montessori School Leadership (AMS)</span>
+          <span class="tag">UC Berkeley, summa cum laude</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       SERVICES
+  ═══════════════════════════════════════════════════ -->
+  <section class="services" id="services" aria-label="Services">
+    <div class="services__inner">
+      <div class="services__header">
+        <div class="fade-up">
+          <span class="eyebrow">What I Do</span>
+          <h2>Services built for <em>real</em> results.</h2>
+        </div>
+        <p class="services__intro fade-up" style="transition-delay:100ms">
+          Every engagement is tailored to your organization's unique goals — grounded in equity, driven by data, and built for lasting impact.
+        </p>
+      </div>
+
+      <div class="services__grid">
+        <!-- Service 1 -->
+        <article class="service-card fade-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <h3>Strategic Planning &amp; Alignment</h3>
+          <p>Translate high-level vision into actionable initiatives. From stakeholder alignment to outcome frameworks, I lead end-to-end strategic planning that keeps your work on schedule and on mission.</p>
+          <ul>
+            <li>Organizational strategy development</li>
+            <li>Stakeholder alignment facilitation</li>
+            <li>Deliverable creation &amp; outcome evaluation</li>
+            <li>Budget &amp; timeline management</li>
+          </ul>
+        </article>
+
+        <!-- Service 2 -->
+        <article class="service-card fade-up" style="transition-delay:100ms">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Workshop Facilitation &amp; Capacity Building</h3>
+          <p>Design and deliver collaborative workshops and strategy sessions that build genuine organizational capacity — not just compliance. I meet teams where they are and stretch them toward what's possible.</p>
+          <ul>
+            <li>Leadership development retreats</li>
+            <li>Equity &amp; DEI integration workshops</li>
+            <li>Cross-sector convenings</li>
+            <li>Professional learning models</li>
+          </ul>
+        </article>
+
+        <!-- Service 3 -->
+        <article class="service-card fade-up" style="transition-delay:200ms">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3>Program Design &amp; Evaluation</h3>
+          <p>Build programs that deliver measurable social impact. I provide advisory support on program design, operational scaling, and evaluation — with a relentless focus on equity, inclusion, and results.</p>
+          <ul>
+            <li>Evidence-based program design</li>
+            <li>Operational scaling strategies</li>
+            <li>Impact measurement frameworks</li>
+            <li>Accreditation-aligned learning models</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       STATS / IMPACT
+  ═══════════════════════════════════════════════════ -->
+  <section class="stats" id="impact" aria-label="Impact statistics">
+    <div class="stats__inner">
+      <span class="eyebrow stats__eyebrow">Impact by the Numbers</span>
+      <h2 class="stats__heading fade-up">
+        Two decades of work.<br><em>Hundreds of thousands</em> of lives changed.
+      </h2>
+      <div class="stats__grid">
+        <div class="stat-card fade-up">
+          <span class="stat-num" data-count="18">0</span>
+          <span class="stat-label">Years of experience in education &amp; social innovation</span>
+        </div>
+        <div class="stat-card fade-up" style="transition-delay:75ms">
+          <span class="stat-num" data-suffix="K+">660K+</span>
+          <span class="stat-label">Students reached across 48 states, DC &amp; Puerto Rico</span>
+        </div>
+        <div class="stat-card fade-up" style="transition-delay:150ms">
+          <span class="stat-num" data-suffix="K+">10K+</span>
+          <span class="stat-label">Educators trained in equity-driven instructional practice</span>
+        </div>
+        <div class="stat-card fade-up" style="transition-delay:225ms">
+          <span class="stat-num" data-count="96">0</span>
+          <span class="stat-label">% impact metrics on educator behavior change</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       PHILOSOPHY
+  ═══════════════════════════════════════════════════ -->
+  <section class="philosophy" aria-label="How I work">
+    <div class="philosophy__inner">
+      <div class="philosophy__header fade-up">
+        <span class="eyebrow">How I Work</span>
+        <h2 class="philosophy__heading">
+          Partnership built on <em>trust</em>, joy, and rigor.
+        </h2>
+      </div>
+      <div class="philosophy__grid">
+        <div class="philosophy__item fade-up">
+          <p class="philosophy__num">01</p>
+          <div class="philosophy__divider"></div>
+          <h3>Trust</h3>
+          <p>I show up as a true partner — not a vendor. Every engagement begins with deep listening and a commitment to understanding your organization's unique context, culture, and constraints. Your goals become my goals.</p>
+        </div>
+        <div class="philosophy__item fade-up" style="transition-delay:100ms">
+          <p class="philosophy__num">02</p>
+          <div class="philosophy__divider"></div>
+          <h3>Joy</h3>
+          <p>Transformative work doesn't have to be joyless. I bring energy, creativity, and genuine enthusiasm to every engagement. When the work is meaningful, it shows — and it spreads to the teams and communities we serve.</p>
+        </div>
+        <div class="philosophy__item fade-up" style="transition-delay:200ms">
+          <p class="philosophy__num">03</p>
+          <div class="philosophy__divider"></div>
+          <h3>Rigor</h3>
+          <p>Vision without execution is just aspiration. I bring disciplined project management, evidence-based approaches, and a commitment to measurable outcomes — ensuring initiatives stay on schedule, on budget, and on mission.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       WHO WE SERVE
+  ═══════════════════════════════════════════════════ -->
+  <section class="serve" aria-label="Who I serve">
+    <div class="serve__inner">
+      <div class="serve__content fade-up">
+        <span class="eyebrow">Who I Serve</span>
+        <h2>Built for leaders doing <em>meaningful</em> work.</h2>
+        <p class="serve__body">
+          I partner with organizations at the intersection of education, equity, and social innovation — from grassroots nonprofits to national foundations, and everyone in between.
+        </p>
+        <ul class="serve__list">
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>K–12 school districts</strong> building equity-centered systems</span>
+          </li>
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>Charter networks &amp; Montessori ecosystems</strong> scaling innovative models</span>
+          </li>
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>Philanthropic foundations</strong> advancing racial equity and systems change</span>
+          </li>
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>Education nonprofits</strong> seeking strategic growth and operational sustainability</span>
+          </li>
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>Workforce &amp; career-connected learning organizations</strong> expanding economic mobility</span>
+          </li>
+          <li>
+            <span class="serve__check">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+            </span>
+            <span><strong>Cross-sector coalitions</strong> bridging education, community, and employer ecosystems</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="serve__visual fade-up" style="transition-delay:100ms">
+        <div class="serve__exp-card">
+          <div class="role">Founder &amp; Managing Director · 2025–Present</div>
+          <h4>Daisy Han Consulting LLC</h4>
+          <p>Partnering with philanthropic organizations, school systems, and cross-sector teams to translate high-level strategies into actionable initiatives that drive measurable social impact.</p>
+        </div>
+        <div class="serve__exp-card">
+          <div class="role">Vice President, Career Launch · 2025–Present</div>
+          <h4>Making Waves Education Foundation</h4>
+          <p>Architecting system-level strategy and programs to create accelerated, career-connected pathways for low-income students through K–12, postsecondary, and employer ecosystems.</p>
+        </div>
+        <div class="serve__exp-card">
+          <div class="role">Founder &amp; CEO · 2017–2024</div>
+          <h4>Embracing Equity</h4>
+          <p>Founded and scaled a national education nonprofit — 35+ person team, 660,000+ students, 48 states, $2.5M+ raised, 96% impact metrics, 80+ Net Promoter Score.</p>
+        </div>
+        <div class="serve__exp-card">
+          <div class="role">Partner · 2016–2020</div>
+          <h4>Wildflower Montessori Schools</h4>
+          <p>Supported 80+ Teachers of Color in designing and launching schools in their own communities. Helped secure $3M in funding for underserved community school startups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       BACKGROUND / EDUCATION
+  ═══════════════════════════════════════════════════ -->
+  <section class="background" aria-label="Education and credentials">
+    <div class="background__inner">
+      <div class="background__header fade-up">
+        <span class="eyebrow">Credentials</span>
+        <h2 class="background__heading">Experience that <em>spans</em> sectors.</h2>
+      </div>
+      <div class="background__grid">
+        <div class="background__col fade-up">
+          <h3>Education</h3>
+          <div class="edu-item">
+            <h4>Harvard University</h4>
+            <p class="degree">M.Ed. in Educational Equity</p>
+            <p class="year">2016–2017</p>
+          </div>
+          <div class="edu-item">
+            <h4>Tufts University</h4>
+            <p class="degree">Nonprofit Management</p>
+            <p class="year">2017</p>
+          </div>
+          <div class="edu-item">
+            <h4>St. Mary's College of California</h4>
+            <p class="degree">M.A. in Education, <em>summa cum laude</em></p>
+            <p class="year">2011</p>
+          </div>
+          <div class="edu-item">
+            <h4>University of California, Berkeley</h4>
+            <p class="degree">B.A. in Interdisciplinary &amp; Ethnic Studies, <em>summa cum laude</em></p>
+            <p class="year">2008</p>
+          </div>
+        </div>
+        <div class="fade-up" style="transition-delay:100ms">
+          <div class="background__col">
+            <h3>Certifications &amp; Affiliations</h3>
+            <ul class="cert-list">
+              <li>Montessori School Leadership (AMS): Lower El, Upper El, Secondary I–II</li>
+              <li>Teaching for Equity Micro-Credential</li>
+              <li>Wilderness First Responder (NOLS), CPR/First Aid (ARC)</li>
+            </ul>
+          </div>
+          <div class="background__col" style="margin-top:var(--space-8)">
+            <h3>Awards &amp; Community</h3>
+            <ul class="cert-list">
+              <li>40 Under 40 Powerlist, Leaders of Color Magazine (2024)</li>
+              <li>2025 Best Place for Working Parents Award, Embracing Equity</li>
+              <li>Founding Member, APIA Ed Collective</li>
+              <li>Member, Education Leaders of Color</li>
+              <li>Founding Board Member, Montessori for Social Justice</li>
+              <li>Former Executive Board Member, The Mosaic Project</li>
+            </ul>
+          </div>
+          <div class="background__col" style="margin-top:var(--space-8)">
+            <h3>Core Skills</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)">
+              <span class="tag">Organizational Strategy</span>
+              <span class="tag">Racial &amp; Social Justice</span>
+              <span class="tag">Narrative Strategy</span>
+              <span class="tag">Program Design</span>
+              <span class="tag">Cross-functional Leadership</span>
+              <span class="tag">Public Speaking</span>
+              <span class="tag">Curriculum Design</span>
+              <span class="tag">Facilitation</span>
+              <span class="tag">Community Engagement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCHEDULE
+  ═══════════════════════════════════════════════════ -->
+  <section class="schedule" id="schedule" aria-label="Schedule time with Daisy">
+    <div class="schedule__inner">
+      <div class="schedule__header fade-up">
+        <span class="eyebrow">Let's Connect</span>
+        <h2 class="schedule__heading">Schedule time with <em>Daisy</em>.</h2>
+        <p class="schedule__subhead">
+          Ready to explore working together? Find a time that works for you — a 30-minute discovery call is the best first step.
+        </p>
+      </div>
+      <div class="schedule__embed fade-up" style="transition-delay:100ms">
+        <iframe
+          src="https://app.hubble.social/daisyhan"
+          title="Schedule a meeting with Daisy Han"
+          loading="lazy"
+          allow="camera; microphone; fullscreen; payment"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       CONTACT
+  ═══════════════════════════════════════════════════ -->
+  <section class="contact" id="contact" aria-label="Contact">
+    <div class="contact__inner">
+      <div class="contact__content fade-up">
+        <span class="eyebrow">Get in Touch</span>
+        <h2>Ready to work <em>together</em>?</h2>
+        <p class="contact__body">
+          Whether you have a specific project in mind or are still exploring how consulting support could help your organization, I'd love to hear from you.
+        </p>
+        <div class="contact__details">
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <a href="mailto:daisyheyjinhan@gmail.com">daisyheyjinhan@gmail.com</a>
+          </div>
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Makawao, Hawaii · Remote-first</span>
+          </div>
+          <div class="contact__detail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+            <a href="https://linkedin.com/in/christinedaisyhan" target="_blank" rel="noopener noreferrer">linkedin.com/in/christinedaisyhan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact__form fade-up" style="transition-delay:100ms">
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="firstName">First Name</label>
+              <input class="form-input" type="text" id="firstName" name="firstName" placeholder="Jane" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastName">Last Name</label>
+              <input class="form-input" type="text" id="lastName" name="lastName" placeholder="Smith" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-input" type="email" id="email" name="email" placeholder="jane@organization.org" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="org">Organization</label>
+            <input class="form-input" type="text" id="org" name="org" placeholder="Your school, foundation, or nonprofit">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="message">Message</label>
+            <textarea class="form-input" id="message" name="message" placeholder="Tell me about your work and what you're hoping to accomplish…" required></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+              Send Message →
+            </button>
+          </div>
+          <div class="form-success" id="formSuccess">
+            Thank you! I'll be in touch within 2 business days.
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════ -->
+  <footer class="footer" aria-label="Footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <div class="footer__logo">
+            <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <clipPath id="footer-logo-clip"><circle cx="50" cy="50" r="50"/></clipPath>
+              <g clip-path="url(#footer-logo-clip)">
+                <rect x="0" y="0"    width="100" height="14.3" fill="#F2C02E"/>
+                <rect x="0" y="14.3" width="100" height="14.3" fill="#F07A28"/>
+                <rect x="0" y="28.6" width="100" height="14.3" fill="#E84E28"/>
+                <rect x="0" y="42.9" width="100" height="14.3" fill="#E02458"/>
+                <rect x="0" y="57.1" width="100" height="14.3" fill="#28A880"/>
+                <rect x="0" y="71.4" width="100" height="14.3" fill="#2870BC"/>
+                <rect x="0" y="85.7" width="100" height="14.3" fill="#1C3870"/>
+              </g>
+            </svg>
+            <span class="footer__logo-text">Daisy Han Consulting</span>
+          </div>
+          <p class="footer__tagline">
+            Partnering with school systems, foundations, and mission-driven organizations to translate ambitious visions into measurable social impact.
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul class="footer__links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#impact">Impact</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Services</h4>
+          <ul class="footer__links">
+            <li><a href="#services">Strategic Planning</a></li>
+            <li><a href="#services">Workshop Facilitation</a></li>
+            <li><a href="#services">Program Design</a></li>
+            <li><a href="#services">Capacity Building</a></li>
+            <li><a href="#services">Impact Evaluation</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Connect</h4>
+          <ul class="footer__links">
+            <li><a href="mailto:daisyheyjinhan@gmail.com">Email Daisy</a></li>
+            <li><a href="https://linkedin.com/in/christinedaisyhan" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://app.hubble.social/daisyhan" target="_blank" rel="noopener noreferrer">Schedule a Call</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copy">
+          &copy; 2025 Daisy Han Consulting LLC · Makawao, Hawaii · All rights reserved.
+        </p>
+        <div class="footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Nav scroll behavior ──────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 24);
+    }, { passive: true });
+
+    // ── Mobile menu ──────────────────────────────────────
+    const menuBtn = document.getElementById('menuBtn');
+    const drawer  = document.getElementById('drawer');
+    let isOpen = false;
+
+    menuBtn.addEventListener('click', () => {
+      isOpen = !isOpen;
+      drawer.classList.toggle('open', isOpen);
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    function closeDrawer() {
+      isOpen = false;
+      drawer.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    // ── Scroll fade-in ───────────────────────────────────
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          fadeObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    fadeEls.forEach(el => fadeObs.observe(el));
+
+    // ── Count-up animation ───────────────────────────────
+    function animateCount(el, target, duration = 1800, suffix = '+') {
+      const start = performance.now();
+      const update = (now) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      };
+      requestAnimationFrame(update);
+    }
+
+    const statNums = document.querySelectorAll('[data-count]');
+    const countObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el     = e.target;
+          const target = parseInt(el.dataset.count, 10);
+          const suffix = el.dataset.suffix ?? (el.nextElementSibling?.textContent ?? '+');
+          // determine suffix from sibling or none
+          const nextSib = el.nextElementSibling;
+          if (nextSib && nextSib.classList.contains('hero__stat-num')) {
+            // hero cards — count up, leave "+" in next sibling
+            animateCount(el, target, 1600, '');
+          } else {
+            // stats section
+            animateCount(el, target, 2000, '+');
+          }
+          countObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statNums.forEach(el => countObs.observe(el));
+
+    // ── Contact form ─────────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      // Simulate submission
+      setTimeout(() => {
+        document.getElementById('formSuccess').style.display = 'block';
+        btn.textContent = 'Sent ✓';
+        btn.style.background = 'var(--color-success)';
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

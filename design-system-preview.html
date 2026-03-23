@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daisy Han Consulting — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      /* Brand Palette */
+      --color-sun-gold:    #F2C02E;
+      --color-sun-amber:   #F07A28;
+      --color-sun-coral:   #E84E28;
+      --color-sun-crimson: #E02458;
+      --color-sun-teal:    #28A880;
+      --color-sun-blue:    #2870BC;
+      --color-sun-navy:    #1C3870;
+
+      /* Neutral Palette */
+      --color-taupe:  #AEA290;
+      --color-linen:  #DDD5C4;
+      --color-cream:  #F5F0E8;
+      --color-white:  #FFFFFF;
+      --color-ink:    #1A1714;
+      --color-slate:  #4A4540;
+      --color-mist:   #7A746E;
+
+      /* Semantic */
+      --color-primary:        #28A880;
+      --color-primary-dark:   #1C7A60;
+      --color-accent:         #F2C02E;
+      --color-accent-warm:    #F07A28;
+      --color-surface:        #F5F0E8;
+      --color-surface-raised: #DDD5C4;
+      --color-error:          #E02458;
+      --color-success:        #28A880;
+      --color-text:           #1A1714;
+      --color-text-secondary: #4A4540;
+      --color-text-muted:     #7A746E;
+      --color-border:         #DDD5C4;
+
+      /* Typography */
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+
+      /* Spacing */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-5:  24px;
+      --space-6:  32px;
+      --space-7:  48px;
+      --space-8:  64px;
+      --space-9:  96px;
+      --space-10: 128px;
+      --space-11: 160px;
+      --space-12: 200px;
+
+      /* Shadows */
+      --shadow-subtle:  0 1px 3px rgba(26,23,20,0.06), 0 1px 2px rgba(26,23,20,0.04);
+      --shadow-card:    0 2px 8px rgba(26,23,20,0.06), 0 8px 24px rgba(26,23,20,0.08);
+      --shadow-raised:  0 4px 16px rgba(26,23,20,0.08), 0 16px 40px rgba(26,23,20,0.10);
+      --shadow-teal:    0 6px 20px rgba(40,168,128,0.20);
+      --shadow-gold:    0 6px 20px rgba(242,192,46,0.25);
+
+      /* Radius */
+      --radius-sm:   4px;
+      --radius-md:   8px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-fast:     150ms cubic-bezier(0.4,0,0.2,1);
+      --transition-standard: 300ms cubic-bezier(0.4,0,0.2,1);
+      --transition-spring:   300ms cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-cream);
+      color: var(--color-ink);
+      font-size: 16px;
+      line-height: 1.7;
+      width: 1280px;
+    }
+
+    /* ── Layout ── */
+    .ds-page {
+      width: 1280px;
+      padding: 64px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+
+    /* ── Header ── */
+    .ds-header {
+      border-bottom: 2px solid var(--color-sun-teal);
+      padding-bottom: 40px;
+    }
+    .ds-header__eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-sun-teal);
+      margin-bottom: 12px;
+    }
+    .ds-header__title {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--color-sun-navy);
+    }
+    .ds-header__title em {
+      font-style: italic;
+      color: var(--color-sun-teal);
+    }
+    .ds-header__meta {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--color-mist);
+    }
+
+    /* ── Section wrapper ── */
+    .ds-section { display: flex; flex-direction: column; gap: 32px; }
+    .ds-section__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-sun-teal);
+    }
+    .ds-section__title {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--color-sun-navy);
+      margin-top: 4px;
+    }
+
+    /* ── Color Tokens ── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .color-swatch__chip {
+      height: 80px;
+      width: 100%;
+    }
+    .color-swatch__info {
+      background: var(--color-white);
+      padding: 10px 12px;
+    }
+    .color-swatch__name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin-bottom: 2px;
+    }
+    .color-swatch__hex {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-mist);
+    }
+    .color-swatch__token {
+      font-size: 10px;
+      color: var(--color-taupe);
+      margin-top: 2px;
+      word-break: break-all;
+    }
+
+    .neutral-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: -16px;
+    }
+
+    .semantic-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .semantic-swatch {
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .semantic-swatch__chip {
+      height: 48px;
+      width: 100%;
+    }
+    .semantic-swatch__info {
+      background: var(--color-white);
+      padding: 8px 10px;
+    }
+    .semantic-swatch__token {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-sun-navy);
+      font-weight: 500;
+    }
+    .semantic-swatch__hex {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-mist);
+      margin-top: 2px;
+    }
+
+    /* ── Typography ── */
+    .type-stack { display: flex; flex-direction: column; gap: 0; }
+    .type-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 32px;
+      align-items: center;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--color-linen);
+    }
+    .type-row:first-child { border-top: 1px solid var(--color-linen); }
+    .type-row__meta { display: flex; flex-direction: column; gap: 4px; }
+    .type-row__token {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-sun-teal);
+      font-weight: 500;
+    }
+    .type-row__spec {
+      font-size: 11px;
+      color: var(--color-mist);
+      line-height: 1.5;
+    }
+    .type-sample { color: var(--color-ink); }
+
+    /* ── Spacing ── */
+    .spacing-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .spacing-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--color-linen);
+    }
+    .spacing-row:first-child { border-top: 1px solid var(--color-linen); }
+    .spacing-row__token {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-sun-teal);
+      width: 100px;
+      flex-shrink: 0;
+    }
+    .spacing-row__value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-mist);
+      width: 60px;
+      flex-shrink: 0;
+    }
+    .spacing-row__bar-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .spacing-row__bar {
+      height: 16px;
+      background: var(--color-sun-teal);
+      opacity: 0.25;
+      border-radius: 2px;
+    }
+    .spacing-row__bar-inner {
+      height: 16px;
+      background: var(--color-sun-teal);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── Buttons ── */
+    .component-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .component-group { display: flex; flex-direction: column; gap: 16px; }
+    .component-group__label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-mist);
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    .btn--primary {
+      background: var(--color-primary);
+      color: var(--color-white);
+      box-shadow: var(--shadow-teal);
+    }
+    .btn--secondary {
+      background: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .btn--accent {
+      background: var(--color-accent);
+      color: var(--color-ink);
+      box-shadow: var(--shadow-gold);
+    }
+    .btn--sm { font-size: 14px; padding: 10px 20px; }
+    .btn--lg { font-size: 18px; padding: 16px 36px; }
+    .btn--disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Cards ── */
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    .card--service {
+      background: var(--color-cream);
+      border: 1px solid var(--color-linen);
+      padding: 32px 28px;
+    }
+    .card--service__icon {
+      width: 48px;
+      height: 48px;
+      background: var(--color-linen);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .card--service__icon-inner {
+      width: 24px;
+      height: 24px;
+      background: var(--color-sun-teal);
+      border-radius: 4px;
+      opacity: 0.7;
+    }
+    .card--service__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--color-sun-navy);
+      margin-bottom: 8px;
+    }
+    .card--service__desc {
+      font-size: 14px;
+      color: var(--color-slate);
+      line-height: 1.65;
+    }
+
+    .card--stat {
+      background: transparent;
+      box-shadow: none;
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .card--stat__number {
+      font-family: var(--font-mono);
+      font-size: 56px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--color-sun-navy);
+    }
+    .card--stat__label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-mist);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card--testimonial {
+      background: var(--color-taupe);
+      padding: 32px 28px;
+    }
+    .card--testimonial__quote {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--color-white);
+      margin-bottom: 20px;
+    }
+    .card--testimonial__attribution {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+    }
+
+    .card--team {
+      background: var(--color-white);
+      display: flex;
+      flex-direction: column;
+    }
+    .card--team__photo {
+      height: 160px;
+      background: linear-gradient(135deg, var(--color-linen), var(--color-taupe));
+    }
+    .card--team__info {
+      padding: 20px;
+    }
+    .card--team__name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--color-sun-navy);
+    }
+    .card--team__role {
+      font-size: 13px;
+      color: var(--color-mist);
+      margin-top: 4px;
+    }
+
+    /* ── Form ── */
+    .form-demo {
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+      max-width: 560px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-slate);
+    }
+    .form-input {
+      background: var(--color-cream);
+      border: 1px solid var(--color-linen);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--color-ink);
+      outline: none;
+      width: 100%;
+    }
+    .form-input--focus {
+      border-color: var(--color-sun-teal);
+      box-shadow: 0 0 0 2px rgba(40,168,128,0.2);
+    }
+    .form-input--error {
+      border-color: var(--color-error);
+    }
+    .form-error-text {
+      font-size: 12px;
+      color: var(--color-error);
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ── Shadows ── */
+    .shadow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+    .shadow-card-demo {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .shadow-card-demo__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-sun-teal);
+      font-weight: 500;
+    }
+    .shadow-card-demo__spec {
+      font-size: 11px;
+      color: var(--color-mist);
+      line-height: 1.5;
+    }
+
+    /* ── Radius ── */
+    .radius-grid {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .radius-demo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .radius-demo__shape {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--color-sun-teal), var(--color-sun-blue));
+    }
+    .radius-demo__token {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-sun-teal);
+    }
+    .radius-demo__value {
+      font-size: 11px;
+      color: var(--color-mist);
+      margin-top: -8px;
+    }
+
+    /* ── Divider ── */
+    .ds-divider {
+      height: 1px;
+      background: var(--color-linen);
+    }
+
+    /* ── Sub-section heading ── */
+    .sub-heading {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--color-sun-navy);
+      margin-bottom: 16px;
+    }
+
+    /* ── Tags / Badges ── */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      background: var(--color-linen);
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-slate);
+    }
+    .tag--teal { background: rgba(40,168,128,0.12); color: var(--color-sun-teal); }
+    .tag--gold { background: rgba(242,192,46,0.15); color: #9A7A00; }
+
+    /* ── Pull Quote ── */
+    .pull-quote {
+      border-left: 4px solid var(--color-sun-teal);
+      padding: 16px 28px;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--color-sun-navy);
+    }
+
+    /* ── Section Eyebrow ── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-sun-teal);
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--color-sun-teal);
+    }
+
+    /* ── Animation specs ── */
+    .anim-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .anim-card {
+      background: var(--color-white);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-subtle);
+    }
+    .anim-card__label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-sun-teal);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .anim-card__value {
+      font-size: 12px;
+      color: var(--color-slate);
+      line-height: 1.5;
+    }
+
+    /* ── Nav preview ── */
+    .nav-preview {
+      background: var(--color-cream);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-raised);
+    }
+    .nav-bar {
+      height: 72px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-linen);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--color-sun-navy);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+    .nav-link {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--color-slate);
+    }
+    .nav-link--active { color: var(--color-primary); font-weight: 500; }
+    .nav-cta {
+      background: var(--color-primary);
+      color: var(--color-white);
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ── Hero preview ── */
+    .hero-preview {
+      background: linear-gradient(135deg, var(--color-cream) 60%, rgba(221,213,196,0.4));
+      padding: 80px 80px 80px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-preview__content { max-width: 600px; position: relative; z-index: 1; }
+    .hero-preview__heading {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--color-sun-navy);
+      margin-bottom: 20px;
+    }
+    .hero-preview__heading em {
+      font-style: italic;
+      color: var(--color-sun-teal);
+    }
+    .hero-preview__sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--color-slate);
+      line-height: 1.75;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+    .hero-preview__ctas { display: flex; gap: 16px; align-items: center; }
+    .hero-preview__deco {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--color-sun-gold) 0deg 51deg,
+        var(--color-sun-amber) 51deg 102deg,
+        var(--color-sun-coral) 102deg 153deg,
+        var(--color-sun-crimson) 153deg 204deg,
+        var(--color-sun-teal) 204deg 255deg,
+        var(--color-sun-blue) 255deg 306deg,
+        var(--color-sun-navy) 306deg 360deg
+      );
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+<div class="ds-page">
+
+  <!-- ── HEADER ── -->
+  <header class="ds-header">
+    <div class="ds-header__eyebrow">Design System · Single Source of Truth</div>
+    <h1 class="ds-header__title">Daisy Han Consulting<br><em>Design Tokens & Components</em></h1>
+    <p class="ds-header__meta">Brand: Daisy Han Consulting LLC · Generated: 2026-03-22 · Version 1.0</p>
+  </header>
+
+  <!-- ── 1. COLOR TOKENS ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">01 · Color System</div>
+      <h2 class="ds-section__title">Color Tokens</h2>
+    </div>
+
+    <div>
+      <p class="sub-heading">Brand Palette — Sunrise Stripes (top → bottom)</p>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#F2C02E"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Gold</div>
+            <div class="color-swatch__hex">#F2C02E</div>
+            <div class="color-swatch__token">--color-sun-gold</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#F07A28"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Amber</div>
+            <div class="color-swatch__hex">#F07A28</div>
+            <div class="color-swatch__token">--color-sun-amber</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#E84E28"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Coral</div>
+            <div class="color-swatch__hex">#E84E28</div>
+            <div class="color-swatch__token">--color-sun-coral</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#E02458"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Crimson</div>
+            <div class="color-swatch__hex">#E02458</div>
+            <div class="color-swatch__token">--color-sun-crimson</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#28A880"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Teal</div>
+            <div class="color-swatch__hex">#28A880</div>
+            <div class="color-swatch__token">--color-sun-teal</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#2870BC"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Blue</div>
+            <div class="color-swatch__hex">#2870BC</div>
+            <div class="color-swatch__token">--color-sun-blue</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#1C3870"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Sun Navy</div>
+            <div class="color-swatch__hex">#1C3870</div>
+            <div class="color-swatch__token">--color-sun-navy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="sub-heading">Neutral Palette — Warm Taupe Background</p>
+      <div class="neutral-grid">
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#AEA290; border:1px solid #ddd"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Warm Taupe</div>
+            <div class="color-swatch__hex">#AEA290</div>
+            <div class="color-swatch__token">--color-taupe</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#DDD5C4; border:1px solid #ccc"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Warm Linen</div>
+            <div class="color-swatch__hex">#DDD5C4</div>
+            <div class="color-swatch__token">--color-linen</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#F5F0E8; border:1px solid #ddd"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Cream</div>
+            <div class="color-swatch__hex">#F5F0E8</div>
+            <div class="color-swatch__token">--color-cream</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#FFFFFF; border:1px solid #ddd"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">White</div>
+            <div class="color-swatch__hex">#FFFFFF</div>
+            <div class="color-swatch__token">--color-white</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#1A1714"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Deep Ink</div>
+            <div class="color-swatch__hex">#1A1714</div>
+            <div class="color-swatch__token">--color-ink</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#4A4540"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Warm Slate</div>
+            <div class="color-swatch__hex">#4A4540</div>
+            <div class="color-swatch__token">--color-slate</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background:#7A746E"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__name">Mist</div>
+            <div class="color-swatch__hex">#7A746E</div>
+            <div class="color-swatch__token">--color-mist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="sub-heading">Semantic Tokens</p>
+      <div class="semantic-grid">
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#28A880"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-primary</div><div class="semantic-swatch__hex">#28A880 · Primary actions</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#1C7A60"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-primary-dark</div><div class="semantic-swatch__hex">#1C7A60 · Hover on primary</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#F2C02E"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-accent</div><div class="semantic-swatch__hex">#F2C02E · Highlights, badges</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#F07A28"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-accent-warm</div><div class="semantic-swatch__hex">#F07A28 · Secondary accent</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#F5F0E8; border:1px solid #ddd"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-surface</div><div class="semantic-swatch__hex">#F5F0E8 · Page background</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#DDD5C4; border:1px solid #ccc"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-surface-raised</div><div class="semantic-swatch__hex">#DDD5C4 · Elevated sections</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#E02458"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-error</div><div class="semantic-swatch__hex">#E02458 · Form errors</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#28A880"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-success</div><div class="semantic-swatch__hex">#28A880 · Success states</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#1A1714"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-text</div><div class="semantic-swatch__hex">#1A1714 · Primary text</div></div></div>
+        <div class="semantic-swatch"><div class="semantic-swatch__chip" style="background:#4A4540"></div><div class="semantic-swatch__info"><div class="semantic-swatch__token">--color-text-secondary</div><div class="semantic-swatch__hex">#4A4540 · Secondary text</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 2. TYPOGRAPHY ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">02 · Typography</div>
+      <h2 class="ds-section__title">Type System</h2>
+    </div>
+
+    <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px 28px; box-shadow:var(--shadow-subtle);">
+      <p class="sub-heading" style="margin-bottom:12px;">Font Families</p>
+      <div style="display:flex; gap:40px;">
+        <div>
+          <div style="font-size:11px; color:var(--color-mist); margin-bottom:4px; font-family:var(--font-mono);">--font-display</div>
+          <div style="font-family:var(--font-display); font-size:28px; font-weight:500;">Cormorant Garamond</div>
+          <div style="font-family:var(--font-display); font-size:18px; font-style:italic; color:var(--color-mist);">Headings, hero, editorial</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--color-mist); margin-bottom:4px; font-family:var(--font-mono);">--font-body</div>
+          <div style="font-family:var(--font-body); font-size:28px; font-weight:400;">DM Sans</div>
+          <div style="font-family:var(--font-body); font-size:18px; font-weight:300; color:var(--color-mist);">Body copy, UI labels, navigation</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--color-mist); margin-bottom:4px; font-family:var(--font-mono);">--font-mono</div>
+          <div style="font-family:var(--font-mono); font-size:28px; font-weight:300;">DM Mono</div>
+          <div style="font-family:var(--font-mono); font-size:18px; font-weight:300; color:var(--color-mist);">Statistics, code, numbers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-hero</div>
+          <div class="type-row__spec">Display · 88px · wt 500<br>lh 1.05 · ls -0.03em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display); font-size:64px; font-weight:500; line-height:1.05; letter-spacing:-0.03em; color:var(--color-sun-navy);">Hero Heading</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h1</div>
+          <div class="type-row__spec">Display · 64px · wt 500<br>lh 1.1 · ls -0.025em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display); font-size:52px; font-weight:500; line-height:1.1; letter-spacing:-0.025em; color:var(--color-sun-navy);">Page Heading H1</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h2</div>
+          <div class="type-row__spec">Display · 44px · wt 500<br>lh 1.15 · ls -0.02em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display); font-size:40px; font-weight:500; line-height:1.15; letter-spacing:-0.02em; color:var(--color-sun-navy);">Section Heading H2</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h3</div>
+          <div class="type-row__spec">Display · 32px · wt 500<br>lh 1.2 · ls -0.015em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display); font-size:30px; font-weight:500; line-height:1.2; letter-spacing:-0.015em; color:var(--color-sun-navy);">Subsection Heading H3</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h4</div>
+          <div class="type-row__spec">Display · 20px · wt 500<br>lh 1.3 · ls -0.01em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display); font-size:20px; font-weight:500; line-height:1.3; letter-spacing:-0.01em; color:var(--color-sun-navy);">Card Title H4</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h5</div>
+          <div class="type-row__spec">Body · 17px · wt 600<br>lh 1.4 · ls 0.02em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:17px; font-weight:600; line-height:1.4; letter-spacing:0.02em;">Label Heading H5</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-h6</div>
+          <div class="type-row__spec">Body · 14px · wt 600<br>lh 1.4 · ls 0.06em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:14px; font-weight:600; line-height:1.4; letter-spacing:0.06em; text-transform:uppercase;">Small Label H6</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-body-lg</div>
+          <div class="type-row__spec">Body · 18px · wt 300<br>lh 1.75</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:18px; font-weight:300; line-height:1.75;">Body large — used for introductory paragraphs and lead copy. Generous line-height for readability.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-body</div>
+          <div class="type-row__spec">Body · 16px · wt 400<br>lh 1.7</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:16px; font-weight:400; line-height:1.7;">Default body text — used for most paragraph content throughout the site. Comfortable reading size.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-body-sm</div>
+          <div class="type-row__spec">Body · 14px · wt 400<br>lh 1.65</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:14px; font-weight:400; line-height:1.65;">Small body text for secondary information, card descriptions, and supporting details.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-caption</div>
+          <div class="type-row__spec">Body · 12px · wt 500<br>lh 1.5 · ls 0.04em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:12px; font-weight:500; line-height:1.5; letter-spacing:0.04em; color:var(--color-mist);">Caption text · Photo credits · Footnotes</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-label</div>
+          <div class="type-row__spec">Body · 11px · wt 600<br>lh 1.4 · ls 0.1em · UPPERCASE</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body); font-size:11px; font-weight:600; line-height:1.4; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-sun-teal);">Section Label · Eyebrow · Tag</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">
+          <div class="type-row__token">--text-stat</div>
+          <div class="type-row__spec">Mono · 64px · wt 300<br>lh 1 · ls -0.03em</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-mono); font-size:56px; font-weight:300; line-height:1; letter-spacing:-0.03em; color:var(--color-sun-navy);">250+</div>
+      </div>
+    </div>
+
+    <!-- Typographic treatments -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;">
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); margin-bottom:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">Italic Serif Accent</div>
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:500; line-height:1.2; color:var(--color-sun-navy);">Strategy for <em style="color:var(--color-sun-teal);">meaningful</em> change</div>
+      </div>
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); margin-bottom:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">Uppercase Eyebrow Label</div>
+        <div class="eyebrow">Services We Offer</div>
+      </div>
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); margin-bottom:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">Stat Numeral</div>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; gap:4px;">
+          <div style="font-family:var(--font-mono); font-size:48px; font-weight:300; letter-spacing:-0.03em; line-height:1; color:var(--color-sun-navy);">85%</div>
+          <div style="font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-mist);">Client Retention Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 3. SPACING ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">03 · Spacing & Layout</div>
+      <h2 class="ds-section__title">Spacing Scale</h2>
+    </div>
+
+    <div class="spacing-grid">
+      <div class="spacing-row"><div class="spacing-row__token">--space-1</div><div class="spacing-row__value">4px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:4px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-2</div><div class="spacing-row__value">8px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:8px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-3</div><div class="spacing-row__value">12px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:12px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-4</div><div class="spacing-row__value">16px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:16px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-5</div><div class="spacing-row__value">24px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:24px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-6</div><div class="spacing-row__value">32px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:32px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-7</div><div class="spacing-row__value">48px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:48px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-8</div><div class="spacing-row__value">64px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:64px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-9</div><div class="spacing-row__value">96px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:96px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-10</div><div class="spacing-row__value">128px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:128px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-11</div><div class="spacing-row__value">160px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:160px"></div></div></div>
+      <div class="spacing-row"><div class="spacing-row__token">--space-12</div><div class="spacing-row__value">200px</div><div class="spacing-row__bar-wrap"><div class="spacing-row__bar-inner" style="width:200px"></div></div></div>
+    </div>
+
+    <!-- Grid info -->
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">Grid System</div>
+        <div style="font-size:14px; color:var(--color-slate); line-height:1.8;">
+          12 columns<br>
+          Gutter: clamp(16px, 2.5vw, 32px)<br>
+          Max-width: 1280px<br>
+          Padding: clamp(16px, 5vw, 80px)
+        </div>
+      </div>
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">Breakpoints</div>
+        <div style="font-size:14px; color:var(--color-slate); line-height:1.8; font-family:var(--font-mono);">
+          sm: 480px<br>
+          md: 768px<br>
+          lg: 1024px<br>
+          xl: 1280px<br>
+          2xl: 1536px
+        </div>
+      </div>
+      <div style="background:var(--color-white); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-subtle);">
+        <div style="font-size:11px; color:var(--color-mist); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px;">Section Padding</div>
+        <div style="font-size:14px; color:var(--color-slate); line-height:1.8; font-family:var(--font-mono);">
+          Y: clamp(64px, 8vw, 120px)<br>
+          X: clamp(16px, 5vw, 80px)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 4. COMPONENTS ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">04 · Components</div>
+      <h2 class="ds-section__title">Component Library</h2>
+    </div>
+
+    <!-- Navigation -->
+    <div>
+      <p class="sub-heading">Navigation Bar</p>
+      <div class="nav-preview">
+        <div class="nav-bar">
+          <div class="nav-logo">Daisy Han</div>
+          <div class="nav-links">
+            <span class="nav-link nav-link--active">About</span>
+            <span class="nav-link">Services</span>
+            <span class="nav-link">Impact</span>
+            <span class="nav-link">Contact</span>
+          </div>
+          <div class="nav-cta">Work With Us</div>
+        </div>
+      </div>
+      <div style="margin-top:12px; font-size:13px; color:var(--color-mist);">Height: 72px desktop / 60px mobile · Transparent on hero → solid cream + shadow on scroll · Mobile: hamburger drawer</div>
+    </div>
+
+    <!-- Buttons -->
+    <div>
+      <p class="sub-heading">Buttons</p>
+      <div class="component-grid">
+        <div class="component-group">
+          <div class="component-group__label">Variants</div>
+          <div class="btn-row">
+            <button class="btn btn--primary">Primary CTA</button>
+            <button class="btn btn--secondary">Secondary</button>
+            <button class="btn btn--ghost">Ghost Link</button>
+            <button class="btn btn--accent">Accent CTA</button>
+          </div>
+        </div>
+        <div class="component-group">
+          <div class="component-group__label">Sizes</div>
+          <div class="btn-row">
+            <button class="btn btn--primary btn--sm">Small · 10/20px</button>
+            <button class="btn btn--primary">Default · 12/28px</button>
+            <button class="btn btn--primary btn--lg">Large · 16/36px</button>
+          </div>
+        </div>
+        <div class="component-group">
+          <div class="component-group__label">States</div>
+          <div class="btn-row">
+            <button class="btn btn--primary">Default</button>
+            <button class="btn btn--primary" style="transform:translateY(-2px); box-shadow:0 6px 20px rgba(40,168,128,0.25);">Hover (lift)</button>
+            <button class="btn btn--primary" style="transform:translateY(1px); box-shadow:none;">Active (press)</button>
+            <button class="btn btn--primary" style="outline:2px solid var(--color-sun-teal); outline-offset:2px;">Focus Ring</button>
+            <button class="btn btn--primary btn--disabled">Disabled</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div>
+      <p class="sub-heading">Cards</p>
+      <div class="cards-row">
+        <div class="card card--service">
+          <div class="card--service__icon"><div class="card--service__icon-inner"></div></div>
+          <div class="card--service__title">Strategic Planning</div>
+          <div class="card--service__desc">Long-term organizational strategy to drive meaningful outcomes and sustainable growth for mission-driven clients.</div>
+        </div>
+        <div class="card card--stat">
+          <div class="card--stat__number">250+</div>
+          <div class="card--stat__label">Projects Delivered</div>
+        </div>
+        <div class="card card--testimonial">
+          <div class="card--testimonial__quote">"Daisy's guidance transformed how we approach stakeholder engagement and community impact."</div>
+          <div class="card--testimonial__attribution">— Jane Smith, Executive Director</div>
+        </div>
+        <div class="card card--team">
+          <div class="card--team__photo"></div>
+          <div class="card--team__info">
+            <div class="card--team__name">Daisy Han</div>
+            <div class="card--team__role">Principal Consultant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags & Micro-components -->
+    <div>
+      <p class="sub-heading">Tags, Badges & Micro-components</p>
+      <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center; padding:28px; background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-subtle);">
+        <span class="tag">Strategy</span>
+        <span class="tag">Consulting</span>
+        <span class="tag tag--teal">Active Project</span>
+        <span class="tag tag--gold">Featured</span>
+        <div class="eyebrow">Section Eyebrow</div>
+        <div class="pull-quote" style="flex:1; min-width:300px; border-left-color:var(--color-sun-gold);">Strategy that creates <em>lasting</em> change.</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div>
+      <p class="sub-heading">Form Elements</p>
+      <div class="form-demo">
+        <div style="font-family:var(--font-display); font-size:28px; font-weight:500; color:var(--color-sun-navy); margin-bottom:24px;">Ready to work together?</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" type="text" placeholder="Jane Smith" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input form-input--focus" type="email" value="jane@org.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organization</label>
+          <input class="form-input" type="text" placeholder="Your Organization" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" placeholder="Tell us about your project..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Error State</label>
+          <input class="form-input form-input--error" type="text" value="invalid@" />
+          <span class="form-error-text">Please enter a valid email address.</span>
+        </div>
+        <button class="btn btn--primary" style="width:100%; justify-content:center;">Send Message</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 5. SHADOWS & RADIUS ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">05 · Depth & Radius</div>
+      <h2 class="ds-section__title">Shadows & Border Radius</h2>
+    </div>
+
+    <div>
+      <p class="sub-heading">Shadow Tokens</p>
+      <div class="shadow-grid">
+        <div class="shadow-card-demo" style="box-shadow:0 1px 3px rgba(26,23,20,0.06), 0 1px 2px rgba(26,23,20,0.04);">
+          <div class="shadow-card-demo__label">--shadow-subtle</div>
+          <div class="shadow-card-demo__spec">0 1px 3px rgba(26,23,20,0.06)<br>0 1px 2px rgba(26,23,20,0.04)</div>
+        </div>
+        <div class="shadow-card-demo" style="box-shadow:0 2px 8px rgba(26,23,20,0.06), 0 8px 24px rgba(26,23,20,0.08);">
+          <div class="shadow-card-demo__label">--shadow-card</div>
+          <div class="shadow-card-demo__spec">0 2px 8px rgba(26,23,20,0.06)<br>0 8px 24px rgba(26,23,20,0.08)</div>
+        </div>
+        <div class="shadow-card-demo" style="box-shadow:0 4px 16px rgba(26,23,20,0.08), 0 16px 40px rgba(26,23,20,0.10);">
+          <div class="shadow-card-demo__label">--shadow-raised</div>
+          <div class="shadow-card-demo__spec">0 4px 16px rgba(26,23,20,0.08)<br>0 16px 40px rgba(26,23,20,0.10)</div>
+        </div>
+        <div class="shadow-card-demo" style="box-shadow:0 6px 20px rgba(40,168,128,0.20);">
+          <div class="shadow-card-demo__label">--shadow-teal</div>
+          <div class="shadow-card-demo__spec">0 6px 20px rgba(40,168,128,0.20)<br>Primary CTA glow</div>
+        </div>
+        <div class="shadow-card-demo" style="box-shadow:0 6px 20px rgba(242,192,46,0.25);">
+          <div class="shadow-card-demo__label">--shadow-gold</div>
+          <div class="shadow-card-demo__spec">0 6px 20px rgba(242,192,46,0.25)<br>Accent element glow</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="sub-heading">Border Radius Tokens</p>
+      <div class="radius-grid">
+        <div class="radius-demo">
+          <div class="radius-demo__shape" style="border-radius:4px"></div>
+          <div class="radius-demo__token">--radius-sm</div>
+          <div class="radius-demo__value">4px</div>
+        </div>
+        <div class="radius-demo">
+          <div class="radius-demo__shape" style="border-radius:8px"></div>
+          <div class="radius-demo__token">--radius-md</div>
+          <div class="radius-demo__value">8px</div>
+        </div>
+        <div class="radius-demo">
+          <div class="radius-demo__shape" style="border-radius:16px"></div>
+          <div class="radius-demo__token">--radius-lg</div>
+          <div class="radius-demo__value">16px</div>
+        </div>
+        <div class="radius-demo">
+          <div class="radius-demo__shape" style="border-radius:24px"></div>
+          <div class="radius-demo__token">--radius-xl</div>
+          <div class="radius-demo__value">24px</div>
+        </div>
+        <div class="radius-demo">
+          <div class="radius-demo__shape" style="border-radius:9999px"></div>
+          <div class="radius-demo__token">--radius-full</div>
+          <div class="radius-demo__value">9999px · pill</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 6. ANIMATION ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">06 · Motion & Interaction</div>
+      <h2 class="ds-section__title">Animation Tokens</h2>
+    </div>
+
+    <div class="anim-grid">
+      <div class="anim-card">
+        <div class="anim-card__label">--transition-fast</div>
+        <div class="anim-card__value">150ms<br>cubic-bezier(0.4, 0, 0.2, 1)<br><span style="color:var(--color-mist);">Links, color changes</span></div>
+      </div>
+      <div class="anim-card">
+        <div class="anim-card__label">--transition-standard</div>
+        <div class="anim-card__value">300ms<br>cubic-bezier(0.4, 0, 0.2, 1)<br><span style="color:var(--color-mist);">Cards, sections</span></div>
+      </div>
+      <div class="anim-card">
+        <div class="anim-card__label">--transition-spring</div>
+        <div class="anim-card__value">300ms<br>cubic-bezier(0.34, 1.56, 0.64, 1)<br><span style="color:var(--color-mist);">Lifts, hover bounces</span></div>
+      </div>
+      <div class="anim-card">
+        <div class="anim-card__label">--transition-slow</div>
+        <div class="anim-card__value">500ms<br>cubic-bezier(0.4, 0, 0.2, 1)<br><span style="color:var(--color-mist);">Entrances, page load</span></div>
+      </div>
+    </div>
+
+    <div style="background:var(--color-white); border-radius:var(--radius-md); padding:28px; box-shadow:var(--shadow-subtle);">
+      <p class="sub-heading" style="margin-bottom:16px;">Interaction Rules</p>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; font-size:14px; color:var(--color-slate); line-height:1.7;">
+        <div>
+          <div style="font-weight:600; color:var(--color-ink); margin-bottom:6px;">Only animate</div>
+          <code style="font-family:var(--font-mono); font-size:12px; background:var(--color-linen); padding:2px 6px; border-radius:4px;">transform</code> and
+          <code style="font-family:var(--font-mono); font-size:12px; background:var(--color-linen); padding:2px 6px; border-radius:4px;">opacity</code><br>
+          Never use <code style="font-family:var(--font-mono); font-size:12px; background:rgba(224,36,88,0.1); color:var(--color-error); padding:2px 6px; border-radius:4px;">transition-all</code>
+        </div>
+        <div>
+          <div style="font-weight:600; color:var(--color-ink); margin-bottom:6px;">Button hover</div>
+          translateY(-2px) + teal shadow<br>
+          Spring easing, 200ms
+        </div>
+        <div>
+          <div style="font-weight:600; color:var(--color-ink); margin-bottom:6px;">Scroll entrance</div>
+          IntersectionObserver<br>
+          opacity 0→1, translateY(16px→0)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ds-divider"></div>
+
+  <!-- ── 7. PAGE LAYOUT PREVIEWS ── -->
+  <section class="ds-section">
+    <div>
+      <div class="ds-section__label">07 · Page Layouts</div>
+      <h2 class="ds-section__title">Section Anatomy</h2>
+    </div>
+
+    <!-- Hero preview -->
+    <div>
+      <p class="sub-heading">Hero Section</p>
+      <div class="nav-preview">
+        <div class="nav-bar">
+          <div class="nav-logo">Daisy Han</div>
+          <div class="nav-links">
+            <span class="nav-link">About</span>
+            <span class="nav-link">Services</span>
+            <span class="nav-link">Contact</span>
+          </div>
+          <div class="nav-cta">Work With Us</div>
+        </div>
+        <div class="hero-preview">
+          <div class="hero-preview__content">
+            <div class="eyebrow" style="margin-bottom:20px;">Strategic Consulting</div>
+            <div class="hero-preview__heading">Strategy for<br><em>meaningful</em> change</div>
+            <div class="hero-preview__sub">Daisy Han Consulting partners with mission-driven organizations to build strategies that create lasting community impact.</div>
+            <div class="hero-preview__ctas">
+              <button class="btn btn--primary btn--lg">Work With Us</button>
+              <button class="btn btn--ghost btn--lg">Learn More →</button>
+            </div>
+          </div>
+          <div class="hero-preview__deco"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats section preview -->
+    <div>
+      <p class="sub-heading">Impact / Stats Section</p>
+      <div style="background:var(--color-sun-navy); border-radius:var(--radius-lg); padding:64px 80px; display:flex; justify-content:center; gap:80px;">
+        <div class="card--stat">
+          <div class="card--stat__number" style="color:var(--color-sun-gold);">250+</div>
+          <div class="card--stat__label" style="color:rgba(255,255,255,0.6);">Projects Delivered</div>
+        </div>
+        <div class="card--stat">
+          <div class="card--stat__number" style="color:var(--color-sun-gold);">85%</div>
+          <div class="card--stat__label" style="color:rgba(255,255,255,0.6);">Client Retention</div>
+        </div>
+        <div class="card--stat">
+          <div class="card--stat__number" style="color:var(--color-sun-gold);">15+</div>
+          <div class="card--stat__label" style="color:rgba(255,255,255,0.6);">Years Experience</div>
+        </div>
+        <div class="card--stat">
+          <div class="card--stat__number" style="color:var(--color-sun-gold);">40+</div>
+          <div class="card--stat__label" style="color:rgba(255,255,255,0.6);">States Served</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services section preview -->
+    <div>
+      <p class="sub-heading">Services Section</p>
+      <div style="background:var(--color-linen); border-radius:var(--radius-lg); padding:64px 80px;">
+        <div class="eyebrow" style="margin-bottom:16px;">What We Do</div>
+        <div style="font-family:var(--font-display); font-size:44px; font-weight:500; letter-spacing:-0.02em; color:var(--color-sun-navy); margin-bottom:40px; line-height:1.15;">Our <em style="color:var(--color-sun-teal);">Services</em></div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+          <div class="card card--service">
+            <div class="card--service__icon"><div class="card--service__icon-inner"></div></div>
+            <div class="card--service__title">Strategic Planning</div>
+            <div class="card--service__desc">Long-term organizational strategy to drive meaningful outcomes for mission-driven organizations.</div>
+          </div>
+          <div class="card card--service">
+            <div class="card--service__icon"><div class="card--service__icon-inner" style="background:var(--color-sun-amber)"></div></div>
+            <div class="card--service__title">Community Engagement</div>
+            <div class="card--service__desc">Building authentic connections between organizations and the communities they serve.</div>
+          </div>
+          <div class="card card--service">
+            <div class="card--service__icon"><div class="card--service__icon-inner" style="background:var(--color-sun-blue)"></div></div>
+            <div class="card--service__title">Capacity Building</div>
+            <div class="card--service__desc">Strengthening internal systems, leadership, and culture to support sustainable growth.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
