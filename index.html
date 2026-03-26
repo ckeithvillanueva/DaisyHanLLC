@@ -420,14 +420,31 @@
       overflow: hidden;
       position: relative;
     }
-    .about__img-stripes {
+    .about__img-block::after {
+      content: '';
       position: absolute;
       inset: 0;
-      opacity: .15;
+      z-index: 1;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(
+        to top,
+        rgba(28, 56, 112, 0.92) 0%,
+        rgba(28, 56, 112, 0.35) 42%,
+        transparent 68%
+      );
+    }
+    .about__img-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 42%;
     }
     .about__img-quote {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       font-family: var(--font-display);
       font-size: clamp(22px, 2.5vw, 32px);
       font-style: italic;
@@ -1240,16 +1257,15 @@
     <div class="about__inner">
       <div class="about__visual fade-up">
         <div class="about__img-block">
-          <!-- Sunrise stripes decoration -->
-          <svg class="about__img-stripes" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <rect x="0" y="0"   width="400" height="71.4" fill="#F2C02E"/>
-            <rect x="0" y="71.4" width="400" height="71.4" fill="#F07A28"/>
-            <rect x="0" y="142.8" width="400" height="71.4" fill="#E84E28"/>
-            <rect x="0" y="214.2" width="400" height="71.4" fill="#E02458"/>
-            <rect x="0" y="285.6" width="400" height="71.4" fill="#28A880"/>
-            <rect x="0" y="357.0" width="400" height="71.4" fill="#2870BC"/>
-            <rect x="0" y="428.4" width="400" height="71.6" fill="#1C3870"/>
-          </svg>
+          <img
+            class="about__img-photo"
+            src="assets/daisy-hubble-profile.jpg"
+            width="800"
+            height="800"
+            alt="Daisy Han"
+            decoding="async"
+            fetchpriority="low"
+          >
           <p class="about__img-quote">
             Bridging vision with day-to-day execution — on schedule, on budget, on purpose.
           </p>
