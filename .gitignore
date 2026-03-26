@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Cursor / Claude local settings
+.claude/
+
+# Local Figma / design tooling (untracked scratch)
+figma-capture.html
