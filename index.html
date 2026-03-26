@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/" async></script>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
   <style>
     /* ── Design Tokens ─────────────────────────────────── */
@@ -816,7 +817,7 @@
       background: var(--color-linen);
     }
     .background__inner { max-width: 1280px; margin: 0 auto; }
-    .background__header { margin-bottom: var(--space-9); }
+    .background__header { margin-bottom: var(--space-7); }
     .background__heading {
       font-family: var(--font-display);
       font-size: clamp(32px, 4vw, 52px);
@@ -825,7 +826,13 @@
       letter-spacing: -.02em;
       color: var(--color-ink);
     }
-    .background__heading em { font-style: italic; color: var(--color-primary); }
+    .background__heading em {
+      font-style: italic;
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
     .background__grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -837,41 +844,37 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--color-primary);
-      margin-bottom: var(--space-6);
-      padding-bottom: var(--space-4);
-      border-bottom: 1px solid var(--color-border);
+      margin-bottom: var(--space-4);
     }
     .edu-item {
-      padding: var(--space-5) 0;
-      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-4) 0;
     }
-    .edu-item:last-child { border-bottom: none; }
     .edu-item h4 {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 500;
       color: var(--color-ink);
     }
     .edu-item .degree {
       font-size: 14px;
       color: var(--color-slate);
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .edu-item .year {
       font-size: 12px;
       color: var(--color-mist);
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .cert-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: var(--space-3);
+      gap: var(--space-2);
     }
     .cert-list li {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--color-slate);
-      padding-left: var(--space-5);
+      padding-left: var(--space-4);
       position: relative;
     }
     .cert-list li::before {
@@ -881,6 +884,19 @@
       color: var(--color-primary);
       font-size: 8px;
       top: 6px;
+    }
+
+    .core-skills-grid {
+      list-style: none;
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 28px;
+      color: var(--color-slate);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.6;
     }
 
     /* ── Schedule ────────────────────────────────────────── */
@@ -921,11 +937,229 @@
       min-height: 700px;
       position: relative;
     }
-    .schedule__embed iframe {
-      width: 100%;
-      height: 800px;
-      border: none;
+    .schedule__embed { min-height: auto; }
+
+    /* ── Booking Form ──────────────────────────────────── */
+    .booking-progress {
+      height: 3px;
+      background: var(--color-border);
+      border-radius: var(--radius-full) var(--radius-full) 0 0;
+    }
+    .booking-progress__fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: inherit;
+      transition: width 400ms cubic-bezier(0.4,0,0.2,1);
+    }
+    .booking-steps-wrap {
+      padding: var(--space-6) var(--space-8) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .booking-steps {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .booking-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .booking-step__dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--color-linen);
+      color: var(--color-mist);
+      transition: background var(--transition-standard), color var(--transition-standard);
+    }
+    .booking-step__label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--color-mist);
+      white-space: nowrap;
+      transition: color var(--transition-standard);
+    }
+    .booking-step.active .booking-step__dot  { background: var(--color-primary); color: #fff; }
+    .booking-step.active .booking-step__label { color: var(--color-primary); }
+    .booking-step.done   .booking-step__dot  { background: var(--color-primary); color: #fff; }
+    .booking-step.done   .booking-step__label { color: var(--color-primary); }
+    .booking-step-line {
+      flex: 1;
+      min-width: 32px;
+      max-width: 96px;
+      height: 2px;
+      background: var(--color-border);
+      margin-top: 16px;
+      transition: background var(--transition-standard);
+    }
+    .booking-step-line.done { background: var(--color-primary); }
+
+    .booking-panel {
+      display: none;
+      padding: var(--space-7) var(--space-8);
+      animation: bkIn 260ms cubic-bezier(0.4,0,0.2,1);
+    }
+    .booking-panel.active { display: block; }
+    @keyframes bkIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .booking-panel__title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 500;
+      color: var(--color-ink);
+      line-height: 1.2;
+      margin-bottom: var(--space-2);
+    }
+    .booking-panel__subtitle {
+      font-size: 15px;
+      color: var(--color-mist);
+      line-height: 1.65;
+      margin-bottom: var(--space-6);
+    }
+
+    /* Service option cards */
+    .service-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .service-option { position: relative; }
+    .service-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .service-option__card {
       display: block;
+      height: 100%;
+      padding: var(--space-5);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+    .service-option__card:hover {
+      border-color: var(--color-primary);
+      background: rgba(40,168,128,.03);
+    }
+    .service-option input[type="radio"]:checked + .service-option__card {
+      border-color: var(--color-primary);
+      background: rgba(40,168,128,.06);
+      box-shadow: 0 0 0 3px rgba(40,168,128,.12);
+    }
+    .service-option__badge {
+      display: inline-flex;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: rgba(40,168,128,.1);
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+    .service-option__name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--color-ink);
+      line-height: 1.3;
+      margin-bottom: var(--space-2);
+    }
+    .service-option__desc {
+      font-size: 13px;
+      color: var(--color-mist);
+      line-height: 1.65;
+    }
+    .service-option__price {
+      margin-top: var(--space-3);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-taupe);
+      font-family: var(--font-mono);
+    }
+
+    /* Navigation footer */
+    .booking-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-5) var(--space-8);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+    }
+
+    /* Review summary */
+    .booking-summary {
+      background: var(--color-cream);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+    .booking-summary__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-4);
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 14px;
+    }
+    .booking-summary__row:last-child { border-bottom: none; }
+    .booking-summary__label { color: var(--color-mist); font-weight: 500; flex-shrink: 0; }
+    .booking-summary__value { color: var(--color-ink); font-weight: 500; text-align: right; }
+
+    /* Stripe scaffold */
+    .stripe-mount {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin-bottom: var(--space-5);
+      min-height: 80px;
+    }
+    .booking-notice {
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: var(--space-5);
+    }
+    .booking-notice--free {
+      background: rgba(40,168,128,.08);
+      border: 1px solid rgba(40,168,128,.25);
+      color: var(--color-slate);
+    }
+    .booking-notice--scaffold {
+      background: rgba(242,192,46,.08);
+      border: 1px solid rgba(242,192,46,.3);
+      color: var(--color-slate);
+    }
+    .booking-notice strong { display: block; color: var(--color-ink); margin-bottom: 4px; }
+
+    @media (max-width: 640px) {
+      .service-options    { grid-template-columns: 1fr; }
+      .booking-panel      { padding: var(--space-6) var(--space-5); }
+      .booking-nav        { padding: var(--space-4) var(--space-5); flex-wrap: wrap; }
+      .booking-steps-wrap { padding: var(--space-5) var(--space-5) var(--space-4); }
+      .booking-step__label { display: none; }
+      .booking-step-line  { min-width: 20px; }
     }
 
     /* ── Contact ─────────────────────────────────────────── */
@@ -1567,17 +1801,17 @@
           </div>
           <div class="background__col" style="margin-top:var(--space-8)">
             <h3>Core Skills</h3>
-            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-4)">
-              <span class="tag">Organizational Strategy</span>
-              <span class="tag">Racial &amp; Social Justice</span>
-              <span class="tag">Narrative Strategy</span>
-              <span class="tag">Program Design</span>
-              <span class="tag">Cross-functional Leadership</span>
-              <span class="tag">Public Speaking</span>
-              <span class="tag">Curriculum Design</span>
-              <span class="tag">Facilitation</span>
-              <span class="tag">Community Engagement</span>
-            </div>
+            <ul class="core-skills-grid">
+              <li>Organizational Strategy</li>
+              <li>Racial &amp; Social Justice</li>
+              <li>Narrative Strategy</li>
+              <li>Program Design</li>
+              <li>Cross-functional Leadership</li>
+              <li>Public Speaking</li>
+              <li>Curriculum Design</li>
+              <li>Facilitation</li>
+              <li>Community Engagement</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1591,32 +1825,267 @@
     <div class="schedule__inner">
       <div class="schedule__header fade-up">
         <span class="eyebrow">Let's Connect</span>
-        <h2 class="schedule__heading">Schedule time with <em>Daisy</em>.</h2>
+        <h2 class="schedule__heading">Book time with <em>Daisy</em>.</h2>
         <p class="schedule__subhead">
-          Ready to explore working together? Find a time that works for you — a 30-minute discovery call is the best first step.
+          Choose your engagement below — a Discovery Call is always the right first step.
         </p>
       </div>
+
       <div class="schedule__embed fade-up" style="transition-delay:100ms">
-        <!-- Static placeholder shown during Figma capture; JS swaps in live iframe on real page load -->
-        <div id="hubble-placeholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:700px;gap:var(--space-6);">
-          <div style="width:72px;height:72px;border-radius:50%;background:rgba(40,168,128,.12);display:flex;align-items:center;justify-content:center;">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+
+        <!-- ── Booking form (multi-step) ── -->
+        <div id="booking-form-card">
+
+          <!-- Progress bar -->
+          <div class="booking-progress">
+            <div class="booking-progress__fill" style="width:0%"></div>
           </div>
-          <div style="text-align:center;">
-            <p style="font-family:var(--font-display);font-size:clamp(20px,2.5vw,28px);font-weight:500;color:var(--color-ink);margin-bottom:8px;">Find a time that works for you</p>
-            <p style="font-size:15px;color:var(--color-mist);max-width:380px;line-height:1.75;margin:0 auto;">Pick a 30-minute discovery call slot directly in Daisy's calendar.</p>
+
+          <!-- Step indicator -->
+          <div class="booking-steps-wrap">
+            <div class="booking-steps">
+              <div class="booking-step active" data-step="1">
+                <div class="booking-step__dot">1</div>
+                <div class="booking-step__label">Service</div>
+              </div>
+              <div class="booking-step-line"></div>
+              <div class="booking-step" data-step="2">
+                <div class="booking-step__dot">2</div>
+                <div class="booking-step__label">Details</div>
+              </div>
+              <div class="booking-step-line"></div>
+              <div class="booking-step" data-step="3">
+                <div class="booking-step__dot">3</div>
+                <div class="booking-step__label">Contact</div>
+              </div>
+              <div class="booking-step-line"></div>
+              <div class="booking-step" data-step="4">
+                <div class="booking-step__dot">4</div>
+                <div class="booking-step__label">Review</div>
+              </div>
+            </div>
           </div>
-          <a href="https://app.hubble.social/daisyhan" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">Open Scheduling Calendar →</a>
+
+          <!-- ── Panel 1: Service selection ── -->
+          <div class="booking-panel active" id="booking-panel-1">
+            <h3 class="booking-panel__title">Choose your engagement</h3>
+            <p class="booking-panel__subtitle">Not sure where to start? A Discovery Call is always the right first step — it's free.</p>
+
+            <div class="service-options">
+              <label class="service-option">
+                <input type="radio" name="bk-service" value="discovery">
+                <div class="service-option__card">
+                  <div class="service-option__badge">Free · 30 min</div>
+                  <div class="service-option__name">Discovery Call</div>
+                  <div class="service-option__desc">We'll explore your needs and see if working together is the right fit. No commitment required.</div>
+                  <div class="service-option__price">Free</div>
+                </div>
+              </label>
+              <label class="service-option">
+                <input type="radio" name="bk-service" value="strategic">
+                <div class="service-option__card">
+                  <div class="service-option__badge">Strategic Planning</div>
+                  <div class="service-option__name">Strategic Planning &amp; Alignment</div>
+                  <div class="service-option__desc">End-to-end strategy development, stakeholder alignment, and outcome frameworks.</div>
+                  <div class="service-option__price"><!-- TODO: add pricing --></div>
+                </div>
+              </label>
+              <label class="service-option">
+                <input type="radio" name="bk-service" value="workshop">
+                <div class="service-option__card">
+                  <div class="service-option__badge">Facilitation</div>
+                  <div class="service-option__name">Workshop Facilitation &amp; Capacity Building</div>
+                  <div class="service-option__desc">Collaborative workshops and leadership retreats that build genuine organizational capacity.</div>
+                  <div class="service-option__price"><!-- TODO: add pricing --></div>
+                </div>
+              </label>
+              <label class="service-option">
+                <input type="radio" name="bk-service" value="program">
+                <div class="service-option__card">
+                  <div class="service-option__badge">Program Design</div>
+                  <div class="service-option__name">Program Design &amp; Evaluation</div>
+                  <div class="service-option__desc">Evidence-based program design with impact measurement and accreditation-aligned models.</div>
+                  <div class="service-option__price"><!-- TODO: add pricing --></div>
+                </div>
+              </label>
+            </div>
+            <p id="step1-error" class="field-error" style="display:none">Please select a service to continue.</p>
+          </div>
+
+          <!-- ── Panel 2: About your organization ── -->
+          <div class="booking-panel" id="booking-panel-2">
+            <h3 class="booking-panel__title">Tell me about your work</h3>
+            <p class="booking-panel__subtitle">Help me understand your organization and what you're hoping to accomplish.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="bk-org">Organization Name *</label>
+                <input class="form-input" type="text" id="bk-org" placeholder="e.g. Pacific Equity Foundation" autocomplete="organization">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="bk-org-type">Organization Type *</label>
+                <select class="form-input" id="bk-org-type">
+                  <option value="">Select one…</option>
+                  <option value="school-district">School / District</option>
+                  <option value="charter">Charter Management Org</option>
+                  <option value="foundation">Foundation / Philanthropy</option>
+                  <option value="nonprofit">Nonprofit / NGO</option>
+                  <option value="govt">Government Agency</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="bk-role">Your Role / Title *</label>
+                <input class="form-input" type="text" id="bk-role" placeholder="e.g. Executive Director" autocomplete="organization-title">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="bk-team-size">Team Size</label>
+                <select class="form-input" id="bk-team-size">
+                  <option value="">Select one…</option>
+                  <option value="1-10">1–10</option>
+                  <option value="11-50">11–50</option>
+                  <option value="51-200">51–200</option>
+                  <option value="200+">200+</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bk-start-date">Preferred Start Date</label>
+              <input class="form-input" type="date" id="bk-start-date">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bk-goals">What are you hoping to accomplish?</label>
+              <textarea class="form-input" id="bk-goals" rows="3" placeholder="Briefly describe your goals or the challenge you're trying to solve…"></textarea>
+            </div>
+          </div>
+
+          <!-- ── Panel 3: Contact info ── -->
+          <div class="booking-panel" id="booking-panel-3">
+            <h3 class="booking-panel__title">Your contact information</h3>
+            <p class="booking-panel__subtitle">I'll be in touch within one business day to confirm your booking.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="bk-first">First Name *</label>
+                <input class="form-input" type="text" id="bk-first" placeholder="Jane" autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="bk-last">Last Name *</label>
+                <input class="form-input" type="text" id="bk-last" placeholder="Smith" autocomplete="family-name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bk-email">Email Address *</label>
+              <input class="form-input" type="email" id="bk-email" placeholder="jane@organization.org" autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bk-phone">Phone <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></label>
+              <input class="form-input" type="tel" id="bk-phone" placeholder="+1 (808) 555-0100" autocomplete="tel">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bk-referral">How did you hear about Daisy?</label>
+              <select class="form-input" id="bk-referral">
+                <option value="">Select one…</option>
+                <option value="colleague">Colleague or referral</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="conference">Conference or event</option>
+                <option value="search">Search / Google</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ── Panel 4: Review & payment ── -->
+          <div class="booking-panel" id="booking-panel-4">
+            <h3 class="booking-panel__title">Review &amp; confirm</h3>
+            <p class="booking-panel__subtitle">Everything look right? Use the Back button to make changes.</p>
+
+            <div class="booking-summary">
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Service</span>
+                <span class="booking-summary__value" id="summary-service">—</span>
+              </div>
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Investment</span>
+                <span class="booking-summary__value" id="summary-price">—</span>
+              </div>
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Organization</span>
+                <span class="booking-summary__value" id="summary-org">—</span>
+              </div>
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Name</span>
+                <span class="booking-summary__value" id="summary-name">—</span>
+              </div>
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Email</span>
+                <span class="booking-summary__value" id="summary-email">—</span>
+              </div>
+              <div class="booking-summary__row">
+                <span class="booking-summary__label">Preferred Start</span>
+                <span class="booking-summary__value" id="summary-date">—</span>
+              </div>
+            </div>
+
+            <!-- Free service: no payment -->
+            <div id="free-section" style="display:none">
+              <div class="booking-notice booking-notice--free">
+                <strong>Discovery Call — no payment required.</strong>
+                Once confirmed, Daisy will reach out within one business day to schedule your 30-minute call.
+              </div>
+            </div>
+
+            <!-- Paid service: Stripe Payment Element -->
+            <div id="stripe-section" style="display:none">
+              <!--
+                ╔══════════════════════════════════════════════════════╗
+                ║  STRIPE SCAFFOLD — remove this notice before launch  ║
+                ╠══════════════════════════════════════════════════════╣
+                ║  To activate payments:                               ║
+                ║  1. Set STRIPE_PK below to your publishable key      ║
+                ║  2. Build POST /api/create-payment-intent that       ║
+                ║     accepts { serviceId, email } and returns         ║
+                ║     { clientSecret }                                 ║
+                ║  3. Update return_url in confirmPayment()            ║
+                ║  Docs: stripe.com/docs/payments/payment-element      ║
+                ╚══════════════════════════════════════════════════════╝
+              -->
+              <div class="booking-notice booking-notice--scaffold">
+                <strong>Payment — Stripe not yet configured</strong>
+                Add your publishable key and backend endpoint to activate card capture. See the code comment above <code>#stripe-payment-element</code>.
+              </div>
+              <div class="stripe-mount">
+                <div id="stripe-payment-element">
+                  <!-- Stripe Payment Element mounts here once configured -->
+                </div>
+              </div>
+              <p id="stripe-error" class="field-error" style="display:none;margin-bottom:var(--space-4)"></p>
+            </div>
+          </div>
+
+          <!-- Nav footer -->
+          <div class="booking-nav">
+            <button type="button" class="btn btn-secondary" id="bk-back-btn" style="display:none">← Back</button>
+            <span></span><!-- spacer when back is hidden -->
+            <div style="display:flex;gap:var(--space-3);align-items:center">
+              <button type="button" class="btn btn-primary btn-lg" id="bk-next-btn">Continue →</button>
+              <button type="button" class="btn btn-primary btn-lg" id="bk-submit-btn" style="display:none">Confirm Booking →</button>
+            </div>
+          </div>
+        </div><!-- /#booking-form-card -->
+
+        <!-- Success state -->
+        <div id="booking-success" style="display:none;padding:var(--space-10) var(--space-8);text-align:center;">
+          <div style="width:72px;height:72px;border-radius:50%;background:rgba(40,168,128,.12);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-6);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 style="font-family:var(--font-display);font-size:clamp(24px,3vw,36px);font-weight:500;color:var(--color-ink);margin-bottom:var(--space-3);">You're all set!</h3>
+          <p style="font-size:16px;color:var(--color-mist);max-width:420px;margin:0 auto;line-height:1.75;">Daisy will be in touch within one business day to confirm your booking and discuss next steps.</p>
         </div>
-        <iframe
-          id="hubble-iframe"
-          src="about:blank"
-          data-src="https://app.hubble.social/daisyhan"
-          title="Schedule a meeting with Daisy Han"
-          allow="camera; microphone; fullscreen; payment"
-          style="display:none;width:100%;height:800px;border:none;"
-        ></iframe>
-      </div>
+
+      </div><!-- /.schedule__embed -->
     </div>
   </section>
 
@@ -1748,7 +2217,7 @@
           <ul class="footer__links">
             <li><a href="mailto:daisyheyjinhan@gmail.com">Email Daisy</a></li>
             <li><a href="https://linkedin.com/in/christinedaisyhan" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-            <li><a href="https://app.hubble.social/daisyhan" target="_blank" rel="noopener noreferrer">Schedule a Call</a></li>
+            <li><a href="#schedule">Schedule a Call</a></li>
           </ul>
         </div>
       </div>
@@ -1837,18 +2306,263 @@
 
     statNums.forEach(el => countObs.observe(el));
 
-    // ── Hubble iframe — lazy swap ────────────────────────
-    // Swaps in the live embed after page is fully interactive
-    // (keeps Figma capture fast by not blocking on cross-origin iframe)
-    window.addEventListener('load', () => {
-      const placeholder = document.getElementById('hubble-placeholder');
-      const iframe      = document.getElementById('hubble-iframe');
-      if (iframe && placeholder) {
-        iframe.src = iframe.dataset.src;
-        iframe.style.display = 'block';
-        placeholder.style.display = 'none';
+    // ── Multi-step Booking Form ──────────────────────────
+    (function () {
+      // TODO: Replace with your Stripe publishable key (pk_live_... or pk_test_...)
+      var STRIPE_PK = 'pk_test_YOUR_PUBLISHABLE_KEY_HERE';
+
+      // TODO: Update names/priceDisplay to match your actual offerings.
+      // For paid services, set price in cents (e.g. 35000 = $350.00) once you have Stripe set up.
+      var SERVICES = {
+        discovery: { name: 'Discovery Call',                       priceDisplay: 'Free',                free: true  },
+        strategic: { name: 'Strategic Planning & Alignment',       priceDisplay: 'Contact for pricing', free: false },
+        workshop:  { name: 'Workshop Facilitation',                priceDisplay: 'Contact for pricing', free: false },
+        program:   { name: 'Program Design & Evaluation',          priceDisplay: 'Contact for pricing', free: false },
+      };
+
+      var step = 1;
+      var data = { serviceId: null, service: null, details: {}, contact: {} };
+      var stripeObj = null, stripeEls = null;
+
+      var nextBtn   = document.getElementById('bk-next-btn');
+      var backBtn   = document.getElementById('bk-back-btn');
+      var submitBtn = document.getElementById('bk-submit-btn');
+
+      function goTo(n) {
+        document.querySelectorAll('.booking-panel').forEach(function (p) {
+          p.classList.remove('active');
+        });
+        document.getElementById('booking-panel-' + n).classList.add('active');
+
+        document.querySelectorAll('.booking-step').forEach(function (s, i) {
+          var sn  = i + 1;
+          var dot = s.querySelector('.booking-step__dot');
+          s.classList.remove('active', 'done');
+          if      (sn < n)  { s.classList.add('done');   dot.textContent = '✓'; }
+          else if (sn === n) { s.classList.add('active'); dot.textContent = sn;  }
+          else               {                            dot.textContent = sn;  }
+        });
+
+        document.querySelectorAll('.booking-step-line').forEach(function (l, i) {
+          l.classList.toggle('done', i + 1 < n);
+        });
+
+        var fill = document.querySelector('.booking-progress__fill');
+        if (fill) fill.style.width = (((n - 1) / 3) * 100) + '%';
+
+        // Nav visibility
+        backBtn.style.display  = n === 1 ? 'none' : '';
+        backBtn.previousElementSibling.style.display = n === 1 ? '' : 'none'; // spacer
+
+        if (n === 4) {
+          nextBtn.style.display   = 'none';
+          submitBtn.style.display = '';
+          populateSummary();
+          if (data.service && !data.service.free) initStripe();
+        } else {
+          nextBtn.style.display   = '';
+          submitBtn.style.display = 'none';
+        }
+
+        step = n;
+        var card = document.getElementById('booking-form-card');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
-    });
+
+      function validate(n) {
+        if (n === 1) {
+          var ok  = !!document.querySelector('input[name="bk-service"]:checked');
+          var err = document.getElementById('step1-error');
+          if (err) err.style.display = ok ? 'none' : 'block';
+          return ok;
+        }
+        if (n === 2) {
+          var valid = true;
+          ['bk-org', 'bk-org-type', 'bk-role'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            var ok = el.value.trim() !== '';
+            el.classList.toggle('invalid', !ok);
+            if (!ok) valid = false;
+          });
+          return valid;
+        }
+        if (n === 3) {
+          var valid = true;
+          ['bk-first', 'bk-last'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            var ok = el.value.trim() !== '';
+            el.classList.toggle('invalid', !ok);
+            if (!ok) valid = false;
+          });
+          var emailEl = document.getElementById('bk-email');
+          if (emailEl) {
+            var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value);
+            emailEl.classList.toggle('invalid', !ok);
+            if (!ok) valid = false;
+          }
+          return valid;
+        }
+        return true;
+      }
+
+      function collect(n) {
+        if (n === 1) {
+          var checked = document.querySelector('input[name="bk-service"]:checked');
+          if (checked) {
+            data.serviceId = checked.value;
+            data.service   = SERVICES[checked.value];
+          }
+        }
+        if (n === 2) {
+          data.details = {
+            org:       (document.getElementById('bk-org')        || {}).value || '',
+            orgType:   (document.getElementById('bk-org-type')   || {}).value || '',
+            role:      (document.getElementById('bk-role')       || {}).value || '',
+            teamSize:  (document.getElementById('bk-team-size')  || {}).value || '',
+            startDate: (document.getElementById('bk-start-date') || {}).value || '',
+            goals:     (document.getElementById('bk-goals')      || {}).value || '',
+          };
+        }
+        if (n === 3) {
+          data.contact = {
+            first:    (document.getElementById('bk-first')    || {}).value || '',
+            last:     (document.getElementById('bk-last')     || {}).value || '',
+            email:    (document.getElementById('bk-email')    || {}).value || '',
+            phone:    (document.getElementById('bk-phone')    || {}).value || '',
+            referral: (document.getElementById('bk-referral') || {}).value || '',
+          };
+        }
+      }
+
+      function set(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val || '—';
+      }
+
+      function populateSummary() {
+        var svc = data.service  || {};
+        var det = data.details  || {};
+        var con = data.contact  || {};
+        set('summary-service', svc.name);
+        set('summary-price',   svc.priceDisplay);
+        set('summary-org',     det.org);
+        set('summary-name',    (con.first + ' ' + con.last).trim());
+        set('summary-email',   con.email);
+        set('summary-date',    det.startDate || 'Flexible');
+
+        var freeSection   = document.getElementById('free-section');
+        var stripeSection = document.getElementById('stripe-section');
+        if (svc.free) {
+          if (freeSection)   freeSection.style.display   = 'block';
+          if (stripeSection) stripeSection.style.display = 'none';
+          submitBtn.textContent = 'Confirm Booking →';
+        } else {
+          if (freeSection)   freeSection.style.display   = 'none';
+          if (stripeSection) stripeSection.style.display = 'block';
+          submitBtn.textContent = 'Confirm & Pay →';
+        }
+      }
+
+      function initStripe() {
+        if (stripeObj) return; // already initialised
+        var mountEl = document.getElementById('stripe-payment-element');
+
+        if (STRIPE_PK === 'pk_test_YOUR_PUBLISHABLE_KEY_HERE') {
+          // Scaffold placeholder — Stripe not yet configured
+          if (mountEl) mountEl.innerHTML =
+            '<p style="font-size:13px;color:var(--color-mist);padding:var(--space-2) 0">' +
+            'Card field will appear here once Stripe is configured.</p>';
+          return;
+        }
+
+        stripeObj = Stripe(STRIPE_PK); // eslint-disable-line no-undef
+
+        // TODO: Implement POST /api/create-payment-intent on your backend.
+        // It should accept { serviceId, email } and return { clientSecret }.
+        fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ serviceId: data.serviceId, email: data.contact.email }),
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (body) {
+            stripeEls = stripeObj.elements({
+              clientSecret: body.clientSecret,
+              appearance: {
+                theme: 'stripe',
+                variables: {
+                  colorPrimary:    '#28A880',
+                  colorBackground: '#FFFFFF',
+                  colorText:       '#1A1714',
+                  colorDanger:     '#E02458',
+                  fontFamily:      '"DM Sans", "Helvetica Neue", sans-serif',
+                  borderRadius:    '8px',
+                },
+              },
+            });
+            stripeEls.create('payment').mount('#stripe-payment-element');
+          })
+          .catch(function () {
+            var errEl = document.getElementById('stripe-error');
+            if (errEl) {
+              errEl.textContent = 'Unable to load payment form. Please try again or contact us directly.';
+              errEl.style.display = 'block';
+            }
+          });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+          if (!validate(step)) return;
+          collect(step);
+          goTo(step + 1);
+        });
+      }
+
+      if (backBtn) {
+        backBtn.addEventListener('click', function () { goTo(step - 1); });
+      }
+
+      if (submitBtn) {
+        submitBtn.addEventListener('click', function () {
+          if (data.service && data.service.free) {
+            // TODO: POST booking data to your backend before showing success
+            // fetch('/api/book', { method: 'POST', body: JSON.stringify(data) });
+            showSuccess();
+            return;
+          }
+
+          if (!stripeObj || !stripeEls) return;
+
+          submitBtn.disabled    = true;
+          submitBtn.textContent = 'Processing…';
+
+          stripeObj.confirmPayment({
+            elements: stripeEls,
+            confirmParams: {
+              // TODO: Update to your actual confirmation page URL
+              return_url:    window.location.origin + '/booking-confirmation',
+              receipt_email: data.contact.email,
+            },
+          }).then(function (result) {
+            if (result.error) {
+              var errEl = document.getElementById('stripe-error');
+              if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
+              submitBtn.disabled    = false;
+              submitBtn.textContent = 'Confirm & Pay →';
+            }
+            // On success Stripe redirects to return_url — no else needed
+          });
+        });
+      }
+
+      function showSuccess() {
+        document.getElementById('booking-form-card').style.display = 'none';
+        document.getElementById('booking-success').style.display   = 'block';
+      }
+    })();
 
     // ── Contact form ─────────────────────────────────────
     document.getElementById('contactForm').addEventListener('submit', function(e) {
