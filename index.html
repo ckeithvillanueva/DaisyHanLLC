@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Daisy Han Consulting LLC — strategic planning, facilitation, and program design for school systems, foundations, and mission-driven organizations. Makawao, Hawaii; serving clients nationwide.">
+  <meta name="theme-color" content="#1C3870">
   <title>Daisy Han Consulting LLC — Strategic Consulting for Meaningful Change</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
   <style>
     /* ── Design Tokens ─────────────────────────────────── */
     :root {
@@ -123,7 +125,7 @@
       left: 0;
       right: 0;
       z-index: 100;
-      height: 72px;
+      height: 102px;
       display: flex;
       align-items: center;
       transition: background var(--transition-standard), box-shadow var(--transition-standard);
@@ -133,24 +135,31 @@
       box-shadow: var(--shadow-subtle);
     }
     .nav__inner {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-10);
+      align-items: center;
+      width: 100%;
+    }
+    .nav__actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
+      justify-self: end;
+      gap: clamp(16px, 2vw, 28px);
     }
     .nav__logo {
       display: flex;
       align-items: center;
-      gap: var(--space-3);
+      gap: var(--space-5);
     }
     .nav__logo-mark {
-      width: 40px;
-      height: 40px;
+      width: 80px;
+      height: 80px;
       flex-shrink: 0;
     }
     .nav__logo-text {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 36px;
       font-weight: 600;
       color: var(--color-ink);
       line-height: 1.2;
@@ -158,7 +167,7 @@
     .nav__logo-text span {
       display: block;
       font-family: var(--font-body);
-      font-size: 11px;
+      font-size: 22px;
       font-weight: 500;
       letter-spacing: .05em;
       color: var(--color-mist);
@@ -176,6 +185,7 @@
       transition: color var(--transition-fast);
     }
     .nav__links a:hover { color: var(--color-primary); }
+    .nav__cta { white-space: nowrap; }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -271,7 +281,7 @@
       min-height: 100svh;
       display: flex;
       align-items: center;
-      padding-top: 72px;
+      padding-top: 102px;
       position: relative;
       overflow: hidden;
       background: var(--color-cream);
@@ -672,7 +682,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: var(--space-8);
     }
-    .philosophy__item {}
     .philosophy__num {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -1026,7 +1035,6 @@
       padding-bottom: var(--space-8);
       border-bottom: 1px solid rgba(255,255,255,.1);
     }
-    .footer__brand {}
     .footer__logo {
       display: flex;
       align-items: center;
@@ -1092,6 +1100,8 @@
       .background__grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
+      .nav__inner { grid-template-columns: 1fr; }
+      .nav__actions { justify-self: end; }
       .nav__links, .nav__cta { display: none; }
       .nav__hamburger { display: flex; }
       .hero__inner { grid-template-columns: 1fr; gap: var(--space-8); }
@@ -1142,19 +1152,19 @@
           </div>
         </a>
 
-        <ul class="nav__links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#impact">Impact</a></li>
-          <li><a href="#schedule">Schedule</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-
-        <a href="#schedule" class="btn btn-primary nav__cta">Schedule a Call</a>
-
-        <button class="nav__hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
+        <div class="nav__actions">
+          <ul class="nav__links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#impact">Impact</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <a href="#schedule" class="btn btn-primary nav__cta">Schedule a Call</a>
+          <button class="nav__hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -1369,7 +1379,7 @@
           <span class="stat-label">Educators trained in equity-driven instructional practice</span>
         </div>
         <div class="stat-card fade-up" style="transition-delay:225ms">
-          <span class="stat-num" data-count="96">0</span>
+          <span class="stat-num" data-count="96" data-suffix="%">0</span>
           <span class="stat-label">% impact metrics on educator behavior change</span>
         </div>
       </div>
@@ -1571,11 +1581,24 @@
         </p>
       </div>
       <div class="schedule__embed fade-up" style="transition-delay:100ms">
+        <!-- Static placeholder shown during Figma capture; JS swaps in live iframe on real page load -->
+        <div id="hubble-placeholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:700px;gap:var(--space-6);">
+          <div style="width:72px;height:72px;border-radius:50%;background:rgba(40,168,128,.12);display:flex;align-items:center;justify-content:center;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div style="text-align:center;">
+            <p style="font-family:var(--font-display);font-size:clamp(20px,2.5vw,28px);font-weight:500;color:var(--color-ink);margin-bottom:8px;">Find a time that works for you</p>
+            <p style="font-size:15px;color:var(--color-mist);max-width:380px;line-height:1.75;margin:0 auto;">Pick a 30-minute discovery call slot directly in Daisy's calendar.</p>
+          </div>
+          <a href="https://app.hubble.social/daisyhan" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">Open Scheduling Calendar →</a>
+        </div>
         <iframe
-          src="https://app.hubble.social/daisyhan"
+          id="hubble-iframe"
+          src="about:blank"
+          data-src="https://app.hubble.social/daisyhan"
           title="Schedule a meeting with Daisy Han"
-          loading="lazy"
           allow="camera; microphone; fullscreen; payment"
+          style="display:none;width:100%;height:800px;border:none;"
         ></iframe>
       </div>
     </div>
@@ -1716,7 +1739,7 @@
 
       <div class="footer__bottom">
         <p class="footer__copy">
-          &copy; 2025 Daisy Han Consulting LLC · Makawao, Hawaii · All rights reserved.
+          &copy; 2026 Daisy Han Consulting LLC · Makawao, Hawaii · All rights reserved.
         </p>
         <div class="footer__legal">
           <a href="#">Privacy Policy</a>
@@ -1771,7 +1794,6 @@
       const update = (now) => {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        // ease out cubic
         const eased = 1 - Math.pow(1 - progress, 3);
         el.textContent = Math.round(eased * target) + suffix;
         if (progress < 1) requestAnimationFrame(update);
@@ -1785,15 +1807,12 @@
         if (e.isIntersecting) {
           const el     = e.target;
           const target = parseInt(el.dataset.count, 10);
-          const suffix = el.dataset.suffix ?? (el.nextElementSibling?.textContent ?? '+');
-          // determine suffix from sibling or none
           const nextSib = el.nextElementSibling;
           if (nextSib && nextSib.classList.contains('hero__stat-num')) {
-            // hero cards — count up, leave "+" in next sibling
             animateCount(el, target, 1600, '');
           } else {
-            // stats section
-            animateCount(el, target, 2000, '+');
+            const suffix = el.dataset.suffix !== undefined ? el.dataset.suffix : '+';
+            animateCount(el, target, 2000, suffix);
           }
           countObs.unobserve(el);
         }
@@ -1801,6 +1820,19 @@
     }, { threshold: 0.5 });
 
     statNums.forEach(el => countObs.observe(el));
+
+    // ── Hubble iframe — lazy swap ────────────────────────
+    // Swaps in the live embed after page is fully interactive
+    // (keeps Figma capture fast by not blocking on cross-origin iframe)
+    window.addEventListener('load', () => {
+      const placeholder = document.getElementById('hubble-placeholder');
+      const iframe      = document.getElementById('hubble-iframe');
+      if (iframe && placeholder) {
+        iframe.src = iframe.dataset.src;
+        iframe.style.display = 'block';
+        placeholder.style.display = 'none';
+      }
+    });
 
     // ── Contact form ─────────────────────────────────────
     document.getElementById('contactForm').addEventListener('submit', function(e) {
