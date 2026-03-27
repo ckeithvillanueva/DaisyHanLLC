@@ -680,11 +680,11 @@
 
     /* ── Philosophy ──────────────────────────────────────── */
     .philosophy {
-      padding: var(--section-padding-y) var(--section-padding-x);
+      padding: 36px var(--section-padding-x);
       background: var(--color-cream);
     }
     .philosophy__inner { max-width: 1280px; margin: 0 auto; }
-    .philosophy__header { margin-bottom: var(--space-9); }
+    .philosophy__header { margin-bottom: var(--space-5); }
     .philosophy__heading {
       font-family: var(--font-display);
       font-size: clamp(32px, 4vw, 52px);
@@ -698,15 +698,7 @@
     .philosophy__grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-8);
-    }
-    .philosophy__num {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--color-taupe);
-      margin-bottom: var(--space-4);
-      letter-spacing: .08em;
+      gap: var(--space-7);
     }
     .philosophy__item h3 {
       font-family: var(--font-display);
@@ -724,7 +716,7 @@
       width: 40px;
       height: 2px;
       background: var(--color-primary);
-      margin: var(--space-4) 0 var(--space-5);
+      margin: 0 0 var(--space-5);
     }
 
     /* ── Who We Serve ────────────────────────────────────── */
@@ -937,229 +929,210 @@
       min-height: 700px;
       position: relative;
     }
-    .schedule__embed { min-height: auto; }
+    /* ── Schedule embed — compact centred card ──────────── */
+    .schedule__embed { min-height: auto; max-width: 640px; margin-left: auto; margin-right: auto; }
 
-    /* ── Booking Form ──────────────────────────────────── */
-    .booking-progress {
-      height: 3px;
-      background: var(--color-border);
-      border-radius: var(--radius-full) var(--radius-full) 0 0;
-    }
-    .booking-progress__fill {
-      height: 100%;
-      background: var(--color-primary);
-      border-radius: inherit;
-      transition: width 400ms cubic-bezier(0.4,0,0.2,1);
-    }
-    .booking-steps-wrap {
-      padding: var(--space-6) var(--space-8) var(--space-5);
+    /* ── Booking Widget ──────────────────────────────────── */
+    .bk-section {
+      padding: var(--space-5) var(--space-6);
       border-bottom: 1px solid var(--color-border);
     }
-    .booking-steps {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
+    .bk-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin-bottom: var(--space-3);
+      line-height: 1;
     }
-    .booking-step {
+
+    /* Duration pills */
+    .bk-pills { display: flex; gap: var(--space-3); }
+    .bk-pill {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-2);
-    }
-    .booking-step__dot {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
+      gap: 4px;
+      padding: 11px 12px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-white);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 15px;
       font-weight: 600;
-      background: var(--color-linen);
-      color: var(--color-mist);
-      transition: background var(--transition-standard), color var(--transition-standard);
+      color: var(--color-ink);
+      transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
     }
-    .booking-step__label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: var(--color-mist);
-      white-space: nowrap;
-      transition: color var(--transition-standard);
-    }
-    .booking-step.active .booking-step__dot  { background: var(--color-primary); color: #fff; }
-    .booking-step.active .booking-step__label { color: var(--color-primary); }
-    .booking-step.done   .booking-step__dot  { background: var(--color-primary); color: #fff; }
-    .booking-step.done   .booking-step__label { color: var(--color-primary); }
-    .booking-step-line {
-      flex: 1;
-      min-width: 32px;
-      max-width: 96px;
-      height: 2px;
-      background: var(--color-border);
-      margin-top: 16px;
-      transition: background var(--transition-standard);
-    }
-    .booking-step-line.done { background: var(--color-primary); }
+    .bk-pill-sub { font-size: 12px; font-weight: 400; color: var(--color-mist); transition: color var(--transition-fast); }
+    .bk-pill:hover { border-color: var(--color-primary); }
+    .bk-pill--active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .bk-pill--active .bk-pill-sub { color: rgba(255,255,255,.75); }
 
-    .booking-panel {
-      display: none;
-      padding: var(--space-7) var(--space-8);
-      animation: bkIn 260ms cubic-bezier(0.4,0,0.2,1);
+    /* Availability header */
+    .bk-avail-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+    .bk-view-cal {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font-body);
+      transition: opacity var(--transition-fast);
     }
-    .booking-panel.active { display: block; }
-    @keyframes bkIn {
-      from { opacity: 0; transform: translateX(10px); }
-      to   { opacity: 1; transform: translateX(0); }
+    .bk-view-cal:hover { opacity: .7; }
+
+    /* Quick slots */
+    .bk-quick-slots { display: flex; gap: var(--space-3); }
+    .bk-slot {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 10px;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-white);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink);
+      line-height: 1.25;
+      transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
     }
+    .bk-slot-main { font-size: 13px; }
+    .bk-slot-sub  { font-size: 13px; font-weight: 400; color: var(--color-mist); transition: color var(--transition-fast); }
+    .bk-slot:hover { border-color: var(--color-primary); }
+    .bk-slot--active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .bk-slot--active .bk-slot-sub { color: rgba(255,255,255,.75); }
+
+    /* Calendar */
+    .bk-cal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-5); }
+    .bk-cal-nav-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid var(--color-border);
+      background: var(--color-white);
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--color-ink);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      line-height: 1;
+    }
+    .bk-cal-nav-btn:hover:not(:disabled) { border-color: var(--color-primary); background: rgba(40,168,128,.06); }
+    .bk-cal-nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .bk-cal-month-label { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--color-ink); }
+    .bk-cal-weekdays {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      margin-bottom: var(--space-1);
+    }
+    .bk-cal-weekdays span {
+      text-align: center;
+      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--color-mist); padding: var(--space-1) 0;
+    }
+    .bk-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: var(--space-5); }
+    .bk-cal-day {
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      font-size: 14px; font-weight: 500;
+      color: var(--color-mist);
+      cursor: default;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .bk-cal-day--other    { opacity: .35; }
+    .bk-cal-day--today    { outline: 2px solid var(--color-ink); outline-offset: -2px; font-weight: 700; color: var(--color-ink); }
+    .bk-cal-day--available { cursor: pointer; color: var(--color-ink); }
+    .bk-cal-day--available:hover { background: rgba(40,168,128,.12); color: var(--color-primary); }
+    .bk-cal-day--selected { background: var(--color-primary) !important; color: #fff !important; font-weight: 700; }
+
+    /* Time slots */
+    .bk-times-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); margin-bottom: var(--space-4); }
+    .bk-time-btn {
+      padding: 8px 4px;
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-sm);
+      background: rgba(40,168,128,.1);
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--color-ink);
+      cursor: pointer; text-align: center; line-height: 1.3;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+    .bk-time-btn:hover:not(:disabled) { border-color: var(--color-primary); background: rgba(40,168,128,.18); }
+    .bk-time-btn--selected { border-color: var(--color-primary); background: rgba(40,168,128,.18); font-weight: 700; }
+    .bk-time-btn--soldout  { background: var(--color-surface); color: var(--color-mist); cursor: not-allowed; }
+    .bk-time-btn__sold     { display: block; font-size: 10px; color: var(--color-mist); }
+    .bk-tz {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--color-mist);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-body);
+      transition: color var(--transition-fast);
+    }
+    .bk-tz:hover { color: var(--color-primary); }
+
+    /* Footer bar */
+    .bk-footer {
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+      padding: var(--space-4) var(--space-6);
+      background: var(--color-surface);
+    }
+    .bk-footer-left { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+    .bk-footer-icon {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(40,168,128,.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .bk-footer-price { font-size: 17px; font-weight: 700; color: var(--color-ink); line-height: 1.2; }
+    .bk-footer-desc  { font-size: 12px; color: var(--color-mist); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Checkout panel */
+    .bk-checkout-hdr {
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface);
+      display: flex; align-items: center; gap: var(--space-4);
+    }
+    .bk-back-link {
+      font-size: 13px; font-weight: 500; color: var(--color-primary);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-body); flex-shrink: 0;
+      transition: opacity var(--transition-fast);
+    }
+    .bk-back-link:hover { opacity: .7; }
+    .bk-checkout-summary { font-size: 13px; color: var(--color-slate); font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bk-checkout-body { padding: var(--space-7) var(--space-6); }
+
+    /* Shared checkout / notice styles */
     .booking-panel__title {
       font-family: var(--font-display);
       font-size: clamp(20px, 2.5vw, 28px);
-      font-weight: 500;
-      color: var(--color-ink);
-      line-height: 1.2;
-      margin-bottom: var(--space-2);
+      font-weight: 500; color: var(--color-ink); line-height: 1.2; margin-bottom: var(--space-2);
     }
-    .booking-panel__subtitle {
-      font-size: 15px;
-      color: var(--color-mist);
-      line-height: 1.65;
-      margin-bottom: var(--space-6);
-    }
-
-    /* Service option cards */
-    .service-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-4);
-      margin-bottom: var(--space-4);
-    }
-    .service-option { position: relative; }
-    .service-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .service-option__card {
-      display: block;
-      height: 100%;
-      padding: var(--space-5);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      cursor: pointer;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-    }
-    .service-option__card:hover {
-      border-color: var(--color-primary);
-      background: rgba(40,168,128,.03);
-    }
-    .service-option input[type="radio"]:checked + .service-option__card {
-      border-color: var(--color-primary);
-      background: rgba(40,168,128,.06);
-      box-shadow: 0 0 0 3px rgba(40,168,128,.12);
-    }
-    .service-option__badge {
-      display: inline-flex;
-      padding: 3px 10px;
-      border-radius: var(--radius-full);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      background: rgba(40,168,128,.1);
-      color: var(--color-primary);
-      margin-bottom: var(--space-3);
-    }
-    .service-option__name {
-      font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 500;
-      color: var(--color-ink);
-      line-height: 1.3;
-      margin-bottom: var(--space-2);
-    }
-    .service-option__desc {
-      font-size: 13px;
-      color: var(--color-mist);
-      line-height: 1.65;
-    }
-    .service-option__price {
-      margin-top: var(--space-3);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--color-taupe);
-      font-family: var(--font-mono);
-    }
-
-    /* Navigation footer */
-    .booking-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-5) var(--space-8);
-      border-top: 1px solid var(--color-border);
-      background: var(--color-surface);
-    }
-
-    /* Review summary */
-    .booking-summary {
-      background: var(--color-cream);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4) var(--space-5);
-      margin-bottom: var(--space-6);
-    }
-    .booking-summary__row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: var(--space-4);
-      padding: var(--space-2) 0;
-      border-bottom: 1px solid var(--color-border);
-      font-size: 14px;
-    }
-    .booking-summary__row:last-child { border-bottom: none; }
-    .booking-summary__label { color: var(--color-mist); font-weight: 500; flex-shrink: 0; }
-    .booking-summary__value { color: var(--color-ink); font-weight: 500; text-align: right; }
-
-    /* Stripe scaffold */
-    .stripe-mount {
-      background: var(--color-surface);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-5);
-      margin-bottom: var(--space-5);
-      min-height: 80px;
-    }
-    .booking-notice {
-      padding: var(--space-4) var(--space-5);
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      line-height: 1.65;
-      margin-bottom: var(--space-5);
-    }
-    .booking-notice--free {
-      background: rgba(40,168,128,.08);
-      border: 1px solid rgba(40,168,128,.25);
-      color: var(--color-slate);
-    }
-    .booking-notice--scaffold {
-      background: rgba(242,192,46,.08);
-      border: 1px solid rgba(242,192,46,.3);
-      color: var(--color-slate);
-    }
+    .booking-panel__subtitle { font-size: 15px; color: var(--color-mist); line-height: 1.65; margin-bottom: var(--space-6); }
+    .booking-notice { padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); font-size: 13px; line-height: 1.65; margin-bottom: var(--space-5); }
+    .booking-notice--scaffold { background: rgba(242,192,46,.08); border: 1px solid rgba(242,192,46,.3); color: var(--color-slate); }
     .booking-notice strong { display: block; color: var(--color-ink); margin-bottom: 4px; }
+    .stripe-mount { background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5); min-height: 80px; }
 
     @media (max-width: 640px) {
-      .service-options    { grid-template-columns: 1fr; }
-      .booking-panel      { padding: var(--space-6) var(--space-5); }
-      .booking-nav        { padding: var(--space-4) var(--space-5); flex-wrap: wrap; }
-      .booking-steps-wrap { padding: var(--space-5) var(--space-5) var(--space-4); }
-      .booking-step__label { display: none; }
-      .booking-step-line  { min-width: 20px; }
+      .bk-section      { padding: var(--space-4) var(--space-5); }
+      .bk-footer       { padding: var(--space-4) var(--space-5); flex-wrap: wrap; }
+      .bk-pills        { gap: var(--space-2); }
+      .bk-pill         { font-size: 14px; padding: 10px 8px; }
+      .bk-times-grid   { grid-template-columns: repeat(3, 1fr); }
+      .bk-checkout-hdr { padding: var(--space-3) var(--space-5); }
+      .bk-checkout-body{ padding: var(--space-6) var(--space-5); }
     }
 
     /* ── Contact ─────────────────────────────────────────── */
@@ -1649,19 +1622,16 @@
       </div>
       <div class="philosophy__grid">
         <div class="philosophy__item fade-up">
-          <p class="philosophy__num">01</p>
           <div class="philosophy__divider"></div>
           <h3>Trust</h3>
           <p>I show up as a true partner — not a vendor. Every engagement begins with deep listening and a commitment to understanding your organization's unique context, culture, and constraints. Your goals become my goals.</p>
         </div>
         <div class="philosophy__item fade-up" style="transition-delay:100ms">
-          <p class="philosophy__num">02</p>
           <div class="philosophy__divider"></div>
           <h3>Joy</h3>
           <p>Transformative work doesn't have to be joyless. I bring energy, creativity, and genuine enthusiasm to every engagement. When the work is meaningful, it shows — and it spreads to the teams and communities we serve.</p>
         </div>
         <div class="philosophy__item fade-up" style="transition-delay:200ms">
-          <p class="philosophy__num">03</p>
           <div class="philosophy__divider"></div>
           <h3>Rigor</h3>
           <p>Vision without execution is just aspiration. I bring disciplined project management, evidence-based approaches, and a commitment to measurable outcomes — ensuring initiatives stay on schedule, on budget, and on mission.</p>
@@ -1827,262 +1797,134 @@
         <span class="eyebrow">Let's Connect</span>
         <h2 class="schedule__heading">Book time with <em>Daisy</em>.</h2>
         <p class="schedule__subhead">
-          Choose your engagement below — a Discovery Call is always the right first step.
+          Pick your session length, choose a time — you're done in minutes.
         </p>
       </div>
 
       <div class="schedule__embed fade-up" style="transition-delay:100ms">
 
-        <!-- ── Booking form (multi-step) ── -->
-        <div id="booking-form-card">
+        <!-- ── Phase 1: Booking widget ── -->
+        <div id="bk-widget">
 
-          <!-- Progress bar -->
-          <div class="booking-progress">
-            <div class="booking-progress__fill" style="width:0%"></div>
-          </div>
-
-          <!-- Step indicator -->
-          <div class="booking-steps-wrap">
-            <div class="booking-steps">
-              <div class="booking-step active" data-step="1">
-                <div class="booking-step__dot">1</div>
-                <div class="booking-step__label">Service</div>
-              </div>
-              <div class="booking-step-line"></div>
-              <div class="booking-step" data-step="2">
-                <div class="booking-step__dot">2</div>
-                <div class="booking-step__label">Details</div>
-              </div>
-              <div class="booking-step-line"></div>
-              <div class="booking-step" data-step="3">
-                <div class="booking-step__dot">3</div>
-                <div class="booking-step__label">Contact</div>
-              </div>
-              <div class="booking-step-line"></div>
-              <div class="booking-step" data-step="4">
-                <div class="booking-step__dot">4</div>
-                <div class="booking-step__label">Review</div>
-              </div>
+          <!-- Duration picker -->
+          <div class="bk-section">
+            <p class="bk-label">How deep do you want to go?</p>
+            <div class="bk-pills">
+              <button class="bk-pill" data-minutes="15" data-price="40">
+                Quick<span class="bk-pill-sub">15 min</span>
+              </button>
+              <button class="bk-pill" data-minutes="30" data-price="80">
+                Full<span class="bk-pill-sub">30 min</span>
+              </button>
+              <button class="bk-pill bk-pill--active" data-minutes="45" data-price="120">
+                Deep Dive<span class="bk-pill-sub">45 min</span>
+              </button>
             </div>
           </div>
 
-          <!-- ── Panel 1: Service selection ── -->
-          <div class="booking-panel active" id="booking-panel-1">
-            <h3 class="booking-panel__title">Choose your engagement</h3>
-            <p class="booking-panel__subtitle">Not sure where to start? A Discovery Call is always the right first step — it's free.</p>
-
-            <div class="service-options">
-              <label class="service-option">
-                <input type="radio" name="bk-service" value="discovery">
-                <div class="service-option__card">
-                  <div class="service-option__badge">Free · 30 min</div>
-                  <div class="service-option__name">Discovery Call</div>
-                  <div class="service-option__desc">We'll explore your needs and see if working together is the right fit. No commitment required.</div>
-                  <div class="service-option__price">Free</div>
-                </div>
-              </label>
-              <label class="service-option">
-                <input type="radio" name="bk-service" value="strategic">
-                <div class="service-option__card">
-                  <div class="service-option__badge">Strategic Planning</div>
-                  <div class="service-option__name">Strategic Planning &amp; Alignment</div>
-                  <div class="service-option__desc">End-to-end strategy development, stakeholder alignment, and outcome frameworks.</div>
-                  <div class="service-option__price"><!-- TODO: add pricing --></div>
-                </div>
-              </label>
-              <label class="service-option">
-                <input type="radio" name="bk-service" value="workshop">
-                <div class="service-option__card">
-                  <div class="service-option__badge">Facilitation</div>
-                  <div class="service-option__name">Workshop Facilitation &amp; Capacity Building</div>
-                  <div class="service-option__desc">Collaborative workshops and leadership retreats that build genuine organizational capacity.</div>
-                  <div class="service-option__price"><!-- TODO: add pricing --></div>
-                </div>
-              </label>
-              <label class="service-option">
-                <input type="radio" name="bk-service" value="program">
-                <div class="service-option__card">
-                  <div class="service-option__badge">Program Design</div>
-                  <div class="service-option__name">Program Design &amp; Evaluation</div>
-                  <div class="service-option__desc">Evidence-based program design with impact measurement and accreditation-aligned models.</div>
-                  <div class="service-option__price"><!-- TODO: add pricing --></div>
-                </div>
-              </label>
+          <!-- Quick availability -->
+          <div class="bk-section" id="bk-quick-avail">
+            <div class="bk-avail-hdr">
+              <p class="bk-label" style="margin:0">Next availability</p>
+              <button class="bk-view-cal" id="bk-view-cal-btn">View other availability
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
             </div>
-            <p id="step1-error" class="field-error" style="display:none">Please select a service to continue.</p>
+            <div class="bk-quick-slots" id="bk-quick-slots"><!-- filled by JS --></div>
           </div>
 
-          <!-- ── Panel 2: About your organization ── -->
-          <div class="booking-panel" id="booking-panel-2">
-            <h3 class="booking-panel__title">Tell me about your work</h3>
-            <p class="booking-panel__subtitle">Help me understand your organization and what you're hoping to accomplish.</p>
+          <!-- Full calendar (hidden by default) -->
+          <div class="bk-section" id="bk-calendar-wrap" style="display:none">
+            <div class="bk-cal-hdr">
+              <button class="bk-cal-nav-btn" id="bk-cal-prev">‹</button>
+              <span class="bk-cal-month-label" id="bk-cal-month-label"></span>
+              <button class="bk-cal-nav-btn" id="bk-cal-next">›</button>
+            </div>
+            <div class="bk-cal-weekdays">
+              <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+            </div>
+            <div class="bk-cal-grid" id="bk-cal-grid"></div>
+            <div id="bk-times-wrap" style="display:none">
+              <p class="bk-label" style="margin-bottom:var(--space-3)">Available times</p>
+              <div class="bk-times-grid" id="bk-times-grid"></div>
+              <button class="bk-tz">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Hawaii–Aleutian (GMT-10) ›
+              </button>
+            </div>
+          </div>
 
+          <!-- Footer: price + book -->
+          <div class="bk-footer">
+            <div class="bk-footer-left">
+              <div class="bk-footer-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
+                <div class="bk-footer-price" id="bk-footer-price">Book for $120</div>
+                <div class="bk-footer-desc"  id="bk-footer-desc">Deep Dive — select a time above</div>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="bk-book-btn" disabled style="white-space:nowrap">Book Now</button>
+          </div>
+        </div><!-- /#bk-widget -->
+
+        <!-- ── Phase 2: Checkout ── -->
+        <div id="bk-checkout" style="display:none">
+          <div class="bk-checkout-hdr">
+            <button class="bk-back-link" id="bk-checkout-back">← Change time</button>
+            <span class="bk-checkout-summary" id="bk-checkout-summary"></span>
+          </div>
+          <div class="bk-checkout-body">
+            <h3 class="booking-panel__title">Your details</h3>
+            <p class="booking-panel__subtitle">Almost there — a few quick details and you're confirmed.</p>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="bk-org">Organization Name *</label>
-                <input class="form-input" type="text" id="bk-org" placeholder="e.g. Pacific Equity Foundation" autocomplete="organization">
+                <label class="form-label" for="bkc-first">First Name *</label>
+                <input class="form-input" type="text" id="bkc-first" placeholder="Jane" autocomplete="given-name">
               </div>
               <div class="form-group">
-                <label class="form-label" for="bk-org-type">Organization Type *</label>
-                <select class="form-input" id="bk-org-type">
-                  <option value="">Select one…</option>
-                  <option value="school-district">School / District</option>
-                  <option value="charter">Charter Management Org</option>
-                  <option value="foundation">Foundation / Philanthropy</option>
-                  <option value="nonprofit">Nonprofit / NGO</option>
-                  <option value="govt">Government Agency</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="bk-role">Your Role / Title *</label>
-                <input class="form-input" type="text" id="bk-role" placeholder="e.g. Executive Director" autocomplete="organization-title">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="bk-team-size">Team Size</label>
-                <select class="form-input" id="bk-team-size">
-                  <option value="">Select one…</option>
-                  <option value="1-10">1–10</option>
-                  <option value="11-50">11–50</option>
-                  <option value="51-200">51–200</option>
-                  <option value="200+">200+</option>
-                </select>
+                <label class="form-label" for="bkc-last">Last Name *</label>
+                <input class="form-input" type="text" id="bkc-last" placeholder="Smith" autocomplete="family-name">
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label" for="bk-start-date">Preferred Start Date</label>
-              <input class="form-input" type="date" id="bk-start-date">
+              <label class="form-label" for="bkc-email">Email *</label>
+              <input class="form-input" type="email" id="bkc-email" placeholder="jane@organization.org" autocomplete="email">
             </div>
             <div class="form-group">
-              <label class="form-label" for="bk-goals">What are you hoping to accomplish?</label>
-              <textarea class="form-input" id="bk-goals" rows="3" placeholder="Briefly describe your goals or the challenge you're trying to solve…"></textarea>
+              <label class="form-label" for="bkc-org">Organization</label>
+              <input class="form-input" type="text" id="bkc-org" placeholder="School, foundation, or nonprofit" autocomplete="organization">
             </div>
+            <div class="form-group">
+              <label class="form-label" for="bkc-topic">What would you like to discuss? <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></label>
+              <textarea class="form-input" id="bkc-topic" rows="2" placeholder="Brief context helps Daisy prepare…"></textarea>
+            </div>
+            <!--
+              STRIPE SCAFFOLD — remove this notice before launch
+              1. Set STRIPE_PK in the JS below to your pk_live_... key
+              2. Build POST /api/create-payment-intent → { clientSecret }
+                 accepting { session, minutes, amount (cents), email }
+              3. Update return_url in confirmPayment()
+              Docs: stripe.com/docs/payments/payment-element
+            -->
+            <div class="booking-notice booking-notice--scaffold">
+              <strong>Payment — Stripe not yet configured</strong>
+              Add your publishable key and backend endpoint to activate card capture.
+            </div>
+            <div class="stripe-mount"><div id="bkc-stripe-element"></div></div>
+            <p id="bkc-stripe-error" class="field-error" style="display:none;margin-bottom:var(--space-4)"></p>
+            <button type="button" class="btn btn-primary btn-lg" id="bkc-submit-btn" style="width:100%;margin-top:var(--space-2)">Confirm Booking →</button>
           </div>
+        </div><!-- /#bk-checkout -->
 
-          <!-- ── Panel 3: Contact info ── -->
-          <div class="booking-panel" id="booking-panel-3">
-            <h3 class="booking-panel__title">Your contact information</h3>
-            <p class="booking-panel__subtitle">I'll be in touch within one business day to confirm your booking.</p>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="bk-first">First Name *</label>
-                <input class="form-input" type="text" id="bk-first" placeholder="Jane" autocomplete="given-name">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="bk-last">Last Name *</label>
-                <input class="form-input" type="text" id="bk-last" placeholder="Smith" autocomplete="family-name">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="bk-email">Email Address *</label>
-              <input class="form-input" type="email" id="bk-email" placeholder="jane@organization.org" autocomplete="email">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="bk-phone">Phone <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></label>
-              <input class="form-input" type="tel" id="bk-phone" placeholder="+1 (808) 555-0100" autocomplete="tel">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="bk-referral">How did you hear about Daisy?</label>
-              <select class="form-input" id="bk-referral">
-                <option value="">Select one…</option>
-                <option value="colleague">Colleague or referral</option>
-                <option value="linkedin">LinkedIn</option>
-                <option value="conference">Conference or event</option>
-                <option value="search">Search / Google</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- ── Panel 4: Review & payment ── -->
-          <div class="booking-panel" id="booking-panel-4">
-            <h3 class="booking-panel__title">Review &amp; confirm</h3>
-            <p class="booking-panel__subtitle">Everything look right? Use the Back button to make changes.</p>
-
-            <div class="booking-summary">
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Service</span>
-                <span class="booking-summary__value" id="summary-service">—</span>
-              </div>
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Investment</span>
-                <span class="booking-summary__value" id="summary-price">—</span>
-              </div>
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Organization</span>
-                <span class="booking-summary__value" id="summary-org">—</span>
-              </div>
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Name</span>
-                <span class="booking-summary__value" id="summary-name">—</span>
-              </div>
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Email</span>
-                <span class="booking-summary__value" id="summary-email">—</span>
-              </div>
-              <div class="booking-summary__row">
-                <span class="booking-summary__label">Preferred Start</span>
-                <span class="booking-summary__value" id="summary-date">—</span>
-              </div>
-            </div>
-
-            <!-- Free service: no payment -->
-            <div id="free-section" style="display:none">
-              <div class="booking-notice booking-notice--free">
-                <strong>Discovery Call — no payment required.</strong>
-                Once confirmed, Daisy will reach out within one business day to schedule your 30-minute call.
-              </div>
-            </div>
-
-            <!-- Paid service: Stripe Payment Element -->
-            <div id="stripe-section" style="display:none">
-              <!--
-                ╔══════════════════════════════════════════════════════╗
-                ║  STRIPE SCAFFOLD — remove this notice before launch  ║
-                ╠══════════════════════════════════════════════════════╣
-                ║  To activate payments:                               ║
-                ║  1. Set STRIPE_PK below to your publishable key      ║
-                ║  2. Build POST /api/create-payment-intent that       ║
-                ║     accepts { serviceId, email } and returns         ║
-                ║     { clientSecret }                                 ║
-                ║  3. Update return_url in confirmPayment()            ║
-                ║  Docs: stripe.com/docs/payments/payment-element      ║
-                ╚══════════════════════════════════════════════════════╝
-              -->
-              <div class="booking-notice booking-notice--scaffold">
-                <strong>Payment — Stripe not yet configured</strong>
-                Add your publishable key and backend endpoint to activate card capture. See the code comment above <code>#stripe-payment-element</code>.
-              </div>
-              <div class="stripe-mount">
-                <div id="stripe-payment-element">
-                  <!-- Stripe Payment Element mounts here once configured -->
-                </div>
-              </div>
-              <p id="stripe-error" class="field-error" style="display:none;margin-bottom:var(--space-4)"></p>
-            </div>
-          </div>
-
-          <!-- Nav footer -->
-          <div class="booking-nav">
-            <button type="button" class="btn btn-secondary" id="bk-back-btn" style="display:none">← Back</button>
-            <span></span><!-- spacer when back is hidden -->
-            <div style="display:flex;gap:var(--space-3);align-items:center">
-              <button type="button" class="btn btn-primary btn-lg" id="bk-next-btn">Continue →</button>
-              <button type="button" class="btn btn-primary btn-lg" id="bk-submit-btn" style="display:none">Confirm Booking →</button>
-            </div>
-          </div>
-        </div><!-- /#booking-form-card -->
-
-        <!-- Success state -->
-        <div id="booking-success" style="display:none;padding:var(--space-10) var(--space-8);text-align:center;">
+        <!-- ── Success ── -->
+        <div id="bk-success" style="display:none;padding:var(--space-10) var(--space-8);text-align:center;">
           <div style="width:72px;height:72px;border-radius:50%;background:rgba(40,168,128,.12);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-6);">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3 style="font-family:var(--font-display);font-size:clamp(24px,3vw,36px);font-weight:500;color:var(--color-ink);margin-bottom:var(--space-3);">You're all set!</h3>
-          <p style="font-size:16px;color:var(--color-mist);max-width:420px;margin:0 auto;line-height:1.75;">Daisy will be in touch within one business day to confirm your booking and discuss next steps.</p>
+          <p style="font-size:16px;color:var(--color-mist);max-width:420px;margin:0 auto;line-height:1.75;">Daisy will send a confirmation to your email shortly.</p>
         </div>
 
       </div><!-- /.schedule__embed -->
@@ -2306,262 +2148,259 @@
 
     statNums.forEach(el => countObs.observe(el));
 
-    // ── Multi-step Booking Form ──────────────────────────
+    // ── Booking Widget ────────────────────────────────────
     (function () {
-      // TODO: Replace with your Stripe publishable key (pk_live_... or pk_test_...)
+      'use strict';
+
+      // TODO: Set your Stripe publishable key (pk_live_... or pk_test_...)
       var STRIPE_PK = 'pk_test_YOUR_PUBLISHABLE_KEY_HERE';
 
-      // TODO: Update names/priceDisplay to match your actual offerings.
-      // For paid services, set price in cents (e.g. 35000 = $350.00) once you have Stripe set up.
-      var SERVICES = {
-        discovery: { name: 'Discovery Call',                       priceDisplay: 'Free',                free: true  },
-        strategic: { name: 'Strategic Planning & Alignment',       priceDisplay: 'Contact for pricing', free: false },
-        workshop:  { name: 'Workshop Facilitation',                priceDisplay: 'Contact for pricing', free: false },
-        program:   { name: 'Program Design & Evaluation',          priceDisplay: 'Contact for pricing', free: false },
+      // TODO: Update session names and prices (USD) to match your actual offerings
+      var SESSIONS = {
+        15: { label: 'Quick',     price: 40  },
+        30: { label: 'Full',      price: 80  },
+        45: { label: 'Deep Dive', price: 120 },
       };
 
-      var step = 1;
-      var data = { serviceId: null, service: null, details: {}, contact: {} };
-      var stripeObj = null, stripeEls = null;
+      // TODO: Replace with real blocked/booked slots from your calendar backend
+      // Format: 'YYYY-MM-DD HH:MM' (24-hour)
+      var BLOCKED = [
+        '2026-03-27 09:30', '2026-03-27 13:00', '2026-03-27 13:30',
+        '2026-03-27 14:00', '2026-03-27 14:30', '2026-03-27 15:00', '2026-03-27 15:30',
+        '2026-03-30 10:00', '2026-03-30 11:30',
+        '2026-03-31 09:00', '2026-03-31 12:30',
+        '2026-04-01 10:00', '2026-04-01 10:45', '2026-04-01 14:00',
+        '2026-04-02 09:00', '2026-04-02 09:45',
+      ];
 
-      var nextBtn   = document.getElementById('bk-next-btn');
-      var backBtn   = document.getElementById('bk-back-btn');
-      var submitBtn = document.getElementById('bk-submit-btn');
+      // ── State ──────────────────────────────────────────────
+      var today        = new Date(); today.setHours(0,0,0,0);
+      var selectedMin  = 45;
+      var selectedDate = null;
+      var selectedTime = null;
+      var calDate      = new Date(today.getFullYear(), today.getMonth(), 1);
+      var calOpen      = false;
+      var stripeObj    = null, stripeEls = null;
 
-      function goTo(n) {
-        document.querySelectorAll('.booking-panel').forEach(function (p) {
-          p.classList.remove('active');
-        });
-        document.getElementById('booking-panel-' + n).classList.add('active');
+      // ── Helpers ─────────────────────────────────────────────
+      var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var MSHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var DSHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-        document.querySelectorAll('.booking-step').forEach(function (s, i) {
-          var sn  = i + 1;
-          var dot = s.querySelector('.booking-step__dot');
-          s.classList.remove('active', 'done');
-          if      (sn < n)  { s.classList.add('done');   dot.textContent = '✓'; }
-          else if (sn === n) { s.classList.add('active'); dot.textContent = sn;  }
-          else               {                            dot.textContent = sn;  }
-        });
+      function pad(n)  { return n < 10 ? '0' + n : '' + n; }
+      function ymd(d)  { return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+      function sameDay(a,b) { return ymd(a) === ymd(b); }
+      function isWknd(d)    { return d.getDay() === 0 || d.getDay() === 6; }
+      function isPast(d)    { var c=new Date(d); c.setHours(0,0,0,0); return c < today; }
+      function isBlocked(ds,h,m) { return BLOCKED.indexOf(ds+' '+pad(h)+':'+pad(m)) >= 0; }
 
-        document.querySelectorAll('.booking-step-line').forEach(function (l, i) {
-          l.classList.toggle('done', i + 1 < n);
-        });
-
-        var fill = document.querySelector('.booking-progress__fill');
-        if (fill) fill.style.width = (((n - 1) / 3) * 100) + '%';
-
-        // Nav visibility
-        backBtn.style.display  = n === 1 ? 'none' : '';
-        backBtn.previousElementSibling.style.display = n === 1 ? '' : 'none'; // spacer
-
-        if (n === 4) {
-          nextBtn.style.display   = 'none';
-          submitBtn.style.display = '';
-          populateSummary();
-          if (data.service && !data.service.free) initStripe();
-        } else {
-          nextBtn.style.display   = '';
-          submitBtn.style.display = 'none';
-        }
-
-        step = n;
-        var card = document.getElementById('booking-form-card');
-        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      function fmtDate(d) {
+        var n=d.getDate(), sfx=['','st','nd','rd'];
+        return DSHORT[d.getDay()]+', '+MSHORT[d.getMonth()]+' '+n+(sfx[n]||'th');
       }
+      function fmtTime(h,m) { return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM'); }
 
-      function validate(n) {
-        if (n === 1) {
-          var ok  = !!document.querySelector('input[name="bk-service"]:checked');
-          var err = document.getElementById('step1-error');
-          if (err) err.style.display = ok ? 'none' : 'block';
-          return ok;
-        }
-        if (n === 2) {
-          var valid = true;
-          ['bk-org', 'bk-org-type', 'bk-role'].forEach(function (id) {
-            var el = document.getElementById(id);
-            if (!el) return;
-            var ok = el.value.trim() !== '';
-            el.classList.toggle('invalid', !ok);
-            if (!ok) valid = false;
-          });
-          return valid;
-        }
-        if (n === 3) {
-          var valid = true;
-          ['bk-first', 'bk-last'].forEach(function (id) {
-            var el = document.getElementById(id);
-            if (!el) return;
-            var ok = el.value.trim() !== '';
-            el.classList.toggle('invalid', !ok);
-            if (!ok) valid = false;
-          });
-          var emailEl = document.getElementById('bk-email');
-          if (emailEl) {
-            var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value);
-            emailEl.classList.toggle('invalid', !ok);
-            if (!ok) valid = false;
-          }
-          return valid;
-        }
-        return true;
-      }
-
-      function collect(n) {
-        if (n === 1) {
-          var checked = document.querySelector('input[name="bk-service"]:checked');
-          if (checked) {
-            data.serviceId = checked.value;
-            data.service   = SERVICES[checked.value];
+      function getSlots(date) {
+        var ds=ymd(date), slots=[];
+        for (var h=9; h<=16; h++) {
+          for (var m=0; m<60; m+=selectedMin) {
+            if (h*60+m+selectedMin > 17*60) break;
+            slots.push({ h:h, m:m, label:fmtTime(h,m), blocked:isBlocked(ds,h,m) });
           }
         }
-        if (n === 2) {
-          data.details = {
-            org:       (document.getElementById('bk-org')        || {}).value || '',
-            orgType:   (document.getElementById('bk-org-type')   || {}).value || '',
-            role:      (document.getElementById('bk-role')       || {}).value || '',
-            teamSize:  (document.getElementById('bk-team-size')  || {}).value || '',
-            startDate: (document.getElementById('bk-start-date') || {}).value || '',
-            goals:     (document.getElementById('bk-goals')      || {}).value || '',
-          };
-        }
-        if (n === 3) {
-          data.contact = {
-            first:    (document.getElementById('bk-first')    || {}).value || '',
-            last:     (document.getElementById('bk-last')     || {}).value || '',
-            email:    (document.getElementById('bk-email')    || {}).value || '',
-            phone:    (document.getElementById('bk-phone')    || {}).value || '',
-            referral: (document.getElementById('bk-referral') || {}).value || '',
-          };
-        }
+        return slots;
       }
 
-      function set(id, val) {
-        var el = document.getElementById(id);
-        if (el) el.textContent = val || '—';
+      function getNextSlots(count) {
+        var out=[], d=new Date(today);
+        d.setDate(d.getDate()+1);
+        while (out.length<count && d.getFullYear()<=today.getFullYear()+1) {
+          if (!isWknd(d)) {
+            getSlots(d).forEach(function(s){ if (!s.blocked && out.length<count) out.push({date:new Date(d),slot:s}); });
+          }
+          d.setDate(d.getDate()+1);
+        }
+        return out;
       }
 
-      function populateSummary() {
-        var svc = data.service  || {};
-        var det = data.details  || {};
-        var con = data.contact  || {};
-        set('summary-service', svc.name);
-        set('summary-price',   svc.priceDisplay);
-        set('summary-org',     det.org);
-        set('summary-name',    (con.first + ' ' + con.last).trim());
-        set('summary-email',   con.email);
-        set('summary-date',    det.startDate || 'Flexible');
+      function $id(id) { return document.getElementById(id); }
 
-        var freeSection   = document.getElementById('free-section');
-        var stripeSection = document.getElementById('stripe-section');
-        if (svc.free) {
-          if (freeSection)   freeSection.style.display   = 'block';
-          if (stripeSection) stripeSection.style.display = 'none';
-          submitBtn.textContent = 'Confirm Booking →';
+      // ── Footer ──────────────────────────────────────────────
+      function updateFooter() {
+        var svc=$id('bk-footer-price'), dsc=$id('bk-footer-desc'), btn=$id('bk-book-btn');
+        if (!svc) return;
+        svc.textContent = 'Book for $'+SESSIONS[selectedMin].price;
+        if (selectedDate && selectedTime) {
+          dsc.textContent = SESSIONS[selectedMin].label+' · '+fmtDate(selectedDate)+' · '+selectedTime;
+          if (btn) btn.disabled = false;
         } else {
-          if (freeSection)   freeSection.style.display   = 'none';
-          if (stripeSection) stripeSection.style.display = 'block';
-          submitBtn.textContent = 'Confirm & Pay →';
+          dsc.textContent = SESSIONS[selectedMin].label+' — select a time above';
+          if (btn) btn.disabled = true;
         }
       }
 
+      // ── Quick slots ─────────────────────────────────────────
+      function renderQuickSlots() {
+        var c=$id('bk-quick-slots'); if (!c) return;
+        var next=getNextSlots(2);
+        c.innerHTML='';
+        var valid=next.some(function(x){ return selectedDate&&sameDay(x.date,selectedDate)&&selectedTime===x.slot.label; });
+        if (!valid) { selectedDate=null; selectedTime=null; }
+        next.forEach(function(item,idx) {
+          var btn=document.createElement('button');
+          btn.className='bk-slot'+(idx===0?' bk-slot--active':'');
+          btn.innerHTML='<span class="bk-slot-main">'+fmtDate(item.date)+'</span><span class="bk-slot-sub">'+item.slot.label+'</span>';
+          if (idx===0&&!selectedDate) { selectedDate=item.date; selectedTime=item.slot.label; }
+          btn.addEventListener('click', function(){
+            c.querySelectorAll('.bk-slot').forEach(function(b){b.classList.remove('bk-slot--active');});
+            btn.classList.add('bk-slot--active');
+            selectedDate=item.date; selectedTime=item.slot.label;
+            updateFooter();
+          });
+          c.appendChild(btn);
+        });
+        updateFooter();
+      }
+
+      // ── Calendar ────────────────────────────────────────────
+      function renderCalendar() {
+        var grid=$id('bk-cal-grid'), lbl=$id('bk-cal-month-label');
+        var prev=$id('bk-cal-prev'),  nxt=$id('bk-cal-next');
+        if (!grid) return;
+        lbl.textContent = MNAMES[calDate.getMonth()]+' '+calDate.getFullYear();
+        var yr=calDate.getFullYear(), mo=calDate.getMonth();
+        var first=new Date(yr,mo,1).getDay(), days=new Date(yr,mo+1,0).getDate();
+        var prevDays=new Date(yr,mo,0).getDate();
+        grid.innerHTML='';
+        for (var i=0;i<first;i++) { var f=document.createElement('div'); f.className='bk-cal-day bk-cal-day--other'; f.textContent=prevDays-first+1+i; grid.appendChild(f); }
+        for (var day=1;day<=days;day++) {
+          var date=new Date(yr,mo,day);
+          var avail=!isPast(date)&&!isWknd(date);
+          var sel=selectedDate&&sameDay(date,selectedDate);
+          var cell=document.createElement('div');
+          cell.className='bk-cal-day'+(isPast(date)||isWknd(date)?' bk-cal-day--other':'')+(sameDay(date,today)?' bk-cal-day--today':'')+(avail?' bk-cal-day--available':'')+(sel?' bk-cal-day--selected':'');
+          cell.textContent=day;
+          if (avail) {
+            (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
+          }
+          grid.appendChild(cell);
+        }
+        var used=first+days, rem=used%7===0?0:7-(used%7);
+        for (var j=1;j<=rem;j++) { var nf=document.createElement('div'); nf.className='bk-cal-day bk-cal-day--other'; nf.textContent=j; grid.appendChild(nf); }
+        if (prev) prev.disabled = yr<today.getFullYear()||(yr===today.getFullYear()&&mo<=today.getMonth());
+      }
+
+      // ── Time slots ──────────────────────────────────────────
+      function renderTimeSlots() {
+        var grid=$id('bk-times-grid'); if (!grid||!selectedDate) { if(grid) grid.innerHTML=''; return; }
+        grid.innerHTML='';
+        getSlots(selectedDate).forEach(function(slot){
+          var btn=document.createElement('button');
+          btn.className='bk-time-btn'+(slot.blocked?' bk-time-btn--soldout':'')+(selectedTime===slot.label?' bk-time-btn--selected':'');
+          btn.textContent=slot.label;
+          if (slot.blocked) {
+            btn.disabled=true;
+            var tag=document.createElement('span'); tag.className='bk-time-btn__sold'; tag.textContent='Sold Out'; btn.appendChild(tag);
+          } else {
+            btn.addEventListener('click',function(){
+              grid.querySelectorAll('.bk-time-btn').forEach(function(b){b.classList.remove('bk-time-btn--selected');});
+              btn.classList.add('bk-time-btn--selected');
+              selectedTime=slot.label; updateFooter();
+            });
+          }
+          grid.appendChild(btn);
+        });
+      }
+
+      // ── Duration pills ──────────────────────────────────────
+      document.querySelectorAll('.bk-pill').forEach(function(pill){
+        pill.addEventListener('click',function(){
+          document.querySelectorAll('.bk-pill').forEach(function(p){p.classList.remove('bk-pill--active');});
+          pill.classList.add('bk-pill--active');
+          selectedMin=parseInt(pill.dataset.minutes,10); selectedTime=null;
+          if (calOpen) renderTimeSlots(); else renderQuickSlots();
+          updateFooter();
+        });
+      });
+
+      // ── View other availability ─────────────────────────────
+      var viewBtn=$id('bk-view-cal-btn'), calWrap=$id('bk-calendar-wrap'), quickAvail=$id('bk-quick-avail');
+      if (viewBtn) {
+        viewBtn.addEventListener('click',function(){
+          calOpen=!calOpen;
+          calWrap.style.display   = calOpen?'block':'none';
+          quickAvail.style.display= calOpen?'none':'block';
+          if (calOpen) {
+            if (selectedDate) calDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
+            renderCalendar();
+            if (selectedDate) { renderTimeSlots(); $id('bk-times-wrap').style.display='block'; }
+          }
+          viewBtn.innerHTML = calOpen
+            ? '← Quick pick'
+            : 'View other availability <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+        });
+      }
+
+      // ── Calendar nav ────────────────────────────────────────
+      var calPrev=$id('bk-cal-prev'), calNext=$id('bk-cal-next');
+      if (calPrev) calPrev.addEventListener('click',function(){ calDate.setMonth(calDate.getMonth()-1); renderCalendar(); });
+      if (calNext) calNext.addEventListener('click',function(){ calDate.setMonth(calDate.getMonth()+1); renderCalendar(); });
+
+      // ── Book Now → Checkout ─────────────────────────────────
+      var bookBtn=$id('bk-book-btn'), widget=$id('bk-widget'), checkout=$id('bk-checkout'), backLink=$id('bk-checkout-back');
+      if (bookBtn) {
+        bookBtn.addEventListener('click',function(){
+          if (!selectedDate||!selectedTime) return;
+          widget.style.display='none'; checkout.style.display='block';
+          var s=SESSIONS[selectedMin];
+          $id('bk-checkout-summary').textContent=s.label+' ('+selectedMin+' min) · '+fmtDate(selectedDate)+' · '+selectedTime+' · $'+s.price;
+          initStripe();
+        });
+      }
+      if (backLink) backLink.addEventListener('click',function(){ checkout.style.display='none'; widget.style.display='block'; });
+
+      // ── Stripe ──────────────────────────────────────────────
       function initStripe() {
-        if (stripeObj) return; // already initialised
-        var mountEl = document.getElementById('stripe-payment-element');
-
-        if (STRIPE_PK === 'pk_test_YOUR_PUBLISHABLE_KEY_HERE') {
-          // Scaffold placeholder — Stripe not yet configured
-          if (mountEl) mountEl.innerHTML =
-            '<p style="font-size:13px;color:var(--color-mist);padding:var(--space-2) 0">' +
-            'Card field will appear here once Stripe is configured.</p>';
+        if (stripeObj) return;
+        var mountEl=$id('bkc-stripe-element');
+        if (STRIPE_PK==='pk_test_YOUR_PUBLISHABLE_KEY_HERE') {
+          if (mountEl) mountEl.innerHTML='<p style="font-size:13px;color:var(--color-mist);padding:8px 0">Card field appears here once Stripe is configured.</p>';
           return;
         }
-
-        stripeObj = Stripe(STRIPE_PK); // eslint-disable-line no-undef
-
-        // TODO: Implement POST /api/create-payment-intent on your backend.
-        // It should accept { serviceId, email } and return { clientSecret }.
-        fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ serviceId: data.serviceId, email: data.contact.email }),
+        stripeObj=Stripe(STRIPE_PK); // eslint-disable-line no-undef
+        fetch('/api/create-payment-intent',{
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ session:SESSIONS[selectedMin].label, minutes:selectedMin, amount:SESSIONS[selectedMin].price*100, email:($id('bkc-email')||{}).value }),
         })
-          .then(function (r) { return r.json(); })
-          .then(function (body) {
-            stripeEls = stripeObj.elements({
-              clientSecret: body.clientSecret,
-              appearance: {
-                theme: 'stripe',
-                variables: {
-                  colorPrimary:    '#28A880',
-                  colorBackground: '#FFFFFF',
-                  colorText:       '#1A1714',
-                  colorDanger:     '#E02458',
-                  fontFamily:      '"DM Sans", "Helvetica Neue", sans-serif',
-                  borderRadius:    '8px',
-                },
-              },
-            });
-            stripeEls.create('payment').mount('#stripe-payment-element');
-          })
-          .catch(function () {
-            var errEl = document.getElementById('stripe-error');
-            if (errEl) {
-              errEl.textContent = 'Unable to load payment form. Please try again or contact us directly.';
-              errEl.style.display = 'block';
-            }
-          });
+        .then(function(r){return r.json();})
+        .then(function(body){
+          stripeEls=stripeObj.elements({ clientSecret:body.clientSecret, appearance:{theme:'stripe',variables:{colorPrimary:'#28A880',colorBackground:'#FFFFFF',colorText:'#1A1714',colorDanger:'#E02458',fontFamily:'"DM Sans","Helvetica Neue",sans-serif',borderRadius:'8px'}} });
+          stripeEls.create('payment').mount('#bkc-stripe-element');
+        })
+        .catch(function(){ var e=$id('bkc-stripe-error'); if(e){e.textContent='Unable to load payment. Please try again or contact Daisy directly.';e.style.display='block';} });
       }
 
-      if (nextBtn) {
-        nextBtn.addEventListener('click', function () {
-          if (!validate(step)) return;
-          collect(step);
-          goTo(step + 1);
-        });
-      }
-
-      if (backBtn) {
-        backBtn.addEventListener('click', function () { goTo(step - 1); });
-      }
-
+      // ── Submit ──────────────────────────────────────────────
+      var submitBtn=$id('bkc-submit-btn');
       if (submitBtn) {
-        submitBtn.addEventListener('click', function () {
-          if (data.service && data.service.free) {
-            // TODO: POST booking data to your backend before showing success
-            // fetch('/api/book', { method: 'POST', body: JSON.stringify(data) });
-            showSuccess();
-            return;
-          }
-
-          if (!stripeObj || !stripeEls) return;
-
-          submitBtn.disabled    = true;
-          submitBtn.textContent = 'Processing…';
-
-          stripeObj.confirmPayment({
-            elements: stripeEls,
-            confirmParams: {
-              // TODO: Update to your actual confirmation page URL
-              return_url:    window.location.origin + '/booking-confirmation',
-              receipt_email: data.contact.email,
-            },
-          }).then(function (result) {
-            if (result.error) {
-              var errEl = document.getElementById('stripe-error');
-              if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
-              submitBtn.disabled    = false;
-              submitBtn.textContent = 'Confirm & Pay →';
-            }
-            // On success Stripe redirects to return_url — no else needed
+        submitBtn.addEventListener('click',function(){
+          var first=$id('bkc-first'), last=$id('bkc-last'), email=$id('bkc-email'), valid=true;
+          [first,last].forEach(function(el){ var ok=el&&el.value.trim()!==''; if(el)el.classList.toggle('invalid',!ok); if(!ok)valid=false; });
+          if (email){ var ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value); email.classList.toggle('invalid',!ok); if(!ok)valid=false; }
+          if (!valid) return;
+          if (!stripeObj||!stripeEls) { showSuccess(); return; }
+          submitBtn.disabled=true; submitBtn.textContent='Processing…';
+          stripeObj.confirmPayment({ elements:stripeEls, confirmParams:{return_url:window.location.origin+'/booking-confirmation',receipt_email:email?email.value:''} })
+          .then(function(result){
+            if (result.error){ var e=$id('bkc-stripe-error'); if(e){e.textContent=result.error.message;e.style.display='block';} submitBtn.disabled=false; submitBtn.textContent='Confirm Booking →'; }
           });
         });
       }
 
-      function showSuccess() {
-        document.getElementById('booking-form-card').style.display = 'none';
-        document.getElementById('booking-success').style.display   = 'block';
-      }
+      function showSuccess() { $id('bk-checkout').style.display='none'; $id('bk-success').style.display='block'; }
+
+      // ── Init ────────────────────────────────────────────────
+      renderQuickSlots();
     })();
 
     // ── Contact form ─────────────────────────────────────

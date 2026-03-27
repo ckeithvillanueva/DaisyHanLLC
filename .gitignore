@@ -7,3 +7,10 @@
 
 # Local Figma / design tooling (untracked scratch)
 figma-capture.html
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
