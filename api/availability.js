@@ -1,9 +1,5 @@
 const { google } = require("googleapis");
 
-// Working hours in Hawaii time (Pacific/Honolulu, always UTC-10)
-const WORK_START_MIN = 9 * 60;  // 9:00 AM
-const WORK_END_MIN   = 17 * 60; // 5:00 PM
-
 function getAuth() {
   const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY;
@@ -19,21 +15,19 @@ function getAuth() {
   });
 }
 
-// Hawaii is always UTC-10 (no DST). Returns a Date whose UTC fields hold Hawaii local values.
-function toHawaiiDate(utcMs) {
-  return new Date(utcMs - 10 * 60 * 60 * 1000);
-}
-
-function hwDateStr(hw) {
-  return hw.getUTCFullYear() + "-" +
-         String(hw.getUTCMonth() + 1).padStart(2, "0") + "-" +
-         String(hw.getUTCDate()).padStart(2, "0");
-}
-
-function hwMinOfDay(hw) {
-  return hw.getUTCHours() * 60 + hw.getUTCMinutes();
-}
-
+/**
+ * Reads the Daisy Han Consulting calendar and returns bookable time ranges.
+ *
+ * How it works:
+ *   - Events whose title starts with "Available" (case-insensitive) define open windows.
+ *   - All other timed events are treated as conflicts and subtracted from those windows.
+ *   - No hardcoded working hours or timezones — Daisy controls availability entirely
+ *     from Google Calendar by adding/removing "Available" events.
+ *
+ * Returns: { freeSlots: [{ start: ISO string, end: ISO string }, ...] }
+ *
+ * Times are UTC ISO strings; the browser converts them to the visitor's local timezone.
+ */
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -49,97 +43,64 @@ module.exports = async function handler(req, res) {
     const timeMin = now.toISOString();
     const timeMax = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString();
 
-    const freeBusy = await calendar.freebusy.query({
-      resource: {
-        timeMin,
-        timeMax,
-        items: [{ id: process.env.GOOGLE_CALENDAR_ID }],
-      },
+    const eventsRes = await calendar.events.list({
+      calendarId: process.env.GOOGLE_CALENDAR_ID || "primary",
+      timeMin,
+      timeMax,
+      singleEvents: true,
+      orderBy: "startTime",
+      maxResults: 2500,
     });
 
-    const busyUTC = freeBusy.data.calendars[process.env.GOOGLE_CALENDAR_ID]?.busy || [];
+    const items = eventsRes.data.items || [];
+    const availableWindows = []; // open windows from "Available" events
+    const busyIntervals = [];   // conflicts from all other timed events
 
-    // Group busy intervals by Hawaii date as minute-of-day ranges.
-    // busyByDay: { "YYYY-MM-DD": [[startMin, endMin], ...] }
-    const busyByDay = {};
+    for (const event of items) {
+      const summary = (event.summary || "").toLowerCase().trim();
+      const isAvailable = summary.startsWith("available");
 
-    for (const { start, end } of busyUTC) {
-      const sUTC = new Date(start);
-      const eUTC = new Date(end);
-
-      // Find the start of the Hawaii day containing sUTC.
-      // Hawaii midnight = 10:00 UTC that same calendar day.
-      const sHw = toHawaiiDate(sUTC.getTime());
-      let dayStartUTC = Date.UTC(
-        sHw.getUTCFullYear(), sHw.getUTCMonth(), sHw.getUTCDate(),
-        10, 0, 0, 0
-      );
-
-      let safety = 0;
-      while (dayStartUTC < eUTC.getTime() && safety++ < 90) {
-        const dayEndUTC = dayStartUTC + 24 * 60 * 60 * 1000;
-
-        const clipStart = Math.max(sUTC.getTime(), dayStartUTC);
-        const clipEnd   = Math.min(eUTC.getTime(), dayEndUTC);
-
-        if (clipStart < clipEnd) {
-          const csHw = toHawaiiDate(clipStart);
-          const ceHw = toHawaiiDate(clipEnd);
-
-          const dateStr  = hwDateStr(csHw);
-          const startMin = hwMinOfDay(csHw);
-          // If clipEnd lands exactly at midnight Hawaii, endMin would be 0 — treat as 24*60
-          let endMin = hwMinOfDay(ceHw);
-          if (endMin === 0 && clipEnd > clipStart) endMin = 24 * 60;
-
-          if (!busyByDay[dateStr]) busyByDay[dateStr] = [];
-          busyByDay[dateStr].push([startMin, endMin]);
+      // Only process timed events (skip all-day events)
+      if (event.start?.dateTime && event.end?.dateTime) {
+        const startMs = new Date(event.start.dateTime).getTime();
+        const endMs   = new Date(event.end.dateTime).getTime();
+        if (isAvailable) {
+          availableWindows.push([startMs, endMs]);
+        } else {
+          busyIntervals.push([startMs, endMs]);
         }
-
-        dayStartUTC = dayEndUTC;
       }
     }
 
-    // Build free windows for each day in the 60-day window.
-    // freeWindows: { "YYYY-MM-DD": [[startH, startM, endH, endM], ...] }
-    const freeWindows = {};
-    const todayHwStr = hwDateStr(toHawaiiDate(now.getTime()));
+    availableWindows.sort((a, b) => a[0] - b[0]);
+    busyIntervals.sort((a, b) => a[0] - b[0]);
 
-    for (let i = 0; i < 62; i++) {
-      const dayMs = now.getTime() + i * 24 * 60 * 60 * 1000;
-      const dateStr = hwDateStr(toHawaiiDate(dayMs));
-
-      if (dateStr < todayHwStr) continue; // skip past Hawaii dates
-      if (freeWindows[dateStr] !== undefined) continue; // dedupe
-
-      const dayBusy = (busyByDay[dateStr] || [])
-        .slice()
-        .sort((a, b) => a[0] - b[0]);
-
-      // Compute free intervals = working hours minus busy
-      const free = [];
-      let cursor = WORK_START_MIN;
-
-      for (const [bs, be] of dayBusy) {
-        const busyStart = Math.max(bs, WORK_START_MIN);
-        const busyEnd   = Math.min(be, WORK_END_MIN);
-        if (busyEnd <= busyStart) continue;
-        if (cursor < busyStart) free.push([cursor, busyStart]);
-        cursor = Math.max(cursor, busyEnd);
+    // For each available window, subtract busy intervals → free slots
+    const freeSlots = [];
+    for (const [winStart, winEnd] of availableWindows) {
+      let cursor = winStart;
+      for (const [bs, be] of busyIntervals) {
+        if (be <= cursor) continue; // entirely before cursor
+        if (bs >= winEnd) break;   // entirely after window
+        if (bs > cursor) {
+          freeSlots.push({
+            start: new Date(cursor).toISOString(),
+            end:   new Date(bs).toISOString(),
+          });
+        }
+        cursor = Math.max(cursor, be);
       }
-      if (cursor < WORK_END_MIN) free.push([cursor, WORK_END_MIN]);
-
-      if (free.length > 0) {
-        freeWindows[dateStr] = free.map(([s, e]) => [
-          Math.floor(s / 60), s % 60,
-          Math.floor(e / 60), e % 60,
-        ]);
+      if (cursor < winEnd) {
+        freeSlots.push({
+          start: new Date(cursor).toISOString(),
+          end:   new Date(winEnd).toISOString(),
+        });
       }
     }
 
-    return res.json({ freeWindows });
+    return res.json({ freeSlots });
   } catch (err) {
     console.error("Availability fetch error:", err.message);
-    return res.json({ freeWindows: {}, error: err.message });
+    return res.json({ freeSlots: [], error: err.message });
   }
 };

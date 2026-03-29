@@ -2203,13 +2203,18 @@
         45: { label: 'Deep Dive', price: 120 },
       };
 
-      // Free windows fetched from Google Calendar — populated on load
-      // { "YYYY-MM-DD": [[startH, startM, endH, endM], ...] }
-      var FREE_WINDOWS = {};
+      // Free slots fetched from Google Calendar — populated on load.
+      // Array of { start: Date, end: Date } in the visitor's local time.
+      // Daisy controls availability by creating "Available" events in Google Calendar.
+      var FREE_SLOTS = [];
       fetch('/api/availability')
         .then(function(r){ return r.json(); })
         .then(function(data){
-          if (data.freeWindows) { FREE_WINDOWS = data.freeWindows; }
+          if (data.freeSlots) {
+            FREE_SLOTS = data.freeSlots.map(function(s){
+              return { start: new Date(s.start), end: new Date(s.end) };
+            });
+          }
           renderQuickSlots();
           renderCalendar();
           if (selectedDate) renderTimeSlots();
@@ -2224,7 +2229,7 @@
       var selectedMin  = 45;
       var selectedDate = null;
       var selectedTime = null;
-      var selectedSlotHM = null; // {h, m} for ISO datetime construction
+      var selectedSlotStart = null; // Date object (UTC) for the chosen slot start
       var calDate      = new Date(today.getFullYear(), today.getMonth(), 1);
       var calOpen      = false;
       var stripeObj    = null, stripeEls = null;
@@ -2239,24 +2244,17 @@
       function sameDay(a,b) { return ymd(a) === ymd(b); }
       function isWknd(d)    { return d.getDay() === 0 || d.getDay() === 6; }
       function isPast(d)    { var c=new Date(d); c.setHours(0,0,0,0); return c < today; }
-      function hasSlots(date) {
-        var ds=ymd(date), windows=FREE_WINDOWS[ds]||[];
-        for (var i=0;i<windows.length;i++) {
-          var w=windows[i];
-          if (w[0]*60+w[1]+selectedMin <= w[2]*60+w[3]) return true;
-        }
-        return false;
-      }
+      // Returns true if any free slot on this local date fits the selected duration.
+      function hasSlots(date) { return getSlots(date).length > 0; }
 
       function fmtDate(d) {
         var n=d.getDate(), sfx=['','st','nd','rd'];
         return DSHORT[d.getDay()]+', '+MSHORT[d.getMonth()]+' '+n+(sfx[n]||'th');
       }
-      // Hawaii is always UTC-10 (no DST). Convert a Hawaii slot to browser local time.
-      function fmtTime(date,h,m) {
-        var local=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),h+10,m,0));
-        var lh=local.getHours(), lm=local.getMinutes();
-        return (lh%12||12)+':'+pad(lm)+' '+(lh<12?'AM':'PM');
+      // Format a Date object in the visitor's local time (no timezone conversion needed).
+      function fmtTime(d) {
+        var h=d.getHours(), m=d.getMinutes();
+        return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM');
       }
       function getBrowserTzLabel() {
         var now=new Date();
@@ -2271,29 +2269,32 @@
         } catch(e){}
         return (name||Intl.DateTimeFormat().resolvedOptions().timeZone)+' ('+gmt+')';
       }
-      // Returns a floating local datetime string (no UTC offset) so Google Calendar
-      // interprets it using the event's timeZone: "Pacific/Honolulu", not the browser's zone.
-      function slotToISO(date,h,m) { return date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'T'+pad(h)+':'+pad(m)+':00'; }
-
+      // Slots for a given local date, generated from FREE_SLOTS windows.
+      // Aligns to 15-min boundaries; steps by session duration.
       function getSlots(date) {
-        var ds=ymd(date), windows=FREE_WINDOWS[ds]||[], slots=[];
-        for (var i=0;i<windows.length;i++) {
-          var w=windows[i];
-          var startMin=w[0]*60+w[1], endMin=w[2]*60+w[3];
-          for (var t=startMin; t+selectedMin<=endMin; t+=selectedMin) {
-            var h=Math.floor(t/60), m=t%60;
-            slots.push({ h:h, m:m, label:fmtTime(date,h,m), blocked:false });
+        var ds=ymd(date), slots=[], durMs=selectedMin*60000, alignMs=15*60000;
+        for (var i=0;i<FREE_SLOTS.length;i++) {
+          var win=FREE_SLOTS[i];
+          if (ymd(win.start)!==ds) continue;
+          var startMs=Math.ceil(win.start.getTime()/alignMs)*alignMs;
+          for (var t=startMs; t+durMs<=win.end.getTime(); t+=durMs) {
+            var sd=new Date(t);
+            slots.push({ startDate:sd, label:fmtTime(sd), blocked:false });
           }
         }
         return slots;
       }
 
       function getNextSlots(count) {
-        var out=[], d=new Date(today);
-        d.setDate(d.getDate()+1);
-        while (out.length<count && d.getFullYear()<=today.getFullYear()+1) {
-          getSlots(d).forEach(function(s){ if (out.length<count) out.push({date:new Date(d),slot:s}); });
-          d.setDate(d.getDate()+1);
+        var out=[], now=new Date(), durMs=selectedMin*60000, alignMs=15*60000;
+        for (var i=0;i<FREE_SLOTS.length&&out.length<count;i++) {
+          var win=FREE_SLOTS[i];
+          var startMs=Math.ceil(Math.max(win.start.getTime(),now.getTime())/alignMs)*alignMs;
+          for (var t=startMs;t+durMs<=win.end.getTime()&&out.length<count;t+=durMs) {
+            var sd=new Date(t);
+            var ld=new Date(sd); ld.setHours(0,0,0,0);
+            out.push({ date:ld, slot:{ startDate:sd, label:fmtTime(sd) } });
+          }
         }
         return out;
       }
@@ -2336,11 +2337,11 @@
           var btn=document.createElement('button');
           btn.className='bk-slot'+(idx===0?' bk-slot--active':'');
           btn.innerHTML='<span class="bk-slot-main">'+fmtDate(item.date)+'</span><span class="bk-slot-sub">'+item.slot.label+'</span>';
-          if (idx===0&&!selectedDate) { selectedDate=item.date; selectedTime=item.slot.label; selectedSlotHM={h:item.slot.h,m:item.slot.m}; }
+          if (idx===0&&!selectedDate) { selectedDate=item.date; selectedTime=item.slot.label; selectedSlotStart=item.slot.startDate; }
           btn.addEventListener('click', function(){
             c.querySelectorAll('.bk-slot').forEach(function(b){b.classList.remove('bk-slot--active');});
             btn.classList.add('bk-slot--active');
-            selectedDate=item.date; selectedTime=item.slot.label; selectedSlotHM={h:item.slot.h,m:item.slot.m};
+            selectedDate=item.date; selectedTime=item.slot.label; selectedSlotStart=item.slot.startDate;
             updateFooter();
           });
           c.appendChild(btn);
@@ -2367,7 +2368,7 @@
           cell.className='bk-cal-day'+(isPast(date)||!avail?' bk-cal-day--other':'')+(sameDay(date,today)?' bk-cal-day--today':'')+(avail?' bk-cal-day--available':'')+(sel?' bk-cal-day--selected':'');
           cell.textContent=day;
           if (avail) {
-            (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; selectedSlotHM=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
+            (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; selectedSlotStart=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
           }
           grid.appendChild(cell);
         }
@@ -2391,7 +2392,7 @@
             btn.addEventListener('click',function(){
               grid.querySelectorAll('.bk-time-btn').forEach(function(b){b.classList.remove('bk-time-btn--selected');});
               btn.classList.add('bk-time-btn--selected');
-              selectedTime=slot.label; selectedSlotHM={h:slot.h,m:slot.m}; updateFooter();
+              selectedTime=slot.label; selectedSlotStart=slot.startDate; updateFooter();
             });
           }
           grid.appendChild(btn);
@@ -2403,7 +2404,7 @@
         pill.addEventListener('click',function(){
           document.querySelectorAll('.bk-pill').forEach(function(p){p.classList.remove('bk-pill--active');});
           pill.classList.add('bk-pill--active');
-          selectedMin=parseInt(pill.dataset.minutes,10); selectedTime=null; selectedSlotHM=null;
+          selectedMin=parseInt(pill.dataset.minutes,10); selectedTime=null; selectedSlotStart=null;
           if (calOpen) renderTimeSlots(); else renderQuickSlots();
           updateFooter();
         });
@@ -2472,10 +2473,9 @@
         var _first=($id('bkc-first')||{}).value||'', _last=($id('bkc-last')||{}).value||'';
         var _email=($id('bkc-email')||{}).value||'', _topic=($id('bkc-topic')||{}).value||'';
         var _startISO='', _endISO='';
-        if (selectedDate && selectedSlotHM) {
-          _startISO = slotToISO(selectedDate, selectedSlotHM.h, selectedSlotHM.m);
-          var _endTotalMin = selectedSlotHM.h*60 + selectedSlotHM.m + selectedMin;
-          _endISO = slotToISO(selectedDate, Math.floor(_endTotalMin/60), _endTotalMin%60);
+        if (selectedSlotStart) {
+          _startISO = selectedSlotStart.toISOString();
+          _endISO   = new Date(selectedSlotStart.getTime() + selectedMin * 60000).toISOString();
         }
         fetch('/api/create-payment-intent',{
           method:'POST', headers:{'Content-Type':'application/json'},
