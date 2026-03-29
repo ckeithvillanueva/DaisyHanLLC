@@ -11,6 +11,7 @@ const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
 const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
 const { createBookingEvent } = require("./lib/googleCalendar");
+const availabilityHandler = require("./api/availability");
 
 // Webhook must be registered BEFORE express.json() — needs raw body for signature verification
 app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
@@ -97,6 +98,8 @@ app.post("/api/create-payment-intent", async (req, res) => {
     });
   }
 });
+
+app.get("/api/availability", availabilityHandler);
 
 app.get("*", (req, res) => {
   // Keep this site single-file friendly with a fallback.

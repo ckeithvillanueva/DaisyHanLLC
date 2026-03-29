@@ -2203,16 +2203,17 @@
         45: { label: 'Deep Dive', price: 120 },
       };
 
-      // TODO: Replace with real blocked/booked slots from your calendar backend
-      // Format: 'YYYY-MM-DD HH:MM' (24-hour)
-      var BLOCKED = [
-        '2026-03-27 09:30', '2026-03-27 13:00', '2026-03-27 13:30',
-        '2026-03-27 14:00', '2026-03-27 14:30', '2026-03-27 15:00', '2026-03-27 15:30',
-        '2026-03-30 10:00', '2026-03-30 11:30',
-        '2026-03-31 09:00', '2026-03-31 12:30',
-        '2026-04-01 10:00', '2026-04-01 10:45', '2026-04-01 14:00',
-        '2026-04-02 09:00', '2026-04-02 09:45',
-      ];
+      // Blocked slots fetched from Google Calendar — populated on load
+      var BLOCKED = [];
+      fetch('/api/availability')
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          if (data.blocked) { BLOCKED = data.blocked; }
+          renderQuickSlots();
+          renderCalendar();
+          if (selectedDate) renderTimeSlots();
+        })
+        .catch(function(){ /* silently keep BLOCKED empty on error */ });
 
       // ── State ──────────────────────────────────────────────
       var today        = new Date(); today.setHours(0,0,0,0);
