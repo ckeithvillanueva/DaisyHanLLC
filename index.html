@@ -1864,7 +1864,7 @@
               <div class="bk-times-grid" id="bk-times-grid"></div>
               <button class="bk-tz">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                Hawaii–Aleutian (GMT-10) ›
+                <span id="bk-tz-label">Hawaii–Aleutian (GMT-10) ›</span>
               </button>
             </div>
           </div>
@@ -2241,7 +2241,25 @@
         var n=d.getDate(), sfx=['','st','nd','rd'];
         return DSHORT[d.getDay()]+', '+MSHORT[d.getMonth()]+' '+n+(sfx[n]||'th');
       }
-      function fmtTime(h,m) { return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM'); }
+      // Hawaii is always UTC-10 (no DST). Convert a Hawaii slot to browser local time.
+      function fmtTime(date,h,m) {
+        var local=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),h+10,m,0));
+        var lh=local.getHours(), lm=local.getMinutes();
+        return (lh%12||12)+':'+pad(lm)+' '+(lh<12?'AM':'PM');
+      }
+      function getBrowserTzLabel() {
+        var now=new Date();
+        var offMin=-now.getTimezoneOffset();
+        var offH=Math.floor(Math.abs(offMin)/60), offM=Math.abs(offMin)%60;
+        var gmt='GMT'+(offMin>=0?'+':'-')+offH+(offM?':'+pad(offM):'');
+        var name='';
+        try {
+          var parts=Intl.DateTimeFormat('en',{timeZoneName:'long'}).formatToParts(now);
+          var tzp=parts.find(function(p){return p.type==='timeZoneName';});
+          if(tzp) name=tzp.value.replace(' Standard Time','').replace(' Daylight Time','').replace(' Time','');
+        } catch(e){}
+        return (name||Intl.DateTimeFormat().resolvedOptions().timeZone)+' ('+gmt+')';
+      }
       // Returns a floating local datetime string (no UTC offset) so Google Calendar
       // interprets it using the event's timeZone: "Pacific/Honolulu", not the browser's zone.
       function slotToISO(date,h,m) { return date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'T'+pad(h)+':'+pad(m)+':00'; }
@@ -2251,7 +2269,7 @@
         for (var h=9; h<=16; h++) {
           for (var m=0; m<60; m+=selectedMin) {
             if (h*60+m+selectedMin > 17*60) break;
-            slots.push({ h:h, m:m, label:fmtTime(h,m), blocked:isBlocked(ds,h,m) });
+            slots.push({ h:h, m:m, label:fmtTime(date,h,m), blocked:isBlocked(ds,h,m) });
           }
         }
         return slots;
@@ -2549,6 +2567,7 @@
       }
 
       // ── Init ────────────────────────────────────────────────
+      (function(){ var el=$id('bk-tz-label'); if(el) el.textContent=getBrowserTzLabel()+' \u203a'; })();
       renderQuickSlots();
     })();
 
