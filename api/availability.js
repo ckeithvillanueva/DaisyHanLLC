@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=60");
+  res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
 
   try {
     const auth = getAuth();

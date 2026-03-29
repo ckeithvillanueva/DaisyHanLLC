@@ -2575,6 +2575,23 @@
         $id('bk-checkout').style.display='none';
         $id('bk-success').style.display='block';
         centerSuccessInViewport();
+        // Re-fetch availability after a short delay so the newly-booked slot
+        // disappears. The delay gives the Stripe webhook time to create the
+        // Google Calendar event. The ?t= param bypasses the CDN cache.
+        setTimeout(function() {
+          fetch('/api/availability?t=' + Date.now())
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+              if (data.freeSlots) {
+                FREE_SLOTS = data.freeSlots.map(function(s){
+                  return { start: new Date(s.start), end: new Date(s.end) };
+                });
+                renderQuickSlots();
+                renderCalendar();
+              }
+            })
+            .catch(function(){});
+        }, 5000);
       }
 
       // ── Init ────────────────────────────────────────────────
