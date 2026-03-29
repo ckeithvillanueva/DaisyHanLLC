@@ -2219,6 +2219,7 @@
       var selectedMin  = 45;
       var selectedDate = null;
       var selectedTime = null;
+      var selectedSlotHM = null; // {h, m} for ISO datetime construction
       var calDate      = new Date(today.getFullYear(), today.getMonth(), 1);
       var calOpen      = false;
       var stripeObj    = null, stripeEls = null;
@@ -2240,6 +2241,7 @@
         return DSHORT[d.getDay()]+', '+MSHORT[d.getMonth()]+' '+n+(sfx[n]||'th');
       }
       function fmtTime(h,m) { return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM'); }
+      function slotToISO(date,h,m) { return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m,0).toISOString(); }
 
       function getSlots(date) {
         var ds=ymd(date), slots=[];
@@ -2302,11 +2304,11 @@
           var btn=document.createElement('button');
           btn.className='bk-slot'+(idx===0?' bk-slot--active':'');
           btn.innerHTML='<span class="bk-slot-main">'+fmtDate(item.date)+'</span><span class="bk-slot-sub">'+item.slot.label+'</span>';
-          if (idx===0&&!selectedDate) { selectedDate=item.date; selectedTime=item.slot.label; }
+          if (idx===0&&!selectedDate) { selectedDate=item.date; selectedTime=item.slot.label; selectedSlotHM={h:item.slot.h,m:item.slot.m}; }
           btn.addEventListener('click', function(){
             c.querySelectorAll('.bk-slot').forEach(function(b){b.classList.remove('bk-slot--active');});
             btn.classList.add('bk-slot--active');
-            selectedDate=item.date; selectedTime=item.slot.label;
+            selectedDate=item.date; selectedTime=item.slot.label; selectedSlotHM={h:item.slot.h,m:item.slot.m};
             updateFooter();
           });
           c.appendChild(btn);
@@ -2333,7 +2335,7 @@
           cell.className='bk-cal-day'+(isPast(date)||isWknd(date)?' bk-cal-day--other':'')+(sameDay(date,today)?' bk-cal-day--today':'')+(avail?' bk-cal-day--available':'')+(sel?' bk-cal-day--selected':'');
           cell.textContent=day;
           if (avail) {
-            (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
+            (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; selectedSlotHM=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
           }
           grid.appendChild(cell);
         }
@@ -2357,7 +2359,7 @@
             btn.addEventListener('click',function(){
               grid.querySelectorAll('.bk-time-btn').forEach(function(b){b.classList.remove('bk-time-btn--selected');});
               btn.classList.add('bk-time-btn--selected');
-              selectedTime=slot.label; updateFooter();
+              selectedTime=slot.label; selectedSlotHM={h:slot.h,m:slot.m}; updateFooter();
             });
           }
           grid.appendChild(btn);
@@ -2369,7 +2371,7 @@
         pill.addEventListener('click',function(){
           document.querySelectorAll('.bk-pill').forEach(function(p){p.classList.remove('bk-pill--active');});
           pill.classList.add('bk-pill--active');
-          selectedMin=parseInt(pill.dataset.minutes,10); selectedTime=null;
+          selectedMin=parseInt(pill.dataset.minutes,10); selectedTime=null; selectedSlotHM=null;
           if (calOpen) renderTimeSlots(); else renderQuickSlots();
           updateFooter();
         });
@@ -2435,9 +2437,26 @@
         }
 
         stripeObj=Stripe(STRIPE_PK); // eslint-disable-line no-undef
+        var _first=($id('bkc-first')||{}).value||'', _last=($id('bkc-last')||{}).value||'';
+        var _email=($id('bkc-email')||{}).value||'', _topic=($id('bkc-topic')||{}).value||'';
+        var _startISO='', _endISO='';
+        if (selectedDate && selectedSlotHM) {
+          _startISO = slotToISO(selectedDate, selectedSlotHM.h, selectedSlotHM.m);
+          var _endDate = new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate(),selectedSlotHM.h,selectedSlotHM.m+selectedMin,0);
+          _endISO = _endDate.toISOString();
+        }
         fetch('/api/create-payment-intent',{
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({ session:SESSIONS[selectedMin].label, minutes:selectedMin, amount:SESSIONS[selectedMin].price*100, email:($id('bkc-email')||{}).value }),
+          body:JSON.stringify({
+            session: SESSIONS[selectedMin].label,
+            minutes: selectedMin,
+            amount:  SESSIONS[selectedMin].price*100,
+            email:   _email,
+            userName:  (_first+' '+_last).trim(),
+            startTime: _startISO,
+            endTime:   _endISO,
+            topic:     _topic,
+          }),
         })
         .then(function(r){
           return r.text().then(function(raw){

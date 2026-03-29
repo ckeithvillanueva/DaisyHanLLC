@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const stripe = new Stripe(STRIPE_SECRET_KEY);
-    const { session, minutes, amount, email } = req.body || {};
+    const { session, minutes, amount, email, userName, startTime, endTime, topic } = req.body || {};
     const amountCents = Number(amount);
 
     if (!Number.isFinite(amountCents) || !Number.isInteger(amountCents) || amountCents < 50) {
@@ -25,8 +25,13 @@ module.exports = async function handler(req, res) {
       automatic_payment_methods: { enabled: true },
       receipt_email: typeof email === "string" && email.trim() ? email.trim() : undefined,
       metadata: {
-        session: String(session || ""),
-        minutes: String(minutes || ""),
+        session:   String(session || ""),
+        minutes:   String(minutes || ""),
+        userName:  String(userName || ""),
+        userEmail: String(email || ""),
+        startTime: String(startTime || ""),
+        endTime:   String(endTime || ""),
+        topic:     String(topic || ""),
       },
     });
 
