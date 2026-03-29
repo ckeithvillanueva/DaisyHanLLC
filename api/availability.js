@@ -75,8 +75,11 @@ module.exports = async function handler(req, res) {
     availableWindows.sort((a, b) => a[0] - b[0]);
     busyIntervals.sort((a, b) => a[0] - b[0]);
 
-    // For each available window, subtract busy intervals → free slots
+    // For each available window, subtract busy intervals → free slots.
+    // Also capture the busy portions within available windows → busy slots (shown as Sold Out).
     const freeSlots = [];
+    const busySlots = [];
+
     for (const [winStart, winEnd] of availableWindows) {
       let cursor = winStart;
       for (const [bs, be] of busyIntervals) {
@@ -86,6 +89,15 @@ module.exports = async function handler(req, res) {
           freeSlots.push({
             start: new Date(cursor).toISOString(),
             end:   new Date(bs).toISOString(),
+          });
+        }
+        // Clip the busy interval to this available window
+        const clipStart = Math.max(bs, winStart);
+        const clipEnd   = Math.min(be, winEnd);
+        if (clipStart < clipEnd) {
+          busySlots.push({
+            start: new Date(clipStart).toISOString(),
+            end:   new Date(clipEnd).toISOString(),
           });
         }
         cursor = Math.max(cursor, be);
@@ -98,9 +110,9 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    return res.json({ freeSlots });
+    return res.json({ freeSlots, busySlots });
   } catch (err) {
     console.error("Availability fetch error:", err.message);
-    return res.json({ freeSlots: [], error: err.message });
+    return res.json({ freeSlots: [], busySlots: [], error: err.message });
   }
 };

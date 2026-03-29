@@ -2203,26 +2203,31 @@
         45: { label: 'Deep Dive', price: 120 },
       };
 
-      // Free slots fetched from Google Calendar — populated on load.
-      // Array of { start: Date, end: Date } in the visitor's local time.
+      // Slots fetched from Google Calendar — populated on load.
+      // FREE_SLOTS: open for booking. BUSY_SLOTS: taken (shown as Sold Out).
       // Daisy controls availability by creating "Available" events in Google Calendar.
       var FREE_SLOTS = [];
-      fetch('/api/availability')
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          if (data.freeSlots) {
-            FREE_SLOTS = data.freeSlots.map(function(s){
+      var BUSY_SLOTS = [];
+      function loadAvailability(url) {
+        return fetch(url || '/api/availability')
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            FREE_SLOTS = (data.freeSlots || []).map(function(s){
               return { start: new Date(s.start), end: new Date(s.end) };
             });
-          }
-          renderQuickSlots();
-          renderCalendar();
-          if (selectedDate) renderTimeSlots();
-        })
-        .catch(function(){
-          renderQuickSlots();
-          renderCalendar();
-        });
+            BUSY_SLOTS = (data.busySlots || []).map(function(s){
+              return { start: new Date(s.start), end: new Date(s.end) };
+            });
+            renderQuickSlots();
+            renderCalendar();
+            if (selectedDate) renderTimeSlots();
+          })
+          .catch(function(){
+            renderQuickSlots();
+            renderCalendar();
+          });
+      }
+      loadAvailability();
 
       // ── State ──────────────────────────────────────────────
       var today        = new Date(); today.setHours(0,0,0,0);
@@ -2269,17 +2274,21 @@
         } catch(e){}
         return (name||Intl.DateTimeFormat().resolvedOptions().timeZone)+' ('+gmt+')';
       }
-      // Slots for a given local date, generated from FREE_SLOTS windows.
+      // Slots for a given local date, merging free and busy windows.
+      // Free slots are bookable; busy slots show as Sold Out.
       // Aligns to 15-min boundaries; steps by session duration.
       function getSlots(date) {
         var ds=ymd(date), slots=[], durMs=selectedMin*60000, alignMs=15*60000;
-        for (var i=0;i<FREE_SLOTS.length;i++) {
-          var win=FREE_SLOTS[i];
-          if (ymd(win.start)!==ds) continue;
+        var allWindows=[];
+        FREE_SLOTS.forEach(function(w){ if(ymd(w.start)===ds) allWindows.push({start:w.start,end:w.end,blocked:false}); });
+        BUSY_SLOTS.forEach(function(w){ if(ymd(w.start)===ds) allWindows.push({start:w.start,end:w.end,blocked:true}); });
+        allWindows.sort(function(a,b){ return a.start-b.start; });
+        for (var i=0;i<allWindows.length;i++) {
+          var win=allWindows[i];
           var startMs=Math.ceil(win.start.getTime()/alignMs)*alignMs;
           for (var t=startMs; t+durMs<=win.end.getTime(); t+=durMs) {
             var sd=new Date(t);
-            slots.push({ startDate:sd, label:fmtTime(sd), blocked:false });
+            slots.push({ startDate:sd, label:fmtTime(sd), blocked:win.blocked });
           }
         }
         return slots;
@@ -2575,23 +2584,10 @@
         $id('bk-checkout').style.display='none';
         $id('bk-success').style.display='block';
         centerSuccessInViewport();
-        // Re-fetch availability after a short delay so the newly-booked slot
-        // disappears. The delay gives the Stripe webhook time to create the
-        // Google Calendar event. The ?t= param bypasses the CDN cache.
-        setTimeout(function() {
-          fetch('/api/availability?t=' + Date.now())
-            .then(function(r){ return r.json(); })
-            .then(function(data){
-              if (data.freeSlots) {
-                FREE_SLOTS = data.freeSlots.map(function(s){
-                  return { start: new Date(s.start), end: new Date(s.end) };
-                });
-                renderQuickSlots();
-                renderCalendar();
-              }
-            })
-            .catch(function(){});
-        }, 5000);
+        // Re-fetch after a short delay so the booked slot moves to Sold Out.
+        // Delay gives the Stripe webhook time to create the Google Calendar event.
+        // The ?t= param bypasses the CDN cache.
+        setTimeout(function() { loadAvailability('/api/availability?t=' + Date.now()); }, 5000);
       }
 
       // ── Init ────────────────────────────────────────────────
