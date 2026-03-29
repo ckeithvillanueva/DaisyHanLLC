@@ -2242,7 +2242,9 @@
         return DSHORT[d.getDay()]+', '+MSHORT[d.getMonth()]+' '+n+(sfx[n]||'th');
       }
       function fmtTime(h,m) { return (h%12||12)+':'+pad(m)+' '+(h<12?'AM':'PM'); }
-      function slotToISO(date,h,m) { return new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m,0).toISOString(); }
+      // Returns a floating local datetime string (no UTC offset) so Google Calendar
+      // interprets it using the event's timeZone: "Pacific/Honolulu", not the browser's zone.
+      function slotToISO(date,h,m) { return date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'T'+pad(h)+':'+pad(m)+':00'; }
 
       function getSlots(date) {
         var ds=ymd(date), slots=[];
@@ -2443,8 +2445,8 @@
         var _startISO='', _endISO='';
         if (selectedDate && selectedSlotHM) {
           _startISO = slotToISO(selectedDate, selectedSlotHM.h, selectedSlotHM.m);
-          var _endDate = new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate(),selectedSlotHM.h,selectedSlotHM.m+selectedMin,0);
-          _endISO = _endDate.toISOString();
+          var _endTotalMin = selectedSlotHM.h*60 + selectedSlotHM.m + selectedMin;
+          _endISO = slotToISO(selectedDate, Math.floor(_endTotalMin/60), _endTotalMin%60);
         }
         fetch('/api/create-payment-intent',{
           method:'POST', headers:{'Content-Type':'application/json'},
