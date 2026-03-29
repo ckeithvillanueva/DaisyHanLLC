@@ -2203,17 +2203,21 @@
         45: { label: 'Deep Dive', price: 120 },
       };
 
-      // Blocked slots fetched from Google Calendar — populated on load
-      var BLOCKED = [];
+      // Free windows fetched from Google Calendar — populated on load
+      // { "YYYY-MM-DD": [[startH, startM, endH, endM], ...] }
+      var FREE_WINDOWS = {};
       fetch('/api/availability')
         .then(function(r){ return r.json(); })
         .then(function(data){
-          if (data.blocked) { BLOCKED = data.blocked; }
+          if (data.freeWindows) { FREE_WINDOWS = data.freeWindows; }
           renderQuickSlots();
           renderCalendar();
           if (selectedDate) renderTimeSlots();
         })
-        .catch(function(){ /* silently keep BLOCKED empty on error */ });
+        .catch(function(){
+          renderQuickSlots();
+          renderCalendar();
+        });
 
       // ── State ──────────────────────────────────────────────
       var today        = new Date(); today.setHours(0,0,0,0);
@@ -2235,7 +2239,14 @@
       function sameDay(a,b) { return ymd(a) === ymd(b); }
       function isWknd(d)    { return d.getDay() === 0 || d.getDay() === 6; }
       function isPast(d)    { var c=new Date(d); c.setHours(0,0,0,0); return c < today; }
-      function isBlocked(ds,h,m) { return BLOCKED.indexOf(ds+' '+pad(h)+':'+pad(m)) >= 0; }
+      function hasSlots(date) {
+        var ds=ymd(date), windows=FREE_WINDOWS[ds]||[];
+        for (var i=0;i<windows.length;i++) {
+          var w=windows[i];
+          if (w[0]*60+w[1]+selectedMin <= w[2]*60+w[3]) return true;
+        }
+        return false;
+      }
 
       function fmtDate(d) {
         var n=d.getDate(), sfx=['','st','nd','rd'];
@@ -2265,11 +2276,13 @@
       function slotToISO(date,h,m) { return date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+'T'+pad(h)+':'+pad(m)+':00'; }
 
       function getSlots(date) {
-        var ds=ymd(date), slots=[];
-        for (var h=9; h<=16; h++) {
-          for (var m=0; m<60; m+=selectedMin) {
-            if (h*60+m+selectedMin > 17*60) break;
-            slots.push({ h:h, m:m, label:fmtTime(date,h,m), blocked:isBlocked(ds,h,m) });
+        var ds=ymd(date), windows=FREE_WINDOWS[ds]||[], slots=[];
+        for (var i=0;i<windows.length;i++) {
+          var w=windows[i];
+          var startMin=w[0]*60+w[1], endMin=w[2]*60+w[3];
+          for (var t=startMin; t+selectedMin<=endMin; t+=selectedMin) {
+            var h=Math.floor(t/60), m=t%60;
+            slots.push({ h:h, m:m, label:fmtTime(date,h,m), blocked:false });
           }
         }
         return slots;
@@ -2279,9 +2292,7 @@
         var out=[], d=new Date(today);
         d.setDate(d.getDate()+1);
         while (out.length<count && d.getFullYear()<=today.getFullYear()+1) {
-          if (!isWknd(d)) {
-            getSlots(d).forEach(function(s){ if (!s.blocked && out.length<count) out.push({date:new Date(d),slot:s}); });
-          }
+          getSlots(d).forEach(function(s){ if (out.length<count) out.push({date:new Date(d),slot:s}); });
           d.setDate(d.getDate()+1);
         }
         return out;
@@ -2350,10 +2361,10 @@
         for (var i=0;i<first;i++) { var f=document.createElement('div'); f.className='bk-cal-day bk-cal-day--other'; f.textContent=prevDays-first+1+i; grid.appendChild(f); }
         for (var day=1;day<=days;day++) {
           var date=new Date(yr,mo,day);
-          var avail=!isPast(date)&&!isWknd(date);
+          var avail=!isPast(date)&&hasSlots(date);
           var sel=selectedDate&&sameDay(date,selectedDate);
           var cell=document.createElement('div');
-          cell.className='bk-cal-day'+(isPast(date)||isWknd(date)?' bk-cal-day--other':'')+(sameDay(date,today)?' bk-cal-day--today':'')+(avail?' bk-cal-day--available':'')+(sel?' bk-cal-day--selected':'');
+          cell.className='bk-cal-day'+(isPast(date)||!avail?' bk-cal-day--other':'')+(sameDay(date,today)?' bk-cal-day--today':'')+(avail?' bk-cal-day--available':'')+(sel?' bk-cal-day--selected':'');
           cell.textContent=day;
           if (avail) {
             (function(d){ cell.addEventListener('click',function(){ selectedDate=d; selectedTime=null; selectedSlotHM=null; renderCalendar(); renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }); })(date);
