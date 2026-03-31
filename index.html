@@ -2286,7 +2286,7 @@
         for (var i=0;i<allWindows.length;i++) {
           var win=allWindows[i];
           var startMs=Math.ceil(win.start.getTime()/alignMs)*alignMs;
-          for (var t=startMs; t+durMs<=win.end.getTime(); t+=durMs) {
+          for (var t=startMs; t+durMs<=win.end.getTime(); t+=alignMs) {
             var sd=new Date(t);
             slots.push({ startDate:sd, label:fmtTime(sd), blocked:win.blocked });
           }
@@ -2299,7 +2299,7 @@
         for (var i=0;i<FREE_SLOTS.length&&out.length<count;i++) {
           var win=FREE_SLOTS[i];
           var startMs=Math.ceil(Math.max(win.start.getTime(),now.getTime())/alignMs)*alignMs;
-          for (var t=startMs;t+durMs<=win.end.getTime()&&out.length<count;t+=durMs) {
+          for (var t=startMs;t+durMs<=win.end.getTime()&&out.length<count;t+=alignMs) {
             var sd=new Date(t);
             var ld=new Date(sd); ld.setHours(0,0,0,0);
             out.push({ date:ld, slot:{ startDate:sd, label:fmtTime(sd) } });
