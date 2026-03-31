@@ -1,8 +1,10 @@
 const { google } = require("googleapis");
 
+const LOOK_AHEAD_DAYS = 60;
+
 function getAuth() {
   const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  const privateKey  = process.env.GOOGLE_PRIVATE_KEY;
   if (!clientEmail || !privateKey) {
     throw new Error("Missing GOOGLE_CLIENT_EMAIL or GOOGLE_PRIVATE_KEY");
   }
@@ -16,17 +18,19 @@ function getAuth() {
 }
 
 /**
- * Reads the Daisy Han Consulting calendar and returns bookable time ranges.
+ * GET /api/availability
  *
- * How it works:
- *   - Events whose title starts with "Available" (case-insensitive) define open windows.
- *   - All other timed events are treated as conflicts and subtracted from those windows.
- *   - No hardcoded working hours or timezones — Daisy controls availability entirely
- *     from Google Calendar by adding/removing "Available" events.
+ * Queries the Google Calendar FreeBusy API and returns every free interval
+ * in the next 60 days.  No timezone, no hardcoded working hours — Daisy
+ * controls her bookable time entirely through her own calendar:
  *
- * Returns: { freeSlots: [{ start: ISO string, end: ISO string }, ...] }
+ *   • Any event on her calendar (personal, work, blocked time) = unavailable.
+ *   • Any gap between events = available for booking.
+ *   • To prevent late-night or weekend bookings she adds a recurring
+ *     "Not Available" block (e.g. 6 PM – 9 AM daily) — one-time setup.
  *
- * Times are UTC ISO strings; the browser converts them to the visitor's local timezone.
+ * All times are UTC ISO strings.  The browser converts them to the
+ * visitor's local timezone — no timezone is ever hardcoded here.
  */
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
@@ -36,79 +40,73 @@ module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
 
   try {
-    const auth = getAuth();
+    const auth     = getAuth();
     const calendar = google.calendar({ version: "v3", auth });
+    const calId    = process.env.GOOGLE_CALENDAR_ID || "primary";
 
-    const now = new Date();
+    const now     = new Date();
     const timeMin = now.toISOString();
-    const timeMax = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString();
+    const timeMax = new Date(now.getTime() + LOOK_AHEAD_DAYS * 86_400_000).toISOString();
 
-    const eventsRes = await calendar.events.list({
-      calendarId: process.env.GOOGLE_CALENDAR_ID || "primary",
-      timeMin,
-      timeMax,
-      singleEvents: true,
-      orderBy: "startTime",
-      maxResults: 2500,
+    // Query FreeBusy — no timeZone field; ISO strings are self-describing.
+    const fbRes = await calendar.freebusy.query({
+      requestBody: {
+        timeMin,
+        timeMax,
+        items: [{ id: calId }],
+      },
     });
 
-    const items = eventsRes.data.items || [];
-    const availableWindows = []; // open windows from "Available" events
-    const busyIntervals = [];   // conflicts from all other timed events
+    const calData = fbRes.data.calendars?.[calId];
 
-    for (const event of items) {
-      const summary = (event.summary || "").toLowerCase().trim();
-      const isAvailable = summary.startsWith("available");
-
-      // Only process timed events (skip all-day events)
-      if (event.start?.dateTime && event.end?.dateTime) {
-        const startMs = new Date(event.start.dateTime).getTime();
-        const endMs   = new Date(event.end.dateTime).getTime();
-        if (isAvailable) {
-          availableWindows.push([startMs, endMs]);
-        } else {
-          busyIntervals.push([startMs, endMs]);
-        }
-      }
+    // Log any calendar-level errors (e.g. service account can't access the calendar)
+    if (calData?.errors?.length) {
+      console.error("FreeBusy calendar errors:", JSON.stringify(calData.errors));
     }
 
-    availableWindows.sort((a, b) => a[0] - b[0]);
-    busyIntervals.sort((a, b) => a[0] - b[0]);
+    const busyPeriods = (calData?.busy ?? [])
+      .map((b) => ({
+        start: new Date(b.start).getTime(),
+        end:   new Date(b.end).getTime(),
+      }))
+      .sort((a, b) => a.start - b.start);
 
-    // For each available window, subtract busy intervals → free slots.
-    // Also capture the busy portions within available windows → busy slots (shown as Sold Out).
+    // ── Compute free intervals ────────────────────────────────────
+    // Start from the next clean 15-minute boundary so the first offered
+    // slot is never "right now" (gives a small booking buffer).
+    const windowStart = Math.ceil(now.getTime() / 900_000) * 900_000;
+    const windowEnd   = new Date(timeMax).getTime();
+
     const freeSlots = [];
-    const busySlots = [];
+    let cursor = windowStart;
 
-    for (const [winStart, winEnd] of availableWindows) {
-      let cursor = winStart;
-      for (const [bs, be] of busyIntervals) {
-        if (be <= cursor) continue; // entirely before cursor
-        if (bs >= winEnd) break;   // entirely after window
-        if (bs > cursor) {
-          freeSlots.push({
-            start: new Date(cursor).toISOString(),
-            end:   new Date(bs).toISOString(),
-          });
-        }
-        // Clip the busy interval to this available window
-        const clipStart = Math.max(bs, winStart);
-        const clipEnd   = Math.min(be, winEnd);
-        if (clipStart < clipEnd) {
-          busySlots.push({
-            start: new Date(clipStart).toISOString(),
-            end:   new Date(clipEnd).toISOString(),
-          });
-        }
-        cursor = Math.max(cursor, be);
-      }
-      if (cursor < winEnd) {
+    for (const { start: bs, end: be } of busyPeriods) {
+      if (be <= cursor) continue;  // busy period already behind cursor
+      if (bs >= windowEnd) break;  // busy period beyond our window
+
+      if (bs > cursor) {
         freeSlots.push({
           start: new Date(cursor).toISOString(),
-          end:   new Date(winEnd).toISOString(),
+          end:   new Date(bs).toISOString(),
         });
       }
+      cursor = Math.max(cursor, be);
     }
+
+    if (cursor < windowEnd) {
+      freeSlots.push({
+        start: new Date(cursor).toISOString(),
+        end:   new Date(windowEnd).toISOString(),
+      });
+    }
+
+    // busySlots are shown as "Sold Out" in the calendar UI
+    const busySlots = busyPeriods
+      .filter((b) => b.end > windowStart && b.start < windowEnd)
+      .map((b) => ({
+        start: new Date(Math.max(b.start, windowStart)).toISOString(),
+        end:   new Date(Math.min(b.end, windowEnd)).toISOString(),
+      }));
 
     return res.json({ freeSlots, busySlots });
   } catch (err) {

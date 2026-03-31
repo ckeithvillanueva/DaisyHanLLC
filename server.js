@@ -10,7 +10,7 @@ const PORT = Number(process.env.PORT || 3000);
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
 const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
-const { createBookingEvent } = require("./lib/googleCalendar");
+const { createBookingEvent, sendConfirmationEmail } = require("./lib/googleCalendar");
 const availabilityHandler = require("./api/availability");
 
 // Webhook must be registered BEFORE express.json() — needs raw body for signature verification
@@ -34,14 +34,25 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
     try {
       await createBookingEvent({
         summary:     `Consulting Call with ${metadata.userName || "Client"}`,
-        description: metadata.topic || `${metadata.session || "Consulting"} session with Daisy Han`,
+        description: `${metadata.topic || metadata.session || "Consulting"} session with Daisy Han`,
         startTime:   metadata.startTime,
         endTime:     metadata.endTime,
         userEmail:   metadata.userEmail,
       });
       console.log("Calendar event created for", metadata.userName);
+
+      // Send branded confirmation email + the calendar event above sends
+      // the Google Meet invite via sendUpdates:'all'.
+      await sendConfirmationEmail({
+        userEmail: metadata.userEmail,
+        userName:  metadata.userName,
+        startTime: metadata.startTime,
+        endTime:   metadata.endTime,
+        topic:     metadata.topic,
+        session:   metadata.session,
+      });
     } catch (err) {
-      console.error("Google Calendar error:", err.message);
+      console.error("Post-payment processing error:", err.message);
     }
   }
 
