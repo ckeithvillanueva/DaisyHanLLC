@@ -20,17 +20,17 @@ function getAuth() {
 /**
  * GET /api/availability
  *
- * Queries the Google Calendar FreeBusy API and returns every free interval
- * in the next 60 days.  No timezone, no hardcoded working hours — Daisy
- * controls her bookable time entirely through her own calendar:
+ * Reads "Available" blocks on the Consulting LLC calendar.
+ * Those windows define when booking is open.  Any other event
+ * (e.g. "Consulting Call with …") that falls inside an Available window
+ * is returned as a busySlot and shown as "Sold Out" in the UI.
  *
- *   • Any event on her calendar (personal, work, blocked time) = unavailable.
- *   • Any gap between events = available for booking.
- *   • To prevent late-night or weekend bookings she adds a recurring
- *     "Not Available" block (e.g. 6 PM – 9 AM daily) — one-time setup.
+ * Daisy controls her schedule by adding/removing "Available" blocks
+ * on the Consulting LLC calendar only.  Her main Gmail calendar stays
+ * clean — only real booked appointments appear there.
  *
- * All times are UTC ISO strings.  The browser converts them to the
- * visitor's local timezone — no timezone is ever hardcoded here.
+ * All times are UTC ISO strings.  The browser converts to the visitor's
+ * local timezone — no timezone is ever hardcoded here.
  */
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
@@ -42,71 +42,84 @@ module.exports = async function handler(req, res) {
   try {
     const auth     = getAuth();
     const calendar = google.calendar({ version: "v3", auth });
-    const calId    = process.env.GOOGLE_CALENDAR_ID || "primary";
+    const calId    = process.env.GOOGLE_CONSULTING_CALENDAR_ID || process.env.GOOGLE_CALENDAR_ID;
+
+    if (!calId) throw new Error("Missing GOOGLE_CONSULTING_CALENDAR_ID in environment");
 
     const now     = new Date();
     const timeMin = now.toISOString();
     const timeMax = new Date(now.getTime() + LOOK_AHEAD_DAYS * 86_400_000).toISOString();
 
-    // Query FreeBusy — no timeZone field; ISO strings are self-describing.
-    const fbRes = await calendar.freebusy.query({
-      requestBody: {
-        timeMin,
-        timeMax,
-        items: [{ id: calId }],
-      },
+    const eventsRes = await calendar.events.list({
+      calendarId:   calId,
+      timeMin,
+      timeMax,
+      singleEvents: true,
+      orderBy:      "startTime",
     });
 
-    const calData = fbRes.data.calendars?.[calId];
+    const events = eventsRes.data.items || [];
 
-    // Log any calendar-level errors (e.g. service account can't access the calendar)
-    if (calData?.errors?.length) {
-      console.error("FreeBusy calendar errors:", JSON.stringify(calData.errors));
-    }
+    // "Available" blocks → define the bookable windows
+    const availableBlocks = events
+      .filter(e => (e.summary || "").toLowerCase().includes("available"))
+      .map(e => ({
+        start: new Date(e.start.dateTime || e.start.date).getTime(),
+        end:   new Date(e.end.dateTime   || e.end.date).getTime(),
+      }));
 
-    const busyPeriods = (calData?.busy ?? [])
-      .map((b) => ({
-        start: new Date(b.start).getTime(),
-        end:   new Date(b.end).getTime(),
-      }))
-      .sort((a, b) => a.start - b.start);
+    // All other events within Available windows → sold-out slots
+    const bookingEvents = events
+      .filter(e => !(e.summary || "").toLowerCase().includes("available"))
+      .map(e => ({
+        start: new Date(e.start.dateTime || e.start.date).getTime(),
+        end:   new Date(e.end.dateTime   || e.end.date).getTime(),
+      }));
 
-    // ── Compute free intervals ────────────────────────────────────
-    // Start from the next clean 15-minute boundary so the first offered
-    // slot is never "right now" (gives a small booking buffer).
+    // Start from the next 15-minute boundary (small booking buffer)
     const windowStart = Math.ceil(now.getTime() / 900_000) * 900_000;
     const windowEnd   = new Date(timeMax).getTime();
 
     const freeSlots = [];
-    let cursor = windowStart;
+    const busySlots = [];
 
-    for (const { start: bs, end: be } of busyPeriods) {
-      if (be <= cursor) continue;  // busy period already behind cursor
-      if (bs >= windowEnd) break;  // busy period beyond our window
+    for (const avail of availableBlocks) {
+      const blockStart = Math.max(avail.start, windowStart);
+      const blockEnd   = Math.min(avail.end, windowEnd);
+      if (blockStart >= blockEnd) continue;
 
-      if (bs > cursor) {
-        freeSlots.push({
-          start: new Date(cursor).toISOString(),
-          end:   new Date(bs).toISOString(),
+      // Bookings that overlap this Available block
+      const overlapping = bookingEvents
+        .filter(b => b.end > blockStart && b.start < blockEnd)
+        .sort((a, b) => a.start - b.start);
+
+      // Sold-out slots (clipped to the Available window)
+      for (const b of overlapping) {
+        busySlots.push({
+          start: new Date(Math.max(b.start, blockStart)).toISOString(),
+          end:   new Date(Math.min(b.end, blockEnd)).toISOString(),
         });
       }
-      cursor = Math.max(cursor, be);
-    }
 
-    if (cursor < windowEnd) {
-      freeSlots.push({
-        start: new Date(cursor).toISOString(),
-        end:   new Date(windowEnd).toISOString(),
-      });
+      // Free intervals = Available block minus booking events
+      let cursor = blockStart;
+      for (const { start: bs, end: be } of overlapping) {
+        if (be <= cursor) continue;
+        if (bs > cursor) {
+          freeSlots.push({
+            start: new Date(cursor).toISOString(),
+            end:   new Date(bs).toISOString(),
+          });
+        }
+        cursor = Math.max(cursor, be);
+      }
+      if (cursor < blockEnd) {
+        freeSlots.push({
+          start: new Date(cursor).toISOString(),
+          end:   new Date(blockEnd).toISOString(),
+        });
+      }
     }
-
-    // busySlots are shown as "Sold Out" in the calendar UI
-    const busySlots = busyPeriods
-      .filter((b) => b.end > windowStart && b.start < windowEnd)
-      .map((b) => ({
-        start: new Date(Math.max(b.start, windowStart)).toISOString(),
-        end:   new Date(Math.min(b.end, windowEnd)).toISOString(),
-      }));
 
     return res.json({ freeSlots, busySlots });
   } catch (err) {
