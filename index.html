@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <script src="https://js.stripe.com/v3/" async></script>
   <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
   <style>
     /* ── Design Tokens ─────────────────────────────────── */
@@ -1137,7 +1136,6 @@
     .booking-notice { padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); font-size: 13px; line-height: 1.65; margin-bottom: var(--space-5); }
     .booking-notice--scaffold { background: rgba(242,192,46,.08); border: 1px solid rgba(242,192,46,.3); color: var(--color-slate); }
     .booking-notice strong { display: block; color: var(--color-ink); margin-bottom: 4px; }
-    .stripe-mount { background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5); min-height: 80px; }
     #bkc-submit-btn { justify-content: center; text-align: center; }
 
     @media (max-width: 640px) {
@@ -1825,13 +1823,13 @@
           <div class="bk-section">
             <p class="bk-label">How deep do you want to go?</p>
             <div class="bk-pills">
-              <button class="bk-pill" data-minutes="15" data-price="40">
+              <button class="bk-pill" data-minutes="15">
                 Quick<span class="bk-pill-sub">15 min</span>
               </button>
-              <button class="bk-pill" data-minutes="30" data-price="80">
+              <button class="bk-pill" data-minutes="30">
                 Full<span class="bk-pill-sub">30 min</span>
               </button>
-              <button class="bk-pill bk-pill--active" data-minutes="45" data-price="120">
+              <button class="bk-pill bk-pill--active" data-minutes="45">
                 Deep Dive<span class="bk-pill-sub">45 min</span>
               </button>
             </div>
@@ -1876,8 +1874,8 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </div>
               <div>
-                <div class="bk-footer-price" id="bk-footer-price">Book for $120</div>
-                <div class="bk-footer-desc"  id="bk-footer-desc">Deep Dive — select a time above</div>
+                <div class="bk-footer-price" id="bk-footer-price">Deep Dive · 45 min</div>
+                <div class="bk-footer-desc"  id="bk-footer-desc">Select a time above</div>
               </div>
             </div>
             <button class="btn btn-primary" id="bk-book-btn" disabled style="white-space:nowrap">Book Now</button>
@@ -1915,20 +1913,7 @@
               <label class="form-label" for="bkc-topic">What would you like to discuss? <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></label>
               <textarea class="form-input" id="bkc-topic" rows="2" placeholder="Brief context helps Daisy prepare…"></textarea>
             </div>
-            <!--
-              STRIPE SCAFFOLD — remove this notice before launch
-              1. Set STRIPE_PK in the JS below to your pk_live_... key
-              2. Build POST /api/create-payment-intent → { clientSecret }
-                 accepting { session, minutes, amount (cents), email }
-              3. Update return_url in confirmPayment()
-              Docs: stripe.com/docs/payments/payment-element
-            -->
-            <div class="booking-notice booking-notice--scaffold" id="bkc-stripe-scaffold">
-              <strong>Payment — Stripe not yet configured</strong>
-              Add your publishable key and backend endpoint to activate card capture.
-            </div>
-            <div class="stripe-mount"><div id="bkc-stripe-element"></div></div>
-            <p id="bkc-stripe-error" class="field-error" style="display:none;margin-bottom:var(--space-4)"></p>
+            <p id="bkc-booking-error" class="field-error" style="display:none;margin-bottom:var(--space-4)"></p>
             <div class="bk-checkout-recap" aria-label="Selected booking details">
               <div class="bk-footer">
                 <div class="bk-footer-left">
@@ -1936,8 +1921,8 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   </div>
                   <div>
-                    <div class="bk-footer-price" id="bkc-footer-price">Book for $120</div>
-                    <div class="bk-footer-desc" id="bkc-footer-desc">Deep Dive — select a time above</div>
+                    <div class="bk-footer-price" id="bkc-footer-price">Deep Dive · 45 min</div>
+                    <div class="bk-footer-desc" id="bkc-footer-desc">Select a time above</div>
                   </div>
                 </div>
               </div>
@@ -1961,7 +1946,6 @@
                 </div>
                 <div>
                   <div class="bk-footer-price" id="bks-footer-detail">Deep Dive · Fri, Mar 27th · 9:00 AM</div>
-                  <div class="bk-footer-desc" id="bks-footer-price">Booked for $120</div>
                 </div>
               </div>
             </div>
@@ -2193,14 +2177,10 @@
     (function () {
       'use strict';
 
-      // TODO: Set your Stripe publishable key (pk_live_... or pk_test_...)
-      var STRIPE_PK = 'pk_test_51TFQwcRybdhps6MwVqVoNhJRRgZNe0WOjDkL4Yay3WsWrSixWcmqGMiOtVQ1ys9HbPPJVJMCut24qZeA39tH0h4f00TJ9inlEs';
-
-      // TODO: Update session names and prices (USD) to match your actual offerings
       var SESSIONS = {
-        15: { label: 'Quick',     price: 40  },
-        30: { label: 'Full',      price: 80  },
-        45: { label: 'Deep Dive', price: 120 },
+        15: { label: 'Quick'     },
+        30: { label: 'Full'      },
+        45: { label: 'Deep Dive' },
       };
 
       // Slots fetched from Google Calendar — populated on load.
@@ -2237,7 +2217,6 @@
       var selectedSlotStart = null; // Date object (UTC) for the chosen slot start
       var calDate      = new Date(today.getFullYear(), today.getMonth(), 1);
       var calOpen      = false;
-      var stripeObj    = null, stripeEls = null;
 
       // ── Helpers ─────────────────────────────────────────────
       var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -2314,12 +2293,11 @@
       function updateFooter() {
         var svc=$id('bk-footer-price'), dsc=$id('bk-footer-desc'), btn=$id('bk-book-btn');
         var cSvc=$id('bkc-footer-price'), cDsc=$id('bkc-footer-desc');
-        var sDetail=$id('bks-footer-detail'), sPrice=$id('bks-footer-price');
+        var sDetail=$id('bks-footer-detail');
         if (!svc) return;
-        var priceText = 'Book for $'+SESSIONS[selectedMin].price;
-        svc.textContent = priceText;
-        if (cSvc) cSvc.textContent = priceText;
-        if (sPrice) sPrice.textContent = 'Booked for $'+SESSIONS[selectedMin].price;
+        var sessionText = SESSIONS[selectedMin].label+' · '+selectedMin+' min';
+        svc.textContent = sessionText;
+        if (cSvc) cSvc.textContent = sessionText;
         if (selectedDate && selectedTime) {
           var detailText = SESSIONS[selectedMin].label+' · '+fmtDate(selectedDate)+' · '+selectedTime;
           dsc.textContent = detailText;
@@ -2449,84 +2427,10 @@
           if (!selectedDate||!selectedTime) return;
           widget.style.display='none'; checkout.style.display='block';
           var s=SESSIONS[selectedMin];
-          $id('bk-checkout-summary').textContent=s.label+' ('+selectedMin+' min) · '+fmtDate(selectedDate)+' · '+selectedTime+' · $'+s.price;
-          initStripe();
+          $id('bk-checkout-summary').textContent=s.label+' ('+selectedMin+' min) · '+fmtDate(selectedDate)+' · '+selectedTime;
         });
       }
       if (backLink) backLink.addEventListener('click',function(){ checkout.style.display='none'; widget.style.display='block'; });
-
-      // ── Stripe ──────────────────────────────────────────────
-      function initStripe() {
-        if (stripeObj) return;
-        var mountEl=$id('bkc-stripe-element');
-        var errEl=$id('bkc-stripe-error');
-        var scaffold=$id('bkc-stripe-scaffold');
-        if (scaffold) scaffold.style.display = 'none';
-        if (errEl) errEl.style.display = 'none';
-
-        if (STRIPE_PK==='pk_test_YOUR_PUBLISHABLE_KEY_HERE') {
-          if (scaffold) scaffold.style.display = 'block';
-          if (mountEl) mountEl.innerHTML='<p style="font-size:13px;color:var(--color-mist);padding:8px 0">Card field appears here once Stripe is configured.</p>';
-          return;
-        }
-
-        if (typeof Stripe !== 'function') {
-          if (errEl) {
-            errEl.textContent='Stripe.js failed to load. Refresh the page and check that https://js.stripe.com is reachable.';
-            errEl.style.display='block';
-          }
-          return;
-        }
-
-        stripeObj=Stripe(STRIPE_PK); // eslint-disable-line no-undef
-        var _first=($id('bkc-first')||{}).value||'', _last=($id('bkc-last')||{}).value||'';
-        var _email=($id('bkc-email')||{}).value||'', _topic=($id('bkc-topic')||{}).value||'';
-        var _startISO='', _endISO='';
-        if (selectedSlotStart) {
-          _startISO = selectedSlotStart.toISOString();
-          _endISO   = new Date(selectedSlotStart.getTime() + selectedMin * 60000).toISOString();
-        }
-        fetch('/api/create-payment-intent',{
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({
-            session: SESSIONS[selectedMin].label,
-            minutes: selectedMin,
-            amount:  SESSIONS[selectedMin].price*100,
-            email:   _email,
-            userName:  (_first+' '+_last).trim(),
-            startTime: _startISO,
-            endTime:   _endISO,
-            topic:     _topic,
-          }),
-        })
-        .then(function(r){
-          return r.text().then(function(raw){
-            var parsed={};
-            try { parsed = raw ? JSON.parse(raw) : {}; } catch (_) {}
-            if (!r.ok) {
-              var msg = parsed && (parsed.error || parsed.message)
-                ? (parsed.error || parsed.message)
-                : ('HTTP '+r.status+' from /api/create-payment-intent');
-              throw new Error(msg);
-            }
-            if (!parsed.clientSecret) {
-              throw new Error('Backend response missing clientSecret');
-            }
-            return parsed;
-          });
-        })
-        .then(function(body){
-          stripeEls=stripeObj.elements({ clientSecret:body.clientSecret, appearance:{theme:'stripe',variables:{colorPrimary:'#28A880',colorBackground:'#FFFFFF',colorText:'#1A1714',colorDanger:'#E02458',fontFamily:'"DM Sans","Helvetica Neue",sans-serif',borderRadius:'8px'}} });
-          stripeEls.create('payment').mount('#bkc-stripe-element');
-        })
-        .catch(function(err){
-          var e=$id('bkc-stripe-error');
-          if(e){
-            e.textContent='Unable to load payment: '+(err && err.message ? err.message : 'unknown error');
-            e.style.display='block';
-          }
-        });
-      }
 
       // ── Submit ──────────────────────────────────────────────
       var submitBtn=$id('bkc-submit-btn');
@@ -2536,33 +2440,40 @@
           [first,last].forEach(function(el){ var ok=el&&el.value.trim()!==''; if(el)el.classList.toggle('invalid',!ok); if(!ok)valid=false; });
           if (email){ var ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value); email.classList.toggle('invalid',!ok); if(!ok)valid=false; }
           if (!valid) return;
-          if (!stripeObj||!stripeEls) { showSuccess(); return; }
-          submitBtn.disabled=true; submitBtn.textContent='Processing…';
-          stripeObj.confirmPayment({
-            elements: stripeEls,
-            redirect: 'if_required',
-            confirmParams: { receipt_email: email ? email.value : '' }
+          var _first=first?first.value.trim():'', _last=last?last.value.trim():'', _email=email?email.value.trim():'';
+          var _topic=($id('bkc-topic')||{}).value||'';
+          var _startISO='', _endISO='';
+          if (selectedSlotStart) {
+            _startISO = selectedSlotStart.toISOString();
+            _endISO   = new Date(selectedSlotStart.getTime() + selectedMin * 60000).toISOString();
+          }
+          var bookingErr=$id('bkc-booking-error');
+          if (bookingErr) bookingErr.style.display='none';
+          submitBtn.disabled=true; submitBtn.textContent='Confirming…';
+          fetch('/api/book',{
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              session:   SESSIONS[selectedMin].label,
+              minutes:   selectedMin,
+              email:     _email,
+              userName:  (_first+' '+_last).trim(),
+              startTime: _startISO,
+              endTime:   _endISO,
+              topic:     _topic,
+            }),
           })
-          .then(function(result){
-            if (result.error){
-              var e=$id('bkc-stripe-error');
-              if(e){e.textContent=result.error.message;e.style.display='block';}
-              submitBtn.disabled=false;
-              submitBtn.textContent='Confirm Booking →';
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            if (data.error) {
+              if (bookingErr) { bookingErr.textContent='Booking failed: '+data.error; bookingErr.style.display='block'; }
+              submitBtn.disabled=false; submitBtn.textContent='Confirm Booking →';
               return;
             }
-            var status = result && result.paymentIntent ? result.paymentIntent.status : '';
-            if (status === 'succeeded' || status === 'processing' || status === 'requires_capture') {
-              showSuccess();
-            } else {
-              var ee=$id('bkc-stripe-error');
-              if (ee) {
-                ee.textContent='Payment status: '+(status || 'unknown')+'. Please try again.';
-                ee.style.display='block';
-              }
-              submitBtn.disabled=false;
-              submitBtn.textContent='Confirm Booking →';
-            }
+            showSuccess();
+          })
+          .catch(function(){
+            if (bookingErr) { bookingErr.textContent='Unable to confirm booking. Please try again.'; bookingErr.style.display='block'; }
+            submitBtn.disabled=false; submitBtn.textContent='Confirm Booking →';
           });
         });
       }
@@ -2585,9 +2496,8 @@
         $id('bk-success').style.display='block';
         centerSuccessInViewport();
         // Re-fetch after a short delay so the booked slot moves to Sold Out.
-        // Delay gives the Stripe webhook time to create the Google Calendar event.
         // The ?t= param bypasses the CDN cache.
-        setTimeout(function() { loadAvailability('/api/availability?t=' + Date.now()); }, 5000);
+        setTimeout(function() { loadAvailability('/api/availability?t=' + Date.now()); }, 2000);
       }
 
       // ── Init ────────────────────────────────────────────────
