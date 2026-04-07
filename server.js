@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 3088);
 
 const { createBookingEvent, sendConfirmationEmail } = require("./lib/googleCalendar");
 const availabilityHandler = require("./api/availability");

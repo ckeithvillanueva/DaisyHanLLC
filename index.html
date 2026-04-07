@@ -277,8 +277,9 @@
 
     /* ── Hero ───────────────────────────────────────────── */
     .hero {
-      min-height: 100vh;
-      min-height: 100svh;
+      /* ~30% less vertical slack than full viewport while staying above the fixed nav */
+      min-height: calc(100vh * 0.7);
+      min-height: calc(100svh * 0.7);
       display: flex;
       align-items: center;
       padding-top: 102px;
@@ -460,29 +461,6 @@
       color: var(--color-accent);
       opacity: .6;
       margin-bottom: var(--space-3);
-    }
-    .about__badge {
-      position: absolute;
-      top: var(--space-6);
-      right: calc(-1 * var(--space-6));
-      background: var(--color-accent);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4) var(--space-5);
-      text-align: center;
-      box-shadow: var(--shadow-gold);
-    }
-    .about__badge-num {
-      font-family: var(--font-mono);
-      font-size: 36px;
-      font-weight: 300;
-      color: var(--color-ink);
-      line-height: 1;
-    }
-    .about__badge-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--color-slate);
-      margin-top: 4px;
     }
     .about__content h2 {
       font-family: var(--font-display);
@@ -679,7 +657,7 @@
 
     /* ── Philosophy ──────────────────────────────────────── */
     .philosophy {
-      padding: 36px var(--section-padding-x);
+      padding: var(--section-padding-y) var(--section-padding-x);
       background: var(--color-cream);
     }
     .philosophy__inner { max-width: 1280px; margin: 0 auto; }
@@ -726,10 +704,6 @@
     .serve__inner {
       max-width: 1280px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-10);
-      align-items: start;
     }
     .serve__content h2 {
       font-family: var(--font-display);
@@ -772,35 +746,6 @@
       margin-top: 1px;
     }
     .serve__check svg { width: 12px; height: 12px; color: var(--color-primary); }
-    .serve__visual {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-5);
-    }
-    .serve__exp-card {
-      background: var(--color-cream);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6);
-      border: 1px solid var(--color-border);
-    }
-    .serve__exp-card h4 {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--color-ink);
-      margin-bottom: var(--space-2);
-    }
-    .serve__exp-card .role {
-      font-size: 13px;
-      color: var(--color-primary);
-      font-weight: 500;
-      margin-bottom: var(--space-3);
-    }
-    .serve__exp-card p {
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--color-mist);
-    }
 
     /* ── Background / Experience ─────────────────────────── */
     .background {
@@ -820,9 +765,9 @@
     .background__heading em {
       font-style: italic;
       color: var(--color-primary);
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 6px;
+      text-decoration: none;
+      border-bottom: none;
+      box-shadow: none;
     }
     .background__grid {
       display: grid;
@@ -929,7 +874,7 @@
       position: relative;
     }
     /* ── Schedule embed — compact centred card ──────────── */
-    .schedule__embed { min-height: auto; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .schedule__embed { min-height: auto; max-width: 800px; margin-left: auto; margin-right: auto; }
 
     /* ── Booking Widget ──────────────────────────────────── */
     .bk-section {
@@ -1054,6 +999,11 @@
     .bk-cal-day--available:hover { background: rgba(40,168,128,.12); color: var(--color-primary); }
     .bk-cal-day--selected { background: var(--color-primary) !important; color: #fff !important; font-weight: 700; }
 
+    /* Side-by-side calendar + times layout */
+    .bk-cal-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: start; }
+    .bk-cal-pane { padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6); }
+    .bk-times-pane { padding: var(--space-5) var(--space-6) var(--space-5) var(--space-4); border-left: 1px solid var(--color-border); }
+
     /* Time slots */
     .bk-times-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); margin-bottom: var(--space-4); }
     .bk-time-btn {
@@ -1084,6 +1034,15 @@
       display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
       padding: var(--space-4) var(--space-6);
       background: var(--color-surface);
+    }
+    /* Match width of one duration pill (.bk-pills gap + two equal flex children) */
+    #bk-book-btn {
+      flex: 0 0 calc((100% - var(--space-3)) / 2);
+      max-width: calc((100% - var(--space-3)) / 2);
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
     }
     .bk-footer-left { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
     .bk-footer-icon {
@@ -1141,8 +1100,12 @@
     @media (max-width: 640px) {
       .bk-section      { padding: var(--space-4) var(--space-5); }
       .bk-footer       { padding: var(--space-4) var(--space-5); flex-wrap: wrap; }
+      #bk-book-btn     { flex: 1 1 100%; max-width: none; width: 100%; }
       .bk-pills        { gap: var(--space-2); }
       .bk-pill         { font-size: 14px; padding: 10px 8px; }
+      .bk-cal-layout   { grid-template-columns: 1fr; }
+      .bk-cal-pane     { padding: var(--space-4) var(--space-5); }
+      .bk-times-pane   { padding: var(--space-4) var(--space-5); border-left: none; border-top: 1px solid var(--color-border); }
       .bk-times-grid   { grid-template-columns: repeat(3, 1fr); }
       .bk-checkout-hdr { padding: var(--space-3) var(--space-5); }
       .bk-checkout-body{ padding: var(--space-6) var(--space-5); }
@@ -1259,7 +1222,7 @@
     /* ── Footer ──────────────────────────────────────────── */
     .footer {
       background: var(--color-sun-navy);
-      padding: var(--space-9) var(--section-padding-x) var(--space-7);
+      padding: var(--section-padding-y) var(--section-padding-x);
     }
     .footer__inner {
       max-width: 1280px;
@@ -1336,19 +1299,25 @@
       .stats__grid { grid-template-columns: repeat(2, 1fr); }
       .background__grid { grid-template-columns: 1fr; }
     }
-    @media (max-width: 768px) {
-      .nav__inner { grid-template-columns: 1fr; }
+    /* Nav: switch to hamburger before links + “Schedule a Call” clip (logo + 4 links + CTA need ~1250–1350px+). */
+    @media (max-width: 1320px) {
+      .nav__inner {
+        grid-template-columns: 1fr auto;
+        gap: var(--space-5);
+        align-items: center;
+      }
       .nav__actions { justify-self: end; }
-      .nav__links, .nav__cta { display: none; }
+      .nav__links,
+      .nav__cta { display: none; }
       .nav__hamburger { display: flex; }
+    }
+    @media (max-width: 768px) {
       .hero__inner { grid-template-columns: 1fr; gap: var(--space-8); }
       .hero__visual { display: none; }
       .about__inner { grid-template-columns: 1fr; }
-      .about__badge { display: none; }
       .services__header { grid-template-columns: 1fr; gap: var(--space-5); }
       .services__grid { grid-template-columns: 1fr; }
       .philosophy__grid { grid-template-columns: 1fr; gap: var(--space-6); }
-      .serve__inner { grid-template-columns: 1fr; }
       .contact__inner { grid-template-columns: 1fr; }
       .footer__top { grid-template-columns: 1fr 1fr; }
       .footer__bottom { flex-direction: column; gap: var(--space-4); text-align: center; }
@@ -1394,7 +1363,6 @@
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#impact">Impact</a></li>
-            <li><a href="#schedule">Schedule</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
           <a href="#schedule" class="btn btn-primary nav__cta">Schedule a Call</a>
@@ -1411,7 +1379,6 @@
     <a href="#about"     onclick="closeDrawer()">About</a>
     <a href="#services"  onclick="closeDrawer()">Services</a>
     <a href="#impact"    onclick="closeDrawer()">Impact</a>
-    <a href="#schedule"  onclick="closeDrawer()">Schedule</a>
     <a href="#contact"   onclick="closeDrawer()">Contact</a>
   </div>
 
@@ -1447,7 +1414,7 @@
 
       <div class="hero__visual fade-up" style="transition-delay:300ms">
         <div class="hero__card hero__card--accent">
-          <span class="hero__stat-num" data-count="18">0</span><span class="hero__stat-num">+</span>
+          <span class="hero__stat-num" data-count="20">0</span><span class="hero__stat-num">+</span>
           <p class="hero__stat-label">Years Leading Equity-Centered Change</p>
         </div>
         <div class="hero__card-grid">
@@ -1457,7 +1424,7 @@
           </div>
           <div class="hero__card">
             <span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)" data-count="10">0</span><span class="hero__stat-num" style="font-size:36px;color:var(--color-sun-navy)">K+</span>
-            <p class="hero__stat-label">Educators Trained</p>
+            <p class="hero__stat-label">People Trained</p>
           </div>
         </div>
         <div class="hero__card" style="background:var(--color-linen)">
@@ -1479,9 +1446,9 @@
         <div class="about__img-block">
           <img
             class="about__img-photo"
-            src="assets/daisy-hubble-profile.jpg"
-            width="800"
-            height="800"
+            src="assets/Daisy_Headshot.jpeg"
+            width="1080"
+            height="1350"
             alt="Daisy Han"
             decoding="async"
             fetchpriority="low"
@@ -1490,27 +1457,23 @@
             Bridging vision with day-to-day execution — on schedule, on budget, on purpose.
           </p>
         </div>
-        <div class="about__badge">
-          <div class="about__badge-num">96%</div>
-          <div class="about__badge-label">Impact Metrics</div>
-        </div>
       </div>
 
       <div class="about__content fade-up" style="transition-delay:100ms">
         <span class="eyebrow">About Daisy</span>
         <h2>Two decades of leading with <em>purpose</em>.</h2>
         <p class="about__body">
-          Daisy Han is a seasoned education and social innovation strategist with over 18 years of experience leading equity-centered transformation across K–12 systems, charter and Montessori ecosystems, higher education, and career-connected learning.
+          Daisy Han is a seasoned education and social innovation strategist with over 20 years of experience leading equity-centered transformation across K–12 systems, charter and Montessori ecosystems, higher education, philanthropy, and career-connected learning.
         </p>
         <blockquote class="about__pull">
           A trusted partner to districts, charter networks, foundations, and community organizations advancing racial equity and systems-level change.
         </blockquote>
         <p class="about__body">
-          Based in Makawao, Hawaii, Daisy brings a rare combination of on-the-ground classroom experience, nonprofit leadership, and philanthropic strategy. She founded and scaled Embracing Equity into a national organization serving 660,000+ students across 48 states — then brought those learnings back to the consulting world.
+          Based in Makawao, Hawaii, Daisy brings a rare combination of on-the-ground classroom experience, nonprofit leadership, and philanthropic strategy. She founded and scaled Embracing Equity into a national organization serving 660,000+ students across 48 states — then brought those learnings to the consulting world.
         </p>
         <div class="about__awards">
           <span class="tag">40 Under 40, Leaders of Color (2024)</span>
-          <span class="tag">Harvard M.Ed., Educational Equity</span>
+          <span class="tag">Harvard M.Ed., Organizational Leadership &amp; Systems Change</span>
           <span class="tag">Montessori School Leadership (AMS)</span>
           <span class="tag">UC Berkeley, summa cum laude</span>
         </div>
@@ -1603,7 +1566,7 @@
       </h2>
       <div class="stats__grid">
         <div class="stat-card fade-up">
-          <span class="stat-num" data-count="18">0</span>
+          <span class="stat-num" data-count="20">0</span>
           <span class="stat-label">Years of experience in education &amp; social innovation</span>
         </div>
         <div class="stat-card fade-up" style="transition-delay:75ms">
@@ -1612,7 +1575,7 @@
         </div>
         <div class="stat-card fade-up" style="transition-delay:150ms">
           <span class="stat-num" data-suffix="K+">10K+</span>
-          <span class="stat-label">Educators trained in equity-driven instructional practice</span>
+          <span class="stat-label">People trained in equity-driven instructional practice</span>
         </div>
         <div class="stat-card fade-up" style="transition-delay:225ms">
           <span class="stat-num" data-count="96" data-suffix="%">0</span>
@@ -1703,29 +1666,6 @@
           </li>
         </ul>
       </div>
-
-      <div class="serve__visual fade-up" style="transition-delay:100ms">
-        <div class="serve__exp-card">
-          <div class="role">Founder &amp; Managing Director · 2025–Present</div>
-          <h4>Daisy Han Consulting LLC</h4>
-          <p>Partnering with philanthropic organizations, school systems, and cross-sector teams to translate high-level strategies into actionable initiatives that drive measurable social impact.</p>
-        </div>
-        <div class="serve__exp-card">
-          <div class="role">Vice President, Career Launch · 2025–Present</div>
-          <h4>Making Waves Education Foundation</h4>
-          <p>Architecting system-level strategy and programs to create accelerated, career-connected pathways for low-income students through K–12, postsecondary, and employer ecosystems.</p>
-        </div>
-        <div class="serve__exp-card">
-          <div class="role">Founder &amp; CEO · 2017–2024</div>
-          <h4>Embracing Equity</h4>
-          <p>Founded and scaled a national education nonprofit — 35+ person team, 660,000+ students, 48 states, $2.5M+ raised, 96% impact metrics, 80+ Net Promoter Score.</p>
-        </div>
-        <div class="serve__exp-card">
-          <div class="role">Partner · 2016–2020</div>
-          <h4>Wildflower Montessori Schools</h4>
-          <p>Supported 80+ Teachers of Color in designing and launching schools in their own communities. Helped secure $3M in funding for underserved community school startups.</p>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1743,7 +1683,7 @@
           <h3>Education</h3>
           <div class="edu-item">
             <h4>Harvard University</h4>
-            <p class="degree">M.Ed. in Educational Equity</p>
+            <p class="degree">M.Ed. in Organizational Leadership &amp; Systems Change</p>
             <p class="year">2016–2017</p>
           </div>
           <div class="edu-item">
@@ -1769,13 +1709,14 @@
               <li>Montessori School Leadership (AMS): Lower El, Upper El, Secondary I–II</li>
               <li>Teaching for Equity Micro-Credential</li>
               <li>Wilderness First Responder (NOLS), CPR/First Aid (ARC)</li>
+              <li>Core Strengths SDI Assessment Facilitator</li>
+              <li>Career Launch Facilitator</li>
             </ul>
           </div>
           <div class="background__col" style="margin-top:var(--space-8)">
             <h3>Awards &amp; Community</h3>
             <ul class="cert-list">
               <li>40 Under 40 Powerlist, Leaders of Color Magazine (2024)</li>
-              <li>2025 Best Place for Working Parents Award, Embracing Equity</li>
               <li>Founding Member, APIA Ed Collective</li>
               <li>Member, Education Leaders of Color</li>
               <li>Founding Board Member, Montessori for Social Justice</li>
@@ -1826,17 +1767,14 @@
               <button class="bk-pill" data-minutes="15">
                 Quick<span class="bk-pill-sub">15 min</span>
               </button>
-              <button class="bk-pill" data-minutes="30">
+              <button class="bk-pill bk-pill--active" data-minutes="30">
                 Full<span class="bk-pill-sub">30 min</span>
-              </button>
-              <button class="bk-pill bk-pill--active" data-minutes="45">
-                Deep Dive<span class="bk-pill-sub">45 min</span>
               </button>
             </div>
           </div>
 
           <!-- Quick availability -->
-          <div class="bk-section" id="bk-quick-avail">
+          <div class="bk-section" id="bk-quick-avail" style="display:none">
             <div class="bk-avail-hdr">
               <p class="bk-label" style="margin:0">Next availability</p>
               <button class="bk-view-cal" id="bk-view-cal-btn">View other availability
@@ -1846,24 +1784,30 @@
             <div class="bk-quick-slots" id="bk-quick-slots"><!-- filled by JS --></div>
           </div>
 
-          <!-- Full calendar (hidden by default) -->
-          <div class="bk-section" id="bk-calendar-wrap" style="display:none">
-            <div class="bk-cal-hdr">
-              <button class="bk-cal-nav-btn" id="bk-cal-prev">‹</button>
-              <span class="bk-cal-month-label" id="bk-cal-month-label"></span>
-              <button class="bk-cal-nav-btn" id="bk-cal-next">›</button>
-            </div>
-            <div class="bk-cal-weekdays">
-              <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
-            </div>
-            <div class="bk-cal-grid" id="bk-cal-grid"></div>
-            <div id="bk-times-wrap" style="display:none">
-              <p class="bk-label" style="margin-bottom:var(--space-3)">Available times</p>
-              <div class="bk-times-grid" id="bk-times-grid"></div>
-              <button class="bk-tz">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                <span id="bk-tz-label">Hawaii–Aleutian (GMT-10) ›</span>
-              </button>
+          <!-- Full calendar -->
+          <div class="bk-section" id="bk-calendar-wrap" style="display:block;padding:0">
+            <div class="bk-cal-layout">
+              <div class="bk-cal-pane">
+                <div class="bk-cal-hdr">
+                  <button class="bk-cal-nav-btn" id="bk-cal-prev">‹</button>
+                  <span class="bk-cal-month-label" id="bk-cal-month-label"></span>
+                  <button class="bk-cal-nav-btn" id="bk-cal-next">›</button>
+                </div>
+                <div class="bk-cal-weekdays">
+                  <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+                </div>
+                <div class="bk-cal-grid" id="bk-cal-grid"></div>
+              </div>
+              <div class="bk-times-pane">
+                <div id="bk-times-wrap" style="display:none">
+                  <p class="bk-label" style="margin-bottom:var(--space-3)">Available times</p>
+                  <div class="bk-times-grid" id="bk-times-grid"></div>
+                  <button class="bk-tz">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span id="bk-tz-label">Hawaii–Aleutian (GMT-10) ›</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1874,11 +1818,11 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </div>
               <div>
-                <div class="bk-footer-price" id="bk-footer-price">Deep Dive · 45 min</div>
+                <div class="bk-footer-price" id="bk-footer-price">Full · 30 min</div>
                 <div class="bk-footer-desc"  id="bk-footer-desc">Select a time above</div>
               </div>
             </div>
-            <button class="btn btn-primary" id="bk-book-btn" disabled style="white-space:nowrap">Book Now</button>
+            <button class="btn btn-primary" id="bk-book-btn" disabled>Book Now</button>
           </div>
         </div><!-- /#bk-widget -->
 
@@ -1921,7 +1865,7 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   </div>
                   <div>
-                    <div class="bk-footer-price" id="bkc-footer-price">Deep Dive · 45 min</div>
+                    <div class="bk-footer-price" id="bkc-footer-price">Full · 30 min</div>
                     <div class="bk-footer-desc" id="bkc-footer-desc">Select a time above</div>
                   </div>
                 </div>
@@ -1945,7 +1889,7 @@
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28A880" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 </div>
                 <div>
-                  <div class="bk-footer-price" id="bks-footer-detail">Deep Dive · Fri, Mar 27th · 9:00 AM</div>
+                  <div class="bk-footer-price" id="bks-footer-detail">Full — select a time above</div>
                 </div>
               </div>
             </div>
@@ -1980,7 +1924,7 @@
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
             </svg>
-            <span>Makawao, Hawaii · Remote-first</span>
+            <span>Makawao, Hawaii</span>
           </div>
           <div class="contact__detail">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -2178,9 +2122,8 @@
       'use strict';
 
       var SESSIONS = {
-        15: { label: 'Quick'     },
-        30: { label: 'Full'      },
-        45: { label: 'Deep Dive' },
+        15: { label: 'Quick' },
+        30: { label: 'Full'  },
       };
 
       // Slots fetched from Google Calendar — populated on load.
@@ -2198,12 +2141,18 @@
             BUSY_SLOTS = (data.busySlots || []).map(function(s){
               return { start: new Date(s.start), end: new Date(s.end) };
             });
-            renderQuickSlots();
             renderCalendar();
-            if (selectedDate) renderTimeSlots();
+            if (!selectedDate) {
+              var next = getNextSlots(1);
+              if (next.length) {
+                selectedDate = next[0].date;
+                calDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+                renderCalendar();
+              }
+            }
+            if (selectedDate) { renderTimeSlots(); $id('bk-times-wrap').style.display='block'; updateFooter(); }
           })
           .catch(function(){
-            renderQuickSlots();
             renderCalendar();
           });
       }
@@ -2211,12 +2160,12 @@
 
       // ── State ──────────────────────────────────────────────
       var today        = new Date(); today.setHours(0,0,0,0);
-      var selectedMin  = 45;
+      var selectedMin  = 30;
       var selectedDate = null;
       var selectedTime = null;
       var selectedSlotStart = null; // Date object (UTC) for the chosen slot start
       var calDate      = new Date(today.getFullYear(), today.getMonth(), 1);
-      var calOpen      = false;
+      var calOpen      = true;
 
       // ── Helpers ─────────────────────────────────────────────
       var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -2502,7 +2451,7 @@
 
       // ── Init ────────────────────────────────────────────────
       (function(){ var el=$id('bk-tz-label'); if(el) el.textContent=getBrowserTzLabel()+' \u203a'; })();
-      renderQuickSlots();
+      renderCalendar();
     })();
 
     // ── Contact form ─────────────────────────────────────

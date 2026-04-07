@@ -26,7 +26,6 @@ type BookingCardProps = {
 const DEFAULT_SESSIONS: Session[] = [
   { minutes: 15, label: 'Quick', price: 40 },
   { minutes: 30, label: 'Full', price: 80 },
-  { minutes: 45, label: 'Deep Dive', price: 120 },
 ];
 
 const DEFAULT_SLOTS: QuickSlot[] = [
@@ -56,7 +55,7 @@ function ChevronRightIcon() {
 export default function BookingCard({
   sessions = DEFAULT_SESSIONS,
   quickSlots = DEFAULT_SLOTS,
-  initialMinutes = 45,
+  initialMinutes = 30,
   initialSlotIndex = 0,
   onViewAvailability,
   onBookNow,
