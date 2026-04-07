@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    await createBookingEvent({
+    const event = await createBookingEvent({
       summary:     `Consulting Call with ${userName}`,
       description: `${topic || session || "Consulting"} session with Daisy Han`,
       startTime,
@@ -27,6 +27,7 @@ module.exports = async function handler(req, res) {
       endTime,
       topic,
       session,
+      meetLink: event.meetLink,
     });
 
     return res.json({ ok: true });
