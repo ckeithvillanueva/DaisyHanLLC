@@ -1309,7 +1309,10 @@
       .nav__actions { justify-self: end; }
       .nav__links,
       .nav__cta { display: none; }
-      .nav__hamburger { display: flex; }
+      .nav__hamburger {
+        display: flex;
+        padding-right: 0;
+      }
     }
     @media (max-width: 768px) {
       .hero__inner { grid-template-columns: 1fr; gap: var(--space-8); }
