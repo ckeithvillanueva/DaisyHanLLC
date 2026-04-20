@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Daisy Han Consulting LLC — strategic planning, facilitation, and program design for school systems, foundations, and mission-driven organizations. Makawao, Hawaii; serving clients nationwide.">
   <meta name="theme-color" content="#1C3870">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <title>Daisy Han Consulting LLC — Strategic Consulting for Meaningful Change</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -607,94 +608,65 @@
       color: var(--color-primary);
     }
 
-    /* ── Stats ──────────────────────────────────────────── */
-    .stats {
-      background: var(--color-sun-navy);
+    /* ── Philosophy (How I Work) — navy band, matches former Impact stats styling ─ */
+    .philosophy {
       padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--color-sun-navy);
     }
-    .stats__inner {
+    .philosophy__inner {
       max-width: 1280px;
       margin: 0 auto;
       text-align: center;
     }
-    .stats__eyebrow { color: var(--color-accent); }
-    .stats__heading {
+    .philosophy .eyebrow {
+      color: var(--color-accent);
+    }
+    .philosophy__header {
+      margin-bottom: var(--space-9);
+    }
+    .philosophy__heading {
       font-family: var(--font-display);
       font-size: clamp(32px, 4vw, 52px);
       font-weight: 500;
-      color: var(--color-white);
-      margin-bottom: var(--space-9);
       line-height: 1.2;
+      letter-spacing: -.02em;
+      color: var(--color-white);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .stats__heading em { font-style: italic; color: var(--color-accent); }
-    .stats__grid {
+    .philosophy__heading em {
+      font-style: italic;
+      color: var(--color-accent);
+    }
+    .philosophy__grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: var(--space-4);
+      text-align: left;
     }
-    .stat-card {
+    .philosophy__item {
       padding: var(--space-7) var(--space-5);
       background: rgba(255,255,255,.05);
       border-radius: var(--radius-lg);
       border: 1px solid rgba(255,255,255,.08);
     }
-    .stat-num {
-      font-family: var(--font-mono);
-      font-size: clamp(40px, 5vw, 64px);
-      font-weight: 300;
-      line-height: 1;
-      letter-spacing: -.03em;
-      color: var(--color-accent);
+    .philosophy__item svg {
+      stroke: var(--color-accent);
+      margin: 0 0 var(--space-5);
       display: block;
-    }
-    .stat-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,.55);
-      margin-top: var(--space-3);
-      letter-spacing: .02em;
-    }
-
-    /* ── Philosophy ──────────────────────────────────────── */
-    .philosophy {
-      padding: var(--section-padding-y) var(--section-padding-x);
-      background: var(--color-cream);
-    }
-    .philosophy__inner { max-width: 1280px; margin: 0 auto; }
-    .philosophy__header { margin-bottom: var(--space-5); }
-    .philosophy__heading {
-      font-family: var(--font-display);
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 500;
-      line-height: 1.15;
-      letter-spacing: -.02em;
-      color: var(--color-ink);
-      max-width: 640px;
-    }
-    .philosophy__heading em { font-style: italic; color: var(--color-primary); }
-    .philosophy__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-7);
     }
     .philosophy__item h3 {
       font-family: var(--font-display);
       font-size: 28px;
       font-weight: 500;
-      color: var(--color-ink);
+      color: var(--color-white);
       margin-bottom: var(--space-4);
     }
     .philosophy__item p {
       font-size: 15px;
       line-height: 1.8;
-      color: var(--color-slate);
-    }
-    .philosophy__divider {
-      width: 40px;
-      height: 2px;
-      background: var(--color-primary);
-      margin: 0 0 var(--space-5);
+      color: rgba(255,255,255,.65);
     }
 
     /* ── Who We Serve ────────────────────────────────────── */
@@ -1297,7 +1269,6 @@
 
     /* ── Responsive ─────────────────────────────────────── */
     @media (max-width: 1024px) {
-      .stats__grid { grid-template-columns: repeat(2, 1fr); }
       .background__grid { grid-template-columns: 1fr; }
     }
     /* Nav: switch to hamburger before links + “Schedule a Call” clip (logo + 4 links + CTA need ~1250–1350px+). */
@@ -1329,7 +1300,6 @@
       .hero__card-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 480px) {
-      .stats__grid { grid-template-columns: 1fr 1fr; }
       .footer__top { grid-template-columns: 1fr; }
     }
   </style>
@@ -1366,7 +1336,6 @@
           <ul class="nav__links">
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
-            <li><a href="#impact">Impact</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
           <a href="#schedule" class="btn btn-primary nav__cta">Schedule a Call</a>
@@ -1382,7 +1351,6 @@
   <div class="nav__drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
     <a href="#about"     onclick="closeDrawer()">About</a>
     <a href="#services"  onclick="closeDrawer()">Services</a>
-    <a href="#impact"    onclick="closeDrawer()">Impact</a>
     <a href="#contact"   onclick="closeDrawer()">Contact</a>
   </div>
 
@@ -1560,39 +1528,9 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       STATS / IMPACT
-  ═══════════════════════════════════════════════════ -->
-  <section class="stats" id="impact" aria-label="Impact statistics">
-    <div class="stats__inner">
-      <span class="eyebrow stats__eyebrow">Impact by the Numbers</span>
-      <h2 class="stats__heading fade-up">
-        Two decades of work.<br><em>Hundreds of thousands</em> of lives changed.
-      </h2>
-      <div class="stats__grid">
-        <div class="stat-card fade-up">
-          <span class="stat-num" data-count="20">0</span>
-          <span class="stat-label">Years of experience in education &amp; social innovation</span>
-        </div>
-        <div class="stat-card fade-up" style="transition-delay:75ms">
-          <span class="stat-num" data-suffix="K+">660K+</span>
-          <span class="stat-label">Students reached across 48 states, DC &amp; Puerto Rico</span>
-        </div>
-        <div class="stat-card fade-up" style="transition-delay:150ms">
-          <span class="stat-num" data-suffix="K+">10K+</span>
-          <span class="stat-label">People trained in equity-driven instructional practice</span>
-        </div>
-        <div class="stat-card fade-up" style="transition-delay:225ms">
-          <span class="stat-num" data-count="96" data-suffix="%">0</span>
-          <span class="stat-label">% impact metrics on educator behavior change</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════
        PHILOSOPHY
   ═══════════════════════════════════════════════════ -->
-  <section class="philosophy" aria-label="How I work">
+  <section class="philosophy" id="how-i-work" aria-label="How I work">
     <div class="philosophy__inner">
       <div class="philosophy__header fade-up">
         <span class="eyebrow">How I Work</span>
@@ -1602,17 +1540,37 @@
       </div>
       <div class="philosophy__grid">
         <div class="philosophy__item fade-up">
-          <div class="philosophy__divider"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m11 17 2 2a1 1 0 1 0 3-3"/>
+            <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/>
+            <path d="m21 3 1 11h-1"/>
+            <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/>
+            <path d="M3 4h8"/>
+          </svg>
           <h3>Trust</h3>
           <p>I show up as a true partner — not a vendor. Every engagement begins with deep listening and a commitment to understanding your organization's unique context, culture, and constraints. Your goals become my goals.</p>
         </div>
         <div class="philosophy__item fade-up" style="transition-delay:100ms">
-          <div class="philosophy__divider"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
           <h3>Joy</h3>
           <p>Transformative work doesn't have to be joyless. I bring energy, creativity, and genuine enthusiasm to every engagement. When the work is meaningful, it shows — and it spreads to the teams and communities we serve.</p>
         </div>
         <div class="philosophy__item fade-up" style="transition-delay:200ms">
-          <div class="philosophy__divider"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="6"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
           <h3>Rigor</h3>
           <p>Vision without execution is just aspiration. I bring disciplined project management, evidence-based approaches, and a commitment to measurable outcomes — ensuring initiatives stay on schedule, on budget, and on mission.</p>
         </div>
@@ -2010,7 +1968,6 @@
           <ul class="footer__links">
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
-            <li><a href="#impact">Impact</a></li>
             <li><a href="#schedule">Schedule</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -2461,15 +2418,35 @@
     // ── Contact form ─────────────────────────────────────
     document.getElementById('contactForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const btn = this.querySelector('button[type="submit"]');
+      const form = this;
+      const btn  = form.querySelector('button[type="submit"]');
       btn.textContent = 'Sending…';
       btn.disabled = true;
-      // Simulate submission
-      setTimeout(() => {
-        document.getElementById('formSuccess').style.display = 'block';
-        btn.textContent = 'Sent ✓';
-        btn.style.background = 'var(--color-success)';
-      }, 1000);
+
+      const body = {
+        firstName:    form.querySelector('#firstName').value.trim(),
+        lastName:     form.querySelector('#lastName').value.trim(),
+        email:        form.querySelector('#email').value.trim(),
+        organization: form.querySelector('#org').value.trim(),
+        message:      form.querySelector('#message').value.trim(),
+      };
+
+      fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body),
+      })
+        .then(function(r) {
+          if (!r.ok) throw new Error('Server error');
+          document.getElementById('formSuccess').style.display = 'block';
+          btn.textContent = 'Sent ✓';
+          btn.style.background = 'var(--color-success)';
+        })
+        .catch(function() {
+          btn.textContent = 'Send Message';
+          btn.disabled = false;
+          alert('Something went wrong — please email daisyheyjinhan@gmail.com directly.');
+        });
     });
   </script>
 </body>
