@@ -2370,6 +2370,7 @@
               startTime: _startISO,
               endTime:   _endISO,
               topic:     _topic,
+              timeZone:  Intl.DateTimeFormat().resolvedOptions().timeZone,
             }),
           })
           .then(function(r){ return r.json(); })

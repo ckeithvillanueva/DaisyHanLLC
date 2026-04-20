@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { session, minutes, email, userName, startTime, endTime, topic } = req.body || {};
+  const { session, minutes, email, userName, startTime, endTime, topic, timeZone } = req.body || {};
 
   if (!email || !userName || !startTime || !endTime) {
     return res.status(400).json({ error: "Missing required fields: email, userName, startTime, endTime" });
@@ -28,6 +28,7 @@ module.exports = async function handler(req, res) {
       topic,
       session,
       meetLink: event.meetLink,
+      timeZone,
     });
 
     return res.json({ ok: true });
